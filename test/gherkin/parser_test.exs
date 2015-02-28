@@ -1,6 +1,7 @@
 defmodule WhiteBread.Gherkin.ParserTest do
   use ExUnit.Case
   import WhiteBread.Gherkin.Parser
+  alias WhiteBread.Gherkin.Elements.Steps, as: Steps
 
   @feature_text """
     Feature: Serve coffee
@@ -40,9 +41,25 @@ defmodule WhiteBread.Gherkin.ParserTest do
     assert Enum.count(scenarios) == 2
   end
 
-  test "Gets the scenarios name" do
+  test "Gets the scenario's name" do
     %{scenarios: [%{name: name} | _]} = parse_feature(@feature_text)
     assert name == "Buy last coffee"
+  end
+
+  test "Gets the correct number of steps for the scenario" do
+    %{scenarios: [%{steps: steps} | _]} = parse_feature(@feature_text)
+    assert Enum.count(steps) == 4
+  end
+
+  test "Has the correct steps for a scenario" do
+    expected_steps = [
+      %Steps.Given{text: "there are 1 coffees left in the machine"},
+      %Steps.And{text: "I have deposited 1$"},
+      %Steps.When{text: "I press the coffee button"},
+      %Steps.Then{text: "I should be served a coffee"},
+    ]
+    %{scenarios: [%{steps: steps} | _]} = parse_feature(@feature_text)
+    assert expected_steps == steps
   end
 
 end
