@@ -2,7 +2,7 @@ defmodule WhiteBread.Gherkin.Parser do
   require Logger
   alias WhiteBread.Gherkin.Elements.Feature, as: Feature
   alias WhiteBread.Gherkin.Elements.Scenario, as: Scenario
-  alias WhiteBread.Gherkin.Elements.Steps, as: Steps
+  alias WhiteBread.Gherkin.Parser.Steps, as: StepsParser
 
   import String, only: [rstrip: 1, rstrip: 2, lstrip: 1]
 
@@ -12,7 +12,7 @@ defmodule WhiteBread.Gherkin.Parser do
     |> Enum.map(&strip_whitespace/1)
     |> Enum.reduce({%Feature{}, :start}, &process_line/2)
     |> strip_state_atom
-    |> reverse_step_order_for_each_scenario
+    |> StepsParser.reverse_step_order_for_each_scenario
     |> reverse_scenario_order
   end
 
@@ -34,15 +34,7 @@ defmodule WhiteBread.Gherkin.Parser do
 
   defp process_line(line, {feature = %{scenarios: [scenario | rest]}, :scenario_steps}) do
     log line
-    step = case line do
-      "Given " <> text -> %Steps.Given{text: text}
-      "When " <> text  -> %Steps.When{text: text}
-      "Then " <> text  -> %Steps.Then{text: text}
-      "And " <> text  -> %Steps.And{text: text}
-      "But " <> text  -> %Steps.But{text: text}
-    end
-    %{steps: current_steps} = scenario
-    updated_scenario = %{scenario | steps: [step | current_steps]}
+    updated_scenario = StepsParser.add_step_to_scenario(scenario, line)
     {%{feature | scenarios: [updated_scenario | rest]}, :scenario_steps}
   end
 
@@ -61,16 +53,6 @@ defmodule WhiteBread.Gherkin.Parser do
 
   defp strip_state_atom({feature, _state}) do
     feature
-  end
-
-  defp reverse_step_order_for_each_scenario(feature) do
-    %{scenarios: scenarios} = feature
-    updated_scenarios = Enum.map(scenarios, &reverse_step_order/1)
-    %{feature | scenarios: updated_scenarios}
-  end
-
-  defp reverse_step_order(scenario = %{steps: steps}) do
-    %{scenario | steps: Enum.reverse(steps)}
   end
 
   defp reverse_scenario_order(feature = %{scenarios: scenarios}) do
