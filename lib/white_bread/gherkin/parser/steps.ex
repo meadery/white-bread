@@ -1,5 +1,4 @@
 defmodule WhiteBread.Gherkin.Parser.Steps do
-  require Logger
   alias WhiteBread.Gherkin.Elements.Steps, as: Steps
 
   def add_step_to_scenario(scenario, line) do

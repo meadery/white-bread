@@ -1,5 +1,4 @@
 defmodule WhiteBread.Gherkin.Parser do
-  require Logger
   alias WhiteBread.Gherkin.Elements.Feature, as: Feature
   alias WhiteBread.Gherkin.Parser.GenericLine, as: LineParser
   alias WhiteBread.Gherkin.Parser.Steps, as: StepsParser
