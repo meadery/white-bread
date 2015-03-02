@@ -20,20 +20,32 @@ defmodule WhiteBread.Context do
   defmacro __before_compile__(_env) do
     quote do
       def execute_step(%{text: step_text} = step, state) do
-        function = if (Dict.has_key?(@string_steps, step_text)) do
-          Dict.fetch!(@string_steps, step_text)
+        if (Dict.has_key?(@string_steps, step_text)) do
+          function = Dict.fetch!(@string_steps, step_text)
+          apply(function, [state])
         else
-          find_function_for_string(step_text)
+          apply_regex_function(step_text, state)
         end
-        function.(state)
       end
 
-      defp find_function_for_string(string) do
-        [{_regex, function}] = @regex_steps
+      defp apply_regex_function(step_text, state) do
+        {regex, function} = find_regex_and_function(step_text)
+        args = unless Regex.names(regex) == [] do
+          captures = WhiteBread.RegexExtension.atom_keyed_named_captures(regex, step_text)
+
+          [state, captures]
+        else
+          [state]
+        end
+        apply(function, args)
+      end
+
+      defp find_regex_and_function(string) do
+        [{regex, function}] = @regex_steps
         |> Stream.filter(fn {regex, _} -> Regex.run(regex, string) end)
         |> Enum.take(1)
 
-        function
+        {regex, function}
       end
     end
   end
@@ -76,9 +88,16 @@ defmodule WhiteBread.Context do
   defp define_function_step(step_regex, function) when is_tuple(step_regex) do
     function_name = regex_to_step_atom(step_regex)
     quote do
-      @regex_steps [{unquote(step_regex), &__MODULE__.unquote(function_name)/1} | @regex_steps]
-      def unquote(function_name)(state) do
-        unquote(function).(state)
+      if Regex.names(unquote(step_regex)) == [] do
+        @regex_steps [{unquote(step_regex), &__MODULE__.unquote(function_name)/1} | @regex_steps]
+        def unquote(function_name)(state) do
+          unquote(function).(state)
+        end
+      else
+        @regex_steps [{unquote(step_regex), &__MODULE__.unquote(function_name)/2} | @regex_steps]
+        def unquote(function_name)(state, captures) do
+          unquote(function).(state, captures)
+        end
       end
     end
   end

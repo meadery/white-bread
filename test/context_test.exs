@@ -21,6 +21,9 @@ defmodule WhiteBread.ContextTest do
       {:ok, state}
     end
 
+    then_ ~r/my new state should be (?<new_state>[A-Za-z]+)/, fn _state, new_state: new_state ->
+      {:ok, new_state}
+    end
   end
 
   test "Blocks provided with a simple string return ok with the starting state" do
@@ -44,5 +47,10 @@ defmodule WhiteBread.ContextTest do
     assert ExampleContext.execute_step(second_step, state) == {:ok, state}
   end
 
+  test "steps can can use named group capture" do
+    state = :old_state
+    step = %Steps.Then{text: "my new state should be awesome"}
+    assert ExampleContext.execute_step(step, state) == {:ok, "awesome"}
+  end
 
 end
