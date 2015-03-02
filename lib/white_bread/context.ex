@@ -6,6 +6,7 @@ defmodule WhiteBread.Context do
   defmacro __using__(_opts) do
     quote do
       import WhiteBread.Context
+      import ExUnit.Assertions
 
       @string_steps HashDict.new
 
@@ -20,11 +21,15 @@ defmodule WhiteBread.Context do
   defmacro __before_compile__(_env) do
     quote do
       def execute_step(%{text: step_text} = step, state) do
-        if (Dict.has_key?(@string_steps, step_text)) do
-          function = Dict.fetch!(@string_steps, step_text)
-          apply(function, [state])
-        else
-          apply_regex_function(step_text, state)
+        try do
+          if (Dict.has_key?(@string_steps, step_text)) do
+            function = Dict.fetch!(@string_steps, step_text)
+            apply(function, [state])
+          else
+            apply_regex_function(step_text, state)
+          end
+        rescue
+          assertion_error in ExUnit.AssertionError -> {:fail, assertion_error}
         end
       end
 
