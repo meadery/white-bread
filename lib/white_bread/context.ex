@@ -7,7 +7,10 @@ defmodule WhiteBread.Context do
     quote do
       import WhiteBread.Context
 
-      @string_steps %{}
+      @string_steps HashDict.new
+
+      # List of tuples {regex, function}
+      @regex_steps []
 
       @before_compile WhiteBread.Context
     end
@@ -17,8 +20,20 @@ defmodule WhiteBread.Context do
   defmacro __before_compile__(_env) do
     quote do
       def execute_step(%{text: step_text} = step, state) do
-        function = Dict.fetch!(@string_steps, step_text)
+        function = if (Dict.has_key?(@string_steps, step_text)) do
+          Dict.fetch!(@string_steps, step_text)
+        else
+          find_function_for_string(step_text)
+        end
         function.(state)
+      end
+
+      defp find_function_for_string(string) do
+        [{_regex, function}] = @regex_steps
+        |> Stream.filter(fn {regex, _} -> Regex.run(regex, string) end)
+        |> Enum.take(1)
+
+        function
       end
     end
   end
@@ -34,6 +49,18 @@ defmodule WhiteBread.Context do
     end
   end
 
+  # This catches regexes (internally these are tuples)
+  defp define_block_step(step_regex, block) when is_tuple(step_regex) do
+    function_name = regex_to_step_atom(step_regex)
+    quote do
+      @regex_steps [{unquote(step_regex), &__MODULE__.unquote(function_name)/1} | @regex_steps]
+      def unquote(function_name)(state) do
+        unquote(block)
+        {:ok, state}
+      end
+    end
+  end
+
   defp define_block_step(step_text, block) do
     function_name = String.to_atom("step_" <> step_text)
     quote do
@@ -41,6 +68,17 @@ defmodule WhiteBread.Context do
       def unquote(function_name)(state) do
         unquote(block)
         {:ok, state}
+      end
+    end
+  end
+
+  # This catches regexes (internally these are tuples)
+  defp define_function_step(step_regex, function) when is_tuple(step_regex) do
+    function_name = regex_to_step_atom(step_regex)
+    quote do
+      @regex_steps [{unquote(step_regex), &__MODULE__.unquote(function_name)/1} | @regex_steps]
+      def unquote(function_name)(state) do
+        unquote(function).(state)
       end
     end
   end
@@ -53,6 +91,10 @@ defmodule WhiteBread.Context do
         unquote(function).(state)
       end
     end
+  end
+
+  defp regex_to_step_atom({:sigil_r, _, [{_, _, [string]}, _]}) do
+    String.to_atom("regex_step_" <> string)
   end
 
 end
