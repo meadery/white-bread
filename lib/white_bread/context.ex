@@ -1,5 +1,7 @@
 defmodule WhiteBread.Context do
 
+  @steps_to_macro [:given_, :when_, :then_, :and_, :but_]
+
   @doc false
   defmacro __using__(_opts) do
     quote do
@@ -21,15 +23,35 @@ defmodule WhiteBread.Context do
     end
   end
 
-  defmacro given(step_text, do: block) do
-    define_step(step_text, block)
+  for step <- @steps_to_macro do
+
+    defmacro unquote(step)(step_text, do: block) do
+      define_block_step(step_text, block)
+    end
+
+    defmacro unquote(step)(step_text, step_function) do
+      define_function_step(step_text, step_function)
+    end
   end
 
-  defp define_step(step_text, block) do
+  defp define_block_step(step_text, block) do
     function_name = String.to_atom("step_" <> step_text)
     quote do
       @string_steps Dict.put(@string_steps, unquote(step_text), &__MODULE__.unquote(function_name)/1)
-      def unquote(function_name)(state), do: unquote(block)
+      def unquote(function_name)(state) do
+        unquote(block)
+        {:ok, state}
+      end
+    end
+  end
+
+  defp define_function_step(step_text, function) do
+    function_name = String.to_atom("step_" <> step_text)
+    quote do
+      @string_steps Dict.put(@string_steps, unquote(step_text), &__MODULE__.unquote(function_name)/1)
+      def unquote(function_name)(state) do
+        unquote(function).(state)
+      end
     end
   end
 
