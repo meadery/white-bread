@@ -1,5 +1,6 @@
 WhiteBread
 ==========
+[![Build Status](https://travis-ci.org/meadsteve/white-bread.svg?branch=master)](https://travis-ci.org/meadsteve/white-bread)
 
 # What?
 Very alpha Story BDD tool written in and for Elixir.
