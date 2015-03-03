@@ -30,11 +30,18 @@ defmodule WhiteBread.ContextTest do
     assert ExampleContext.execute_step(step, state) == {:ok, "awesome"}
   end
 
-  test "failing an assert should not return a {:fail, error} tuple" do
+  test "failing an assert should return a {:fail, error} tuple" do
     state = :old_state
     step = %Steps.Then{text: "I will always fail"}
     {result, _error} = ExampleContext.execute_step(step, state)
     assert result == :fail
+  end
+
+  test "calling a missing step should return {:missing_step, step}" do
+    state = :old_state
+    step = %Steps.And{text: "I question if this step exists"}
+    result = ExampleContext.execute_step(step, state)
+    assert result == {:missing_step, step}
   end
 
 end

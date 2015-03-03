@@ -30,6 +30,7 @@ defmodule WhiteBread.Context do
           end
         rescue
           assertion_error in ExUnit.AssertionError -> {:fail, assertion_error}
+          missing_step in WhiteBread.Context.MissingStep -> {:missing_step, step}
         end
       end
 
@@ -46,11 +47,14 @@ defmodule WhiteBread.Context do
       end
 
       defp find_regex_and_function(string) do
-        [{regex, function}] = @regex_steps
+        matches = @regex_steps
         |> Stream.filter(fn {regex, _} -> Regex.run(regex, string) end)
         |> Enum.take(1)
 
-        {regex, function}
+        case matches do
+          [{regex, function}] -> {regex, function}
+          []                  -> raise WhiteBread.Context.MissingStep
+        end
       end
     end
   end
