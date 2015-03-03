@@ -42,6 +42,16 @@ defmodule WhiteBread.ScenarioRunnerTest do
     assert {:failed, {:missing_step, missing_step}} == ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
   end
 
+  test "Fails if the clauses can't be matched for steps" do
+    step_two = %Steps.When{text: "step two"}
+    steps = [
+      %Steps.When{text: "step that blocks step two"},
+      step_two
+    ]
+    scenario = %{name: "test scenario", steps: steps}
+    assert {:failed, {:no_clause_match, step_two}} == ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+  end
+
 end
 
 defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
@@ -49,6 +59,10 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
 
   when_ "step one", fn _state ->
     {:ok, :step_one_complete}
+  end
+
+  when_ "step that blocks step two", fn _state ->
+    {:ok, :unexpected_state}
   end
 
   when_ "step two", fn :step_one_complete ->
