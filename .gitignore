@@ -1,5 +1,10 @@
+# Elixir/Erlang stuff
 /_build
 /deps
 erl_crash.dump
 *.ez
 /.vagrant/
+
+# JetBrains IDE stuff
+/white-bread.iml
+/.idea/
