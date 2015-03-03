@@ -44,6 +44,13 @@ defmodule WhiteBread.ContextTest do
     assert result == {:missing_step, step}
   end
 
+  test "calling a missing step with incorrect values {:no_clause_match, step}" do
+    state = :wrong_state
+    step = %Steps.When{text: "I require a specific state"}
+    result = ExampleContext.execute_step(step, state)
+    assert result == {:no_clause_match, step}
+  end
+
 end
 
 defmodule WhiteBread.ContextTest.ExampleContext do
@@ -63,6 +70,10 @@ defmodule WhiteBread.ContextTest.ExampleContext do
 
   when_ ~r/I pass in some [A-Za-z]+/, fn state ->
     {:ok, state}
+  end
+
+  when_ "I require a specific state", fn :specific_state ->
+    {:ok, :new_state}
   end
 
   then_ ~r/my new state should be (?<new_state>[A-Za-z]+)/, fn _state, new_state: new_state ->

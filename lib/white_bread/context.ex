@@ -29,8 +29,9 @@ defmodule WhiteBread.Context do
             apply_regex_function(step_text, state)
           end
         rescue
-          assertion_error in ExUnit.AssertionError -> {:fail, assertion_error}
+          assertion_error in ExUnit.AssertionError       -> {:fail, assertion_error}
           missing_step in WhiteBread.Context.MissingStep -> {:missing_step, step}
+          clause_match_error in FunctionClauseError      -> {:no_clause_match, step}
         end
       end
 
