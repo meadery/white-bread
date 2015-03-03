@@ -5,7 +5,7 @@ defmodule WhiteBread.FeatureRunnerTest do
   alias WhiteBread.Gherkin.Elements.Scenario, as: Scenario
   alias WhiteBread.FeatureRunnerTest.ExampleContext, as: ExampleContext
 
-  test "Fails if a step fails an assertion" do
+  test "feature runner should return succesful scenarios" do
     steps = [
       %Steps.When{text: "step one"},
       %Steps.When{text: "step two"}
@@ -13,11 +13,12 @@ defmodule WhiteBread.FeatureRunnerTest do
 
     scenario = %Scenario{name: "test scenario", steps: steps}
     feature = %Feature{name: "test feature", scenarios: [scenario]}
-    output = WhiteBread.Outputers.Console.start
 
+    output = WhiteBread.Outputers.Console.start
     result = WhiteBread.FeatureRunner.run(ExampleContext, feature, output)
-    IO.puts "#{inspect result}"
     output |> WhiteBread.Outputers.Console.stop
+
+    assert result == %{failures: [], successes: [{scenario, {:ok, "test scenario"}}]}
   end
 end
 
