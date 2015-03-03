@@ -1,6 +1,6 @@
 defmodule WhiteBread.FeatureRunner do
 
-  def run(context, %{scenarios: scenarios} = feature, output_pid) do
+  def run(%{scenarios: scenarios} = feature, context, output_pid) do
     results = scenarios
     |> run_all_scenarios_for_context(context)
     |> output_results(feature, output_pid)

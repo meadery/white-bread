@@ -6,6 +6,11 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
 
   import String, only: [rstrip: 1, rstrip: 2, lstrip: 1]
 
+  def process_line("", state) do
+    Logger.debug("Parser skipping blank line")
+    state
+  end
+
   def process_line("Feature: " <> name = line, {feature, :start}) do
     log line
     {%{feature | name: rstrip(name)}, :feature_description}
@@ -34,7 +39,7 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
   end
 
   defp log(line) do
-    Logger.debug("Parsing line: #{line}")
+    Logger.debug("Parsing line: \"#{line}\"")
   end
 
 end

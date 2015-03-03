@@ -3,7 +3,7 @@ defmodule WhiteBread.Gherkin.Parser do
   alias WhiteBread.Gherkin.Parser.GenericLine, as: LineParser
   alias WhiteBread.Gherkin.Parser.Steps, as: StepsParser
 
-  import String, only: [rstrip: 1, rstrip: 2, lstrip: 1]
+  import String, only: [rstrip: 1, rstrip: 2, lstrip: 1, lstrip: 2]
 
   def parse_feature(feature_text) do
     feature_text
@@ -33,7 +33,7 @@ defmodule WhiteBread.Gherkin.Parser do
   end
 
   defp strip_whitespace(line) do
-    line |> lstrip |> rstrip
+    line |> lstrip |> rstrip |> lstrip(?\t)
   end
 
 end

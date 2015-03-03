@@ -15,7 +15,7 @@ defmodule WhiteBread.FeatureRunnerTest do
     feature = %Feature{name: "test feature", scenarios: [scenario]}
 
     output = WhiteBread.Outputers.Console.start
-    result = WhiteBread.FeatureRunner.run(ExampleContext, feature, output)
+    result = WhiteBread.FeatureRunner.run(feature, ExampleContext, output)
     output |> WhiteBread.Outputers.Console.stop
 
     assert result == %{failures: [], successes: [{scenario, {:ok, "test scenario"}}]}
@@ -38,7 +38,7 @@ defmodule WhiteBread.FeatureRunnerTest do
     feature = %Feature{name: "test feature", scenarios: [scenario, failing_scenario]}
 
     output = WhiteBread.Outputers.Console.start
-    result = WhiteBread.FeatureRunner.run(ExampleContext, feature, output)
+    result = WhiteBread.FeatureRunner.run(feature, ExampleContext, output)
     output |> WhiteBread.Outputers.Console.stop
 
     assert result == %{
