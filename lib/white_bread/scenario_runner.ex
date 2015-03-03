@@ -1,12 +1,19 @@
 defmodule WhiteBread.ScenarioRunner do
 
   def run(context, scenario) do
+
+    reduction = fn
+      (step, {:ok, state})                   -> run_step(context, step, state)
+      (_step, {:missing_step, missing_step}) -> {:missing_step, missing_step}
+    end
+
     result = scenario.steps
-    |> Enum.reduce({:ok, :start}, fn(step, {:ok, state}) -> run_step(context, step, state) end)
+    |> Enum.reduce({:ok, :start}, reduction)
 
     case result do
-      {:ok, _} -> {:ok, scenario.name}
-      _        -> {:fail}
+      {:ok, _}              -> {:ok, scenario.name}
+      {:missing_step, step} -> {:failed, {:missing_step, step}}
+      _                     -> {:failed}
     end
   end
 
