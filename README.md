@@ -42,7 +42,7 @@ defmodule SunDoe.CoffeeShopContext do
   end
 
   then_ "I should be served a coffee", fn state ->
-    served_coffees = state |> Dict.get(:coffees_served, 1)
+    served_coffees = state |> Dict.get(:coffees_served)
     assert served_coffees == 1
     {:ok, :whatever}
   end
