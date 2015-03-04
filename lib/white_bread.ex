@@ -9,7 +9,10 @@ defmodule WhiteBread do
 
     output |> WhiteBread.Outputers.Console.stop
 
-    results
+    %{
+      successes: results |> Enum.filter(&feature_success?/1),
+      failures:  results |> Enum.filter(&feature_failure?/1)
+    }
   end
 
   defp read_in_feature_files(file_paths) do
@@ -27,4 +30,13 @@ defmodule WhiteBread do
   defp get_feature_runner(context, output) do
     fn(feature) -> {feature, WhiteBread.FeatureRunner.run(feature, context, output)} end
   end
+
+  defp feature_success?({_feature, %{failures: failures}}) do
+    failures == []
+  end
+
+  defp feature_failure?({_feature, %{failures: failures}}) do
+    failures != []
+  end
+
 end
