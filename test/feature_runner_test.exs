@@ -18,7 +18,10 @@ defmodule WhiteBread.FeatureRunnerTest do
     result = WhiteBread.FeatureRunner.run(feature, ExampleContext, output)
     output |> WhiteBread.Outputers.Console.stop
 
-    assert result == %{failures: [], successes: [{scenario, {:ok, "test scenario"}}]}
+    assert result == %{
+      failures: [],
+      successes: [{scenario, {:ok, "test scenario"}}]
+    }
   end
 
   test "feature runner should return succesful and failed scenarios" do
