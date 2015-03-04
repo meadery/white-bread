@@ -4,11 +4,16 @@ defmodule WhiteBread.Feature.Finder do
   def find_in_path(dir_path) do
     File.ls!(dir_path)
     |> get_only_feature_files
+    |> sort_alphabetically
     |> prepend_dir_path(dir_path)
   end
 
   defp get_only_feature_files(file_paths) do
     file_paths |> Enum.filter(fn(file_path) -> file_path |> ends_with? ".feature" end)
+  end
+
+  defp sort_alphabetically(file_paths) do
+    file_paths |> Enum.sort
   end
 
   defp prepend_dir_path(file_paths, dir_path) do
