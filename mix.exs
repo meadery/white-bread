@@ -3,6 +3,11 @@ defmodule WhiteBread.Mixfile do
 
   def project do
     [app: :white_bread,
+     name: "WhiteBread",
+     description: """
+     Story BDD tool written in and for Elixir.
+     Parses Gherkin formatted feature files and executes them as tests.
+     """,
      version: "0.1.0",
      elixir: "~> 1.0",
      deps: deps]
