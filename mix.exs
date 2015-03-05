@@ -8,6 +8,7 @@ defmodule WhiteBread.Mixfile do
      Story BDD tool written in and for Elixir.
      Parses Gherkin formatted feature files and executes them as tests.
      """,
+     licenses: ["MIT"],
      version: "0.1.0",
      elixir: "~> 1.0",
      deps: deps]
