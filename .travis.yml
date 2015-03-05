@@ -11,3 +11,4 @@ before_script: "export PATH=`pwd`/elixir/bin:$PATH"
 script:
 - mix local.hex --force
 - MIX_ENV=test mix do deps.get, test
+- MIX_ENV=prod mix white_bread.run WhiteBread.Example.ExampleContext
