@@ -12,4 +12,5 @@ script:
 - mix local.hex --force
 - mix do compile, deps.get
 - MIX_ENV=test mix do test
+- MIX_ENV=prod mix help
 - MIX_ENV=prod mix do compile, white_bread.run WhiteBread.Example.ExampleContext
