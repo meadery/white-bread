@@ -1,8 +1,8 @@
 defmodule WhiteBread do
-  def run(context) do
+  def run(context, path) do
     output = WhiteBread.Outputers.Console.start
 
-    results = WhiteBread.Feature.Finder.find_in_path("features/")
+    results = WhiteBread.Feature.Finder.find_in_path(path)
     |> read_in_feature_files
     |> parse_features
     |> run_all_features(context, output)
