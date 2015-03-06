@@ -23,7 +23,7 @@ cd
 
     %{failures: failures} = result
     System.at_exit fn _ ->
-      if Enum.count(failures)  > 0, do: exit({:shutdown, 1})
+      if Enum.count(failures) > 0, do: exit({:shutdown, 1})
     end
   end
 
