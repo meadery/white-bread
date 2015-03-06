@@ -7,14 +7,23 @@ defmodule Mix.Tasks.WhiteBread.Run do
     {options, arguments, _} = OptionParser.parse(argv)
 
     case arguments do
-      [context_name | _ ] -> run(context_name, options)
-      [] -> Mix.raise "Expected context module to be given. Use `mix white_bread.run Context`"
+      [context_name | _ ] -> context_from_string(context_name) |> run(options)
+      []                  -> load_default_context |> run(options)
     end
 
   end
 
-  def run(context_name, _options) do
+  def load_default_context do
+    [{context_module, _} | _] = Code.load_file("features/default_context.exs")
+    context_module
+  end
+
+  def context_from_string(context_name) do
     {context, []} = Code.eval_string(context_name)
+    context
+  end
+
+  def run(context, _options) do
     result = WhiteBread.run(context)
 
     result

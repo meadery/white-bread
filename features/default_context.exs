@@ -1,4 +1,4 @@
-defmodule WhiteBread.Example.ExampleContext do
+defmodule WhiteBread.Example.DefaultContext do
   use WhiteBread.Context
 
   given_ ~r/there are (?<coffees>[0-9]+) coffees left in the machine/, fn _state, coffees: coffees ->
