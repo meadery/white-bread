@@ -51,14 +51,6 @@ defmodule WhiteBread.ContextTest do
     assert result == {:no_clause_match, step}
   end
 
-  test "fake" do
-    code = quote do
-      defmodule DefaultContext do
-      end
-    end
-    IO.puts "#{}"
-  end
-
 end
 
 defmodule WhiteBread.ContextTest.ExampleContext do
