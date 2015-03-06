@@ -22,13 +22,15 @@ Feature: Serve coffee
   Then I should be served a coffee
 ```
 
-Create a context module. This matches each of the steps in a scenario.
+Create ```features/default_context.exs``` and create a module using ```WhiteBread.Context```
+This matches each of the steps in a scenario to some code.
+
 ```elixir
 defmodule SunDoe.CoffeeShopContext do
   use WhiteBread.Context
 
-  given_ "there are 1 coffees left in the machine", fn _state ->
-    {:ok, HashDict.new |> Dict.put(:coffees, 1)}
+  given_ "there are 1 coffees left in the machine", fn state ->
+    {:ok, state |> Dict.put(:coffees, 1)}
   end
 
   given_ ~r/I have deposited £(?<pounds>[0-9]+)/, fn state, pounds: pounds ->
@@ -48,9 +50,10 @@ defmodule SunDoe.CoffeeShopContext do
   end
 end
 ```
+
 Then run:
 
-```mix white_bread.run SunDoe.CoffeeShopContext ```
+```mix white_bread.run```
 
 
 # Contribute ?
