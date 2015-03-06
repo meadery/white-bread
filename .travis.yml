@@ -14,6 +14,6 @@ script:
 - MIX_ENV=test mix do test
 - pwd
 - ls
-- ls _build/prod/lib/white_bread/ebin/
-- MIX_ENV=prod mix help
-- MIX_ENV=prod mix do compile, white_bread.run WhiteBread.Example.ExampleContext
+- ls _build/test/lib/white_bread/ebin/
+- MIX_ENV=test mix help
+- MIX_ENV=test mix do compile, white_bread.run WhiteBread.Example.ExampleContext
