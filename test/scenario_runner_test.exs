@@ -62,6 +62,20 @@ defmodule WhiteBread.ScenarioRunnerTest do
     {result, {:assertion_failure, ^assertion_failure_step, _failure}} = ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
     assert result == :failed
   end
+
+  test "Fails if a step returns anything but {:ok, state}" do
+    failure_step = %Steps.When{text: "I return not okay"}
+    expected_step_result = {:no_way, :impossible}
+
+    steps = [
+      failure_step,
+      %Steps.When{text: "step two"}
+    ]
+    scenario = %{name: "test scenario", steps: steps}
+
+    assert {:failed, expected_step_result} == ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+  end
+
 end
 
 defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
@@ -82,6 +96,10 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
   when_ "make a failing assestion", fn _state ->
     assert 1 == 0
     {:ok, :impossible}
+  end
+
+  when_ "I return not okay", fn _state ->
+    {:no_way, :impossible}
   end
 
 end

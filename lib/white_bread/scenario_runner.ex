@@ -9,6 +9,7 @@ defmodule WhiteBread.ScenarioRunner do
       (_step, {:missing_step, missing_step})          -> {:missing_step, missing_step}
       (_step, {:no_clause_match, failing_step})       -> {:no_clause_match, failing_step}
       (_step, {:fail, failing_step, assertion_error}) -> {:fail, failing_step, assertion_error}
+      (_step, error_data)                             -> error_data
     end
 
     result = scenario.steps
@@ -19,7 +20,7 @@ defmodule WhiteBread.ScenarioRunner do
       {:missing_step, step}          -> {:failed, {:missing_step, step}}
       {:no_clause_match, step}       -> {:failed, {:no_clause_match, step}}
       {:fail, step, assertion_error} -> {:failed, {:assertion_failure, step, assertion_error}}
-      _                              -> {:failed, :unknown}
+      error_data                     -> {:failed, error_data}
     end
   end
 
