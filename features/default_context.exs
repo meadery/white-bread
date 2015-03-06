@@ -1,8 +1,8 @@
 defmodule WhiteBread.Example.DefaultContext do
   use WhiteBread.Context
 
-  given_ ~r/there are (?<coffees>[0-9]+) coffees left in the machine/, fn _state, coffees: coffees ->
-    {:ok, %{} |> Dict.put(:coffees, coffees)}
+  given_ ~r/there are (?<coffees>[0-9]+) coffees left in the machine/, fn state, coffees: coffees ->
+    {:ok, state |> Dict.put(:coffees, coffees)}
   end
 
   given_ ~r/I have deposited £(?<pounds>[0-9]+)/, fn state, pounds: pounds ->
