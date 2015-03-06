@@ -19,11 +19,12 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
     result
     |> WhiteBread.FinalResultPrinter.text
-    |> IO.puts 
+    |> IO.puts
 
     %{failures: failures} = result
     System.at_exit fn _ ->
       if failures > 0, do: exit({:shutdown, 1})
+      exit({:shutdown, 0}
     end
   end
 
