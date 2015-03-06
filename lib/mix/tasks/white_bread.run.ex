@@ -12,7 +12,7 @@ defmodule Mix.Tasks.WhiteBread.Run do
     end
 
   end
-
+cd
   def run(context_name, _options) do
     {context, []} = Code.eval_string(context_name)
     result = WhiteBread.run(context)
@@ -23,8 +23,7 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
     %{failures: failures} = result
     System.at_exit fn _ ->
-      if failures > 0, do: exit({:shutdown, 1})
-      exit({:shutdown, 0}
+      if Enum.count(failures)  > 0, do: exit({:shutdown, 1})
     end
   end
 
