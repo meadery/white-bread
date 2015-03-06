@@ -12,7 +12,7 @@ defmodule Mix.Tasks.WhiteBread.Run do
     end
 
   end
-cd
+
   def run(context_name, _options) do
     {context, []} = Code.eval_string(context_name)
     result = WhiteBread.run(context)
