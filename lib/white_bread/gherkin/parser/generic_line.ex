@@ -11,9 +11,22 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
     state
   end
 
-  def process_line("Feature: " <> name = line, {feature, :start}) do
+  def process_line("@" <> line, {feature, parser_state}) do
     log line
-    {%{feature | name: rstrip(name)}, :feature_description}
+    tags = line
+    |> String.split("@", trim: true)
+    |> Enum.map(&String.strip/1)
+    {feature, %{tags: tags}}
+  end
+
+  def process_line("Feature: " <> name = line, {feature, parser_state}) do
+    feature_tags = case parser_state do
+      %{tags: tags} -> tags
+      _             -> []
+    end
+
+    log line
+    {%{feature | name: rstrip(name), tags: feature_tags}, :feature_description}
   end
 
   def process_line("Background:" <> _ = line, {feature, _} ) do

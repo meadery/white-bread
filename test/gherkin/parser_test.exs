@@ -39,6 +39,17 @@ defmodule WhiteBread.Gherkin.ParserTest do
       Then I should be served a coffee
   """
 
+  @feature_with_single_feature_tag """
+  @beverage
+  Feature: Serve coffee
+    Coffee should not be served until paid for
+    Coffee should not be served until the button has been pressed
+    If there is no coffee left then money should be refunded
+
+  Scenario: Buy last coffee
+    Given there are 1 coffees left in the machine
+  """
+
   test "Parses the feature name" do
     %{name: name} = parse_feature(@feature_text)
     assert name == "Serve coffee"
