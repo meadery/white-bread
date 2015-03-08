@@ -12,6 +12,7 @@ defmodule WhiteBread.Gherkin.Parser do
     |> strip_state_atom
     |> StepsParser.reverse_step_order_for_each_scenario
     |> reverse_scenario_order
+    |> reverse_background_steps
   end
 
   defp strip_state_atom({feature, _state}) do
@@ -20,6 +21,10 @@ defmodule WhiteBread.Gherkin.Parser do
 
   defp reverse_scenario_order(feature = %{scenarios: scenarios}) do
     %{feature | scenarios: Enum.reverse(scenarios)}
+  end
+
+  def reverse_background_steps(feature = %{background_steps: initial}) do
+    %{feature | background_steps: Enum.reverse(initial)}
   end
 
   defp split_lines(string) do

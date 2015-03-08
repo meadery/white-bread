@@ -22,6 +22,23 @@ defmodule WhiteBread.Gherkin.ParserTest do
         Then I should be frustrated
   """
 
+  @feature_with_backgroundtext """
+  Feature: Serve coffee
+    Coffee should not be served until paid for
+    Coffee should not be served until the button has been pressed
+    If there is no coffee left then money should be refunded
+
+    Background:
+      Given coffee exists as a beverage
+      And there is a coffee machine
+
+    Scenario: Buy last coffee
+      Given there are 1 coffees left in the machine
+      And I have deposited 1$
+      When I press the coffee button
+      Then I should be served a coffee
+  """
+
   test "Parses the feature name" do
     %{name: name} = parse_feature(@feature_text)
     assert name == "Serve coffee"
@@ -60,6 +77,15 @@ defmodule WhiteBread.Gherkin.ParserTest do
     ]
     %{scenarios: [%{steps: steps} | _]} = parse_feature(@feature_text)
     assert expected_steps == steps
+  end
+
+  test "Parses the expected background steps" do
+    expected_steps = [
+      %Steps.Given{text: "coffee exists as a beverage"},
+      %Steps.And{text: "there is a coffee machine"}
+    ]
+    %{background_steps: background_steps} = parse_feature(@feature_with_backgroundtext)
+    assert expected_steps == background_steps
   end
 
 end

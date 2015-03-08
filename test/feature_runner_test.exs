@@ -49,6 +49,27 @@ defmodule WhiteBread.FeatureRunnerTest do
       successes: [{scenario, {:ok, "test scenario"}}]
     }
   end
+
+  test "feature runner should pass with background steps" do
+    background_steps = [
+      %Steps.When{text: "step one"}
+    ]
+    steps = [
+      %Steps.When{text: "step two"}
+    ]
+
+    scenario = %Scenario{name: "test scenario", steps: steps}
+    feature = %Feature{name: "test feature", scenarios: [scenario], background_steps: background_steps}
+
+    output = WhiteBread.Outputers.Console.start
+    result = WhiteBread.FeatureRunner.run(feature, ExampleContext, output)
+    output |> WhiteBread.Outputers.Console.stop
+
+    assert result == %{
+      failures: [],
+      successes: [{scenario, {:ok, "test scenario"}}]
+    }
+  end
 end
 
 defmodule WhiteBread.FeatureRunnerTest.ExampleContext do

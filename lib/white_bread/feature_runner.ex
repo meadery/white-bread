@@ -1,8 +1,8 @@
 defmodule WhiteBread.FeatureRunner do
 
-  def run(%{scenarios: scenarios} = feature, context, output_pid) do
+  def run(%{scenarios: scenarios, background_steps: background_steps} = feature, context, output_pid) do
     results = scenarios
-    |> run_all_scenarios_for_context(context)
+    |> run_all_scenarios_for_context(context, background_steps)
     |> output_results(feature, output_pid)
 
     %{
@@ -11,12 +11,12 @@ defmodule WhiteBread.FeatureRunner do
     }
   end
 
-  defp run_all_scenarios_for_context(scenarios, context) do
-    scenarios |> Stream.map(context_scenario_runner(context))
+  defp run_all_scenarios_for_context(scenarios, context, background_steps) do
+    scenarios |> Stream.map(build_scenario_runner(context, background_steps))
   end
 
-  defp context_scenario_runner(context) do
-    fn(scenario) -> {scenario, WhiteBread.ScenarioRunner.run(context, scenario)} end
+  defp build_scenario_runner(context, background_steps) do
+    fn(scenario) -> {scenario, WhiteBread.ScenarioRunner.run(context, scenario, background_steps: background_steps)} end
   end
 
   defp output_results(results, feature, output_pid) do

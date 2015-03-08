@@ -20,6 +20,17 @@ defmodule WhiteBread.ScenarioRunnerTest do
     assert {:ok, "test scenario"} == ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
   end
 
+  test "Runs all backround steps first" do
+    background_steps = [
+      %Steps.When{text: "step one"}
+    ]
+    steps = [
+      %Steps.When{text: "step two"}
+    ]
+    scenario = %{name: "test scenario", steps: steps}
+    assert {:ok, "test scenario"} == ExampleContext |> WhiteBread.ScenarioRunner.run(scenario, background_steps: background_steps)
+  end
+
   test "Fails if the last step is missing" do
     missing_step = %Steps.When{text: "missing step"}
     steps = [
