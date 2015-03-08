@@ -7,6 +7,10 @@ Very alpha Story BDD tool written in and for Elixir.
 Parses Gherkin formatted feature files and executes them as tests.
 Initially started as an experiment. The API will change heavily.
 
+## Why the name?
+Gherkin and cucumber made me think of a [cucumber sandwiches](http://en.wikipedia.org/wiki/Cucumber_sandwich).
+Which are traditionally made with very thin white bread.
+
 # Basic usage
 Create *.feature files in a features directory. They should be gherkin syntax like:
 ```gherkin
@@ -55,6 +59,14 @@ Then run:
 
 ```mix white_bread.run```
 
+# Gherkin Syntax covered
+[x] Features
+[x] Step definitions: '''given''', '''when''', '''then''', '''and''' and '''but''' 
+[x] Feature backgound steps
+[x] Scenerios
+[ ] Scenario outlines
+[x] Tags (only partial as runner doesn't filter based on them)
 
-# Contribute ?
+
+# Contribute
 Contributions more than welcome but please raise an issue first to discuss any large changes.
