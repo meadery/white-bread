@@ -34,9 +34,13 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
     {feature, :background_steps}
   end
 
-  def process_line("Scenario: " <> name = line, {feature = %{scenarios: previous_scenarios}, _}) do
+  def process_line("Scenario: " <> name = line, {feature = %{scenarios: previous_scenarios}, parser_state}) do
     log line
-    new_scenario = %Scenario{name: name}
+    scenario_tags = case parser_state do
+      %{tags: tags} -> tags
+      _             -> []
+    end
+    new_scenario = %Scenario{name: name, tags: scenario_tags}
     {%{feature | scenarios: [new_scenario | previous_scenarios]}, :scenario_steps}
   end
 

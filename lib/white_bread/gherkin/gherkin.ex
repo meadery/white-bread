@@ -2,7 +2,7 @@ defmodule WhiteBread.Gherkin do
 
   defmodule Elements do
     defmodule Feature, do: defstruct name: "", description: "", tags: [], background_steps: [], scenarios: []
-    defmodule Scenario, do: defstruct name: "", steps: []
+    defmodule Scenario, do: defstruct name: "", tags: [], steps: []
 
     defmodule Steps do
       defmodule Given, do: defstruct text: ""
