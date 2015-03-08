@@ -26,11 +26,15 @@ defmodule WhiteBread.Example.DefaultContext do
     {:ok, :whatever}
   end
 
-  given_ "I had a heart", fn _ ->
+  given_ "I want more", fn _ ->
+    {:ok, :want_more}
+  end
+
+  given_ "I had a heart", fn :want_more ->
     {:ok, "have a heart"}
   end
 
-  given_ "I had a voice", fn _ ->
+  given_ "I had a voice", fn :want_more ->
     {:ok, "have a voice"}
   end
 
