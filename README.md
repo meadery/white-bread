@@ -60,12 +60,12 @@ Then run:
 ```mix white_bread.run```
 
 # Gherkin Syntax covered
-[x] Features
-[x] Step definitions: '''given''', '''when''', '''then''', '''and''' and '''but''' 
-[x] Feature backgound steps
-[x] Scenerios
-[ ] Scenario outlines
-[x] Tags (only partial as runner doesn't filter based on them)
+- [x] Features
+- [x] Step definitions: '''given''', '''when''', '''then''', '''and''' and '''but'''
+- [x] Feature backgound steps
+- [x] Scenerios
+- [ ] Scenario outlines
+- [x] Tags (only partial as runner doesn't filter based on them)
 
 
 # Contribute
