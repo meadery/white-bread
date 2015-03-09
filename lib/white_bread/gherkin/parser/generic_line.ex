@@ -1,7 +1,6 @@
 defmodule WhiteBread.Gherkin.Parser.GenericLine do
   require Logger
   alias WhiteBread.Gherkin.Parser.Steps, as: StepsParser
-  alias WhiteBread.Gherkin.Elements.Feature, as: Feature
   alias WhiteBread.Gherkin.Elements.Scenario, as: Scenario
 
   import String, only: [rstrip: 1, rstrip: 2, lstrip: 1]
@@ -11,7 +10,7 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
     state
   end
 
-  def process_line("@" <> line, {feature, parser_state}) do
+  def process_line("@" <> line, {feature, _parser_state}) do
     log line
     tags = line
     |> String.split("@", trim: true)

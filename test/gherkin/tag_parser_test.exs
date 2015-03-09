@@ -1,7 +1,6 @@
 defmodule WhiteBread.Gherkin.TagParserTest do
   use ExUnit.Case
   import WhiteBread.Gherkin.Parser
-  alias WhiteBread.Gherkin.Elements.Steps, as: Steps
 
   @feature_with_single_feature_tag """
   @beverage

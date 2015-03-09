@@ -4,7 +4,7 @@ defmodule WhiteBread.Gherkin.Parser.Steps do
   def add_step_to_scenario(scenario, line) do
     step  = string_to_step(line)
     %{steps: current_steps} = scenario
-    updated_scenario = %{scenario | steps: [step | current_steps]}
+    %{scenario | steps: [step | current_steps]}
   end
 
   def string_to_step(string) do
