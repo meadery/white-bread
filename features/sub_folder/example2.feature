@@ -1,3 +1,4 @@
+@songs
 Feature: Sing a song
     This will never end
 

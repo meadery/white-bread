@@ -1,10 +1,15 @@
 defmodule WhiteBread do
-  def run(context, path) do
+  def run(context, path, options \\ []) do
+    tags = options |> Keyword.get(:tags)
+
     output = WhiteBread.Outputers.Console.start
 
-    results = WhiteBread.Feature.Finder.find_in_path(path)
+    features = WhiteBread.Feature.Finder.find_in_path(path)
     |> read_in_feature_files
     |> parse_features
+    |> filter_features(tags)
+
+    results = features
     |> run_all_features(context, output)
 
     output |> WhiteBread.Outputers.Console.stop
@@ -27,6 +32,13 @@ defmodule WhiteBread do
 
   defp parse_task(feature_text) do
     Task.async(fn -> WhiteBread.Gherkin.Parser.parse_feature(feature_text) end)
+  end
+
+  defp filter_features(features, tags = nil) do
+    features
+  end
+  defp filter_features(features, tags) do
+    features |> WhiteBread.Tags.FeatureFilterer.get_for_tags(tags)
   end
 
   defp run_all_features(features, context, output) do
