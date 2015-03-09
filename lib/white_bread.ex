@@ -20,7 +20,13 @@ defmodule WhiteBread do
   end
 
   defp parse_features(feature_texts) do
-    feature_texts |> Stream.map(&WhiteBread.Gherkin.Parser.parse_feature/1)
+    feature_texts
+    |> Enum.map(&parse_task/1)
+    |> Enum.map(&Task.await/1)
+  end
+
+  defp parse_task(feature_text) do
+    Task.async(fn -> WhiteBread.Gherkin.Parser.parse_feature(feature_text) end)
   end
 
   defp run_all_features(features, context, output) do
@@ -38,5 +44,4 @@ defmodule WhiteBread do
   defp feature_failure?({_feature, %{failures: failures}}) do
     failures != []
   end
-
 end
