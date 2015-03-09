@@ -19,11 +19,7 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
   end
 
   def process_line("Feature: " <> name = line, {feature, parser_state}) do
-    feature_tags = case parser_state do
-      %{tags: tags} -> tags
-      _             -> []
-    end
-
+    feature_tags = tags_from_state(parser_state)
     log line
     {%{feature | name: rstrip(name), tags: feature_tags}, :feature_description}
   end
@@ -35,10 +31,7 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
 
   def process_line("Scenario: " <> name = line, {feature = %{scenarios: previous_scenarios}, parser_state}) do
     log line
-    scenario_tags = case parser_state do
-      %{tags: tags} -> tags
-      _             -> []
-    end
+    scenario_tags = tags_from_state(parser_state)
     new_scenario = %Scenario{name: name, tags: scenario_tags}
     {%{feature | scenarios: [new_scenario | previous_scenarios]}, :scenario_steps}
   end
@@ -67,6 +60,13 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
 
   defp log(line) do
     Logger.debug("Parsing line: \"#{line}\"")
+  end
+
+  defp tags_from_state(parser_state) do
+    case parser_state do
+      %{tags: tags} -> tags
+      _             -> []
+    end
   end
 
 end
