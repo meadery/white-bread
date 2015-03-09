@@ -3,7 +3,7 @@ defmodule WhiteBread.Gherkin.Parser do
   alias WhiteBread.Gherkin.Parser.GenericLine, as: LineParser
   alias WhiteBread.Gherkin.Parser.Steps, as: StepsParser
 
-  import String, only: [rstrip: 1, rstrip: 2, lstrip: 1, lstrip: 2]
+  import String, only: [strip: 1]
 
   def parse_feature(feature_text) do
     feature_text
@@ -24,15 +24,11 @@ defmodule WhiteBread.Gherkin.Parser do
   defp split_lines(string) do
     string
     |> String.split("\n", trim: true)
-    |> Enum.map(&strip_whitespace/1)
+    |> Enum.map(&strip/1)
   end
 
   defp parse_each_line(lines) do
     lines |> Enum.reduce({%Feature{}, :start}, &LineParser.process_line/2)
-  end
-
-  defp strip_whitespace(line) do
-    line |> lstrip |> rstrip |> lstrip(?\t)
   end
 
 end
