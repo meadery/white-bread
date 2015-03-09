@@ -44,7 +44,7 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
   def process_line(line, {feature = %{background_steps: current_background_steps}, :background_steps}) do
     log line
     new_step = StepsParser.string_to_step(line)
-    {%{feature | background_steps: [new_step | current_background_steps]}, :background_steps}
+    {%{feature | background_steps: current_background_steps ++ [new_step]}, :background_steps}
   end
 
   def process_line(line, {feature = %{scenarios: [scenario | rest]}, :scenario_steps}) do
