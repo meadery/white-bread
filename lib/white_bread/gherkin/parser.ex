@@ -9,12 +9,7 @@ defmodule WhiteBread.Gherkin.Parser do
     feature_text
     |> split_lines
     |> parse_each_line
-    |> strip_state_atom
     |> correct_scenario_order
-  end
-
-  defp strip_state_atom({feature, _state}) do
-    feature
   end
 
   defp correct_scenario_order(feature = %{scenarios: scenarios}) do
@@ -28,7 +23,9 @@ defmodule WhiteBread.Gherkin.Parser do
   end
 
   defp parse_each_line(lines) do
-    lines |> Enum.reduce({%Feature{}, :start}, &LineParser.process_line/2)
+    {feature, _end_state} = lines
+    |> Enum.reduce({%Feature{}, :start}, &LineParser.process_line/2)
+    feature
   end
 
 end
