@@ -12,8 +12,7 @@ defmodule WhiteBread.Feature.Finder do
     sub_dir_files = paths
     |> prepend_dir_path(dir_path)
     |> get_only_directories
-    |> Enum.map(fn(sub_dir) -> find_in_path(sub_dir <> "/") end)
-    |> Enum.reduce([], fn(folder_files, all) -> all ++ folder_files end)
+    |> Enum.flat_map(fn(sub_dir) -> find_in_path(sub_dir <> "/") end)
 
     root_files
     |> Enum.into(sub_dir_files)
