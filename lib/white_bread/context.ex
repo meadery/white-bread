@@ -39,8 +39,8 @@ defmodule WhiteBread.Context do
     end
   end
 
-  # This catches regexes (internally these are tuples)
-  defp define_block_step(step_regex, block) when is_tuple(step_regex) do
+  # Regexes
+  defp define_block_step({:sigil_r, _, _} = step_regex, block) do
     function_name = regex_to_step_atom(step_regex)
     quote do
       @regex_steps [{unquote(step_regex), &__MODULE__.unquote(function_name)/1} | @regex_steps]
@@ -62,8 +62,8 @@ defmodule WhiteBread.Context do
     end
   end
 
-  # This catches regexes (internally these are tuples)
-  defp define_function_step(step_regex, function) when is_tuple(step_regex) do
+  # regexes
+  defp define_function_step({:sigil_r, _, _} = step_regex, function) do
     function_name = regex_to_step_atom(step_regex)
     quote do
       if Regex.names(unquote(step_regex)) == [] do
