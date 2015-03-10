@@ -11,4 +11,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :shell, :path => "provisioning/erlang.sh"
   config.vm.provision :shell, :path => "provisioning/elixir.sh"
 
+  config.vm.network :forwarded_port, guest: 22, host: 1235
+
 end
