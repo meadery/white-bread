@@ -38,7 +38,7 @@ defmodule WhiteBread.Example.DefaultContext do
     {:ok, "have a voice"}
   end
 
-  then_ "I could love you", fn "have a hearter" ->
+  then_ "I could love you", fn "have a heart" ->
     {:ok, :love}
   end
 
