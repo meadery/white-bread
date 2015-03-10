@@ -34,10 +34,10 @@ defmodule WhiteBread.FinalResultPrinter do
     "  - #{failing_scenario.name} --> #{reason}"
   end
 
-  defp failure_reason_text({:missing_step, %{text: step_text}}) do
+  defp failure_reason_text({:missing_step, %{text: step_text}, _error}) do
     "undefined step: #{step_text}"
   end
-  defp failure_reason_text({:no_clause_match, %{text: step_text}}) do
+  defp failure_reason_text({:no_clause_match, %{text: step_text}, _error}) do
     "unable to match clauses: #{step_text}"
   end
   defp failure_reason_text({:assertion_failure, %{text: step_text}, assertion_failure}) do

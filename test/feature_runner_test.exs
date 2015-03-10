@@ -44,10 +44,11 @@ defmodule WhiteBread.FeatureRunnerTest do
     result = WhiteBread.FeatureRunner.run(feature, ExampleContext, output)
     output |> WhiteBread.Outputers.Console.stop
 
-    assert result == %{
-      failures: [{failing_scenario, {:failed, {:no_clause_match, failing_step}}}],
-      successes: [{scenario, {:ok, "test scenario"}}]
-    }
+    %{
+      failures: [{^failing_scenario, {:failed, {failing_reason, ^failing_step, _}}}],
+      successes: [{^scenario, {:ok, "test scenario"}}]
+    } = result
+    assert failing_reason == :no_clause_match
   end
 
   test "feature runner should pass with background steps" do

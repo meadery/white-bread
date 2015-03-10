@@ -30,25 +30,25 @@ defmodule WhiteBread.ContextTest do
     assert ExampleContext.execute_step(step, state) == {:ok, "awesome"}
   end
 
-  test "failing an assert should return a {:fail, step, error} tuple" do
+  test "failing an assert should return a {:assertion_failure, step, error} tuple" do
     state = :old_state
     step = %Steps.Then{text: "I will always fail"}
     {result, ^step, _error} = ExampleContext.execute_step(step, state)
-    assert result == :fail
+    assert result == :assertion_failure
   end
 
-  test "calling a missing step should return {:missing_step, step}" do
+  test "calling a missing step should return {:missing_step, step, MissingStep}" do
     state = :old_state
     step = %Steps.And{text: "I question if this step exists"}
     result = ExampleContext.execute_step(step, state)
-    assert result == {:missing_step, step}
+    assert result == {:missing_step, step,  %WhiteBread.Context.MissingStep{message: "Step not defined"}}
   end
 
-  test "calling a missing step with incorrect values {:no_clause_match, step}" do
+  test "calling a missing step with incorrect values {:no_clause_match, step, FunctionClauseError}" do
     state = :wrong_state
     step = %Steps.When{text: "I require a specific state"}
-    result = ExampleContext.execute_step(step, state)
-    assert result == {:no_clause_match, step}
+    {failure, ^step, _} = ExampleContext.execute_step(step, state)
+    assert failure == :no_clause_match
   end
 
 end

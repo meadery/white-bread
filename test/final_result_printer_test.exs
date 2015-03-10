@@ -26,7 +26,7 @@ defmodule WhiteBread.FinalResultPrinterTest do
         {
           %{name: "feature name"},
           %{failures: [
-            {%{name: "failing scenario"}, {:failed, {:no_clause_match, %{text: "failing step"}}}}
+            {%{name: "failing scenario"}, {:failed, {:no_clause_match, %{text: "failing step"}, %{}}}}
           ]}
         }
       ]

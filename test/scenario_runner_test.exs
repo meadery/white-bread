@@ -39,7 +39,9 @@ defmodule WhiteBread.ScenarioRunnerTest do
       missing_step
     ]
     scenario = %{name: "test scenario", steps: steps}
-    assert {:failed, {:missing_step, missing_step}} == ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    {result, {reason, ^missing_step, _}} = ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    assert result == :failed
+    assert reason == :missing_step
   end
 
   test "Fails if a middle step is missing" do
@@ -50,7 +52,9 @@ defmodule WhiteBread.ScenarioRunnerTest do
       %Steps.When{text: "step two"}
     ]
     scenario = %{name: "test scenario", steps: steps}
-    assert {:failed, {:missing_step, missing_step}} == ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    {result, {reason, ^missing_step, _}} = ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    assert result == :failed
+    assert reason == :missing_step
   end
 
   test "Fails if the clauses can't be matched for steps" do
@@ -60,17 +64,19 @@ defmodule WhiteBread.ScenarioRunnerTest do
       step_two
     ]
     scenario = %{name: "test scenario", steps: steps}
-    assert {:failed, {:no_clause_match, step_two}} == ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    {result, {reason, ^step_two, _}} = ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    assert result == :failed
+    assert reason == :no_clause_match
   end
 
   test "Fails if a step fails an assertion" do
-    assertion_failure_step = %Steps.When{text: "make a failing assestion"}
+    assertion_failure_step = %Steps.When{text: "make a failing asserstion"}
     steps = [
       assertion_failure_step,
       %Steps.When{text: "step two"}
     ]
     scenario = %{name: "test scenario", steps: steps}
-    {result, {:assertion_failure, ^assertion_failure_step, _failure}} = ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    {result, {:assertion_failure, _, _failure}} = ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
     assert result == :failed
   end
 
@@ -104,7 +110,7 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
     {:ok, :step_two_complete}
   end
 
-  when_ "make a failing assestion", fn _state ->
+  when_ "make a failing asserstion", fn _state ->
     assert 1 == 0
     {:ok, :impossible}
   end
