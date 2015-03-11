@@ -13,6 +13,8 @@ defmodule WhiteBread.Context do
       # List of tuples {regex, function}
       @regex_steps []
 
+      @initital_state_definied false
+
       @before_compile WhiteBread.Context
     end
   end
@@ -23,6 +25,13 @@ defmodule WhiteBread.Context do
       def execute_step(step, state) do
         {@string_steps, @regex_steps}
         |> WhiteBread.Context.StepExecutor.execute_step(step, state)
+      end
+
+      if !@initital_state_definied do
+        # Default starting state should always be an empty map.
+        def starting_state do
+          %{}
+        end
       end
 
     end
@@ -36,6 +45,15 @@ defmodule WhiteBread.Context do
 
     defmacro unquote(step)(step_text, step_function) do
       define_function_step(step_text, step_function)
+    end
+  end
+
+  defmacro initial_state(do: block) do
+    quote do
+      @initital_state_definied true
+      def starting_state() do
+        unquote(block)
+      end
     end
   end
 

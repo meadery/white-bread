@@ -93,10 +93,24 @@ defmodule WhiteBread.ScenarioRunnerTest do
     assert {:failed, expected_step_result} == ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
   end
 
+  test "Contexts can start with a custom state provied by starting_state method" do
+    steps = [
+      %Steps.Then{text: "starting state was correct"}
+    ]
+    scenario = %{name: "test scenario", steps: steps}
+
+    {result, _} = ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    assert result == :ok
+  end
+
 end
 
 defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
   use WhiteBread.Context
+
+  initial_state do
+    %{starting_state: :yes}
+  end
 
   when_ "step one", fn _state ->
     {:ok, :step_one_complete}
@@ -117,6 +131,10 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
 
   when_ "I return not okay", fn _state ->
     {:no_way, :impossible}
+  end
+
+  then_ "starting state was correct", fn %{starting_state: :yes} = state ->
+    {:ok, state}
   end
 
 end

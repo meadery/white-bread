@@ -1,6 +1,10 @@
 defmodule WhiteBread.Example.DefaultContext do
   use WhiteBread.Context
 
+  initial_state do
+    %{starting_state_loaded: :yes}
+  end
+
   given_ ~r/there are (?<coffees>[0-9]+) coffees left in the machine/, fn state, coffees: coffees ->
     {:ok, state |> Dict.put(:coffees, coffees)}
   end
@@ -26,7 +30,7 @@ defmodule WhiteBread.Example.DefaultContext do
     {:ok, :whatever}
   end
 
-  given_ "I want more", fn _ ->
+  given_ "I want more", fn %{starting_state_loaded: :yes} ->
     {:ok, :want_more}
   end
 

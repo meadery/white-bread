@@ -10,7 +10,7 @@ defmodule WhiteBread.ScenarioRunner do
   end
 
   defp run_steps(context, steps, scenario_name) do
-    starting_state = %{}
+    starting_state = context |> get_starting_state
 
     reduction = fn
       (step, {:ok, state})                            -> run_step(context, step, state)
@@ -28,6 +28,10 @@ defmodule WhiteBread.ScenarioRunner do
 
   defp run_step(context, step, state) do
     apply(context, :execute_step, [step, state])
+  end
+
+  defp get_starting_state(context) do
+    apply(context, :starting_state, [])
   end
 
 end
