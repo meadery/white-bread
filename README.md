@@ -37,7 +37,7 @@ defmodule SunDoe.CoffeeShopContext do
     {:ok, state |> Dict.put(:coffees, 1)}
   end
 
-  given_ ~r/I have deposited £(?<pounds>[0-9]+)/, fn state, pounds: pounds ->
+  given_ ~r/^I have deposited £(?<pounds>[0-9]+)$/, fn state, pounds: pounds ->
     {:ok, state |> Dict.put(:pounds, pounds)}
   end
 
