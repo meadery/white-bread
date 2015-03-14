@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.3.0 (2015-03-14)
+
+### Enhancements
+* Added initial_state macro which takes a block that returns the starting state
+for a context.
+*
+
+### Bug fixes
+no significant fixes
+
+### Backwards incompatible changes
+none
+
+
 ## v0.2.0 (2015-03-09)
 
 ### Enhancements
