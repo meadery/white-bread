@@ -34,8 +34,9 @@ defmodule WhiteBread.FinalResultPrinter do
     "  - #{failing_scenario.name} --> #{reason}"
   end
 
-  defp failure_reason_text({:missing_step, %{text: step_text}, _error}) do
-    "undefined step: #{step_text}"
+  defp failure_reason_text({:missing_step, %{text: step_text} = step, _error}) do
+    code_to_implement = WhiteBread.CodeGenerator.Step.regex_code_for_step(step)
+    "undefined step: #{step_text} implement with\n\n" <> code_to_implement
   end
   defp failure_reason_text({:no_clause_match, %{text: step_text}, _error}) do
     "unable to match clauses: #{step_text}"
