@@ -13,3 +13,4 @@ script:
 - mix do compile, deps.get
 - MIX_ENV=test mix do test
 - MIX_ENV=test mix whiteBread.run
+- MIX_ENV=test mix whiteBread.run --tags songs
