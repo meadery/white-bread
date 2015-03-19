@@ -4,7 +4,7 @@ defmodule WhiteBread.Context.StepExecutor do
     try do
       if (Dict.has_key?(string_steps, step_text)) do
         function = Dict.fetch!(string_steps, step_text)
-        apply(function, [state])
+        apply(function, [state, []])
       else
         regex_steps |> apply_regex_function(step_text, state)
       end
@@ -17,14 +17,12 @@ defmodule WhiteBread.Context.StepExecutor do
 
   defp apply_regex_function(regex_steps, step_text, state) do
     {regex, function} = regex_steps |> find_regex_and_function(step_text)
-    args = unless Regex.names(regex) == [] do
-      captures = WhiteBread.RegexExtension.atom_keyed_named_captures(regex, step_text)
-
-      [state, captures]
+    extra = unless Regex.names(regex) == [] do
+      WhiteBread.RegexExtension.atom_keyed_named_captures(regex, step_text)
     else
-      [state]
+      []
     end
-    apply(function, args)
+    apply(function, [state, extra])
   end
 
   defp find_regex_and_function(regex_steps, string) do
