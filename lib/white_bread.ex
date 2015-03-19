@@ -46,7 +46,7 @@ defmodule WhiteBread do
   end
 
   defp get_feature_runner(context, output) do
-    fn(feature) -> {feature, WhiteBread.FeatureRunner.run(feature, context, output)} end
+    fn(feature) -> {feature, WhiteBread.Runners.FeatureRunner.run(feature, context, output)} end
   end
 
   defp feature_success?({_feature, %{failures: failures}}) do

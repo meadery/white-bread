@@ -1,4 +1,4 @@
-defmodule WhiteBread.FeatureRunnerTest do
+defmodule WhiteBread.Runners.FeatureRunnerTest do
   use ExUnit.Case
   alias WhiteBread.Gherkin.Elements.Steps, as: Steps
   alias WhiteBread.Gherkin.Elements.Feature, as: Feature
@@ -15,7 +15,7 @@ defmodule WhiteBread.FeatureRunnerTest do
     feature = %Feature{name: "test feature", scenarios: [scenario]}
 
     output = WhiteBread.Outputers.Console.start
-    result = WhiteBread.FeatureRunner.run(feature, ExampleContext, output)
+    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output)
     output |> WhiteBread.Outputers.Console.stop
 
     assert result == %{
@@ -41,7 +41,7 @@ defmodule WhiteBread.FeatureRunnerTest do
     feature = %Feature{name: "test feature", scenarios: [scenario, failing_scenario]}
 
     output = WhiteBread.Outputers.Console.start
-    result = WhiteBread.FeatureRunner.run(feature, ExampleContext, output)
+    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output)
     output |> WhiteBread.Outputers.Console.stop
 
     %{
@@ -63,7 +63,7 @@ defmodule WhiteBread.FeatureRunnerTest do
     feature = %Feature{name: "test feature", scenarios: [scenario], background_steps: background_steps}
 
     output = WhiteBread.Outputers.Console.start
-    result = WhiteBread.FeatureRunner.run(feature, ExampleContext, output)
+    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output)
     output |> WhiteBread.Outputers.Console.stop
 
     assert result == %{

@@ -1,4 +1,4 @@
-defmodule WhiteBread.ScenarioRunnerTest do
+defmodule WhiteBread.Runners.ScenarioRunnerTest do
   use ExUnit.Case
   alias WhiteBread.Gherkin.Elements.Steps, as: Steps
   alias WhiteBread.ScenarioRunnerTest.ExampleContext, as: ExampleContext
@@ -8,7 +8,7 @@ defmodule WhiteBread.ScenarioRunnerTest do
       %Steps.When{text: "step one"}
     ]
     scenario = %{name: "test scenario", steps: steps}
-    assert {:ok, "test scenario"} == ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    assert {:ok, "test scenario"} == ExampleContext |> WhiteBread.Runners.ScenarioRunner.run(scenario)
   end
 
   test "Each step passes the updated state to the next" do
@@ -17,7 +17,7 @@ defmodule WhiteBread.ScenarioRunnerTest do
       %Steps.When{text: "step two"}
     ]
     scenario = %{name: "test scenario", steps: steps}
-    assert {:ok, "test scenario"} == ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    assert {:ok, "test scenario"} == ExampleContext |> WhiteBread.Runners.ScenarioRunner.run(scenario)
   end
 
   test "Runs all backround steps first" do
@@ -28,7 +28,7 @@ defmodule WhiteBread.ScenarioRunnerTest do
       %Steps.When{text: "step two"}
     ]
     scenario = %{name: "test scenario", steps: steps}
-    assert {:ok, "test scenario"} == ExampleContext |> WhiteBread.ScenarioRunner.run(scenario, background_steps: background_steps)
+    assert {:ok, "test scenario"} == ExampleContext |> WhiteBread.Runners.ScenarioRunner.run(scenario, background_steps: background_steps)
   end
 
   test "Fails if the last step is missing" do
@@ -39,7 +39,7 @@ defmodule WhiteBread.ScenarioRunnerTest do
       missing_step
     ]
     scenario = %{name: "test scenario", steps: steps}
-    {result, {reason, ^missing_step, _}} = ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    {result, {reason, ^missing_step, _}} = ExampleContext |> WhiteBread.Runners.ScenarioRunner.run(scenario)
     assert result == :failed
     assert reason == :missing_step
   end
@@ -52,7 +52,7 @@ defmodule WhiteBread.ScenarioRunnerTest do
       %Steps.When{text: "step two"}
     ]
     scenario = %{name: "test scenario", steps: steps}
-    {result, {reason, ^missing_step, _}} = ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    {result, {reason, ^missing_step, _}} = ExampleContext |> WhiteBread.Runners.ScenarioRunner.run(scenario)
     assert result == :failed
     assert reason == :missing_step
   end
@@ -64,7 +64,7 @@ defmodule WhiteBread.ScenarioRunnerTest do
       step_two
     ]
     scenario = %{name: "test scenario", steps: steps}
-    {result, {reason, ^step_two, _}} = ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    {result, {reason, ^step_two, _}} = ExampleContext |> WhiteBread.Runners.ScenarioRunner.run(scenario)
     assert result == :failed
     assert reason == :no_clause_match
   end
@@ -76,7 +76,7 @@ defmodule WhiteBread.ScenarioRunnerTest do
       %Steps.When{text: "step two"}
     ]
     scenario = %{name: "test scenario", steps: steps}
-    {result, {:assertion_failure, _, _failure}} = ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    {result, {:assertion_failure, _, _failure}} = ExampleContext |> WhiteBread.Runners.ScenarioRunner.run(scenario)
     assert result == :failed
   end
 
@@ -90,7 +90,7 @@ defmodule WhiteBread.ScenarioRunnerTest do
     ]
     scenario = %{name: "test scenario", steps: steps}
 
-    assert {:failed, expected_step_result} == ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    assert {:failed, expected_step_result} == ExampleContext |> WhiteBread.Runners.ScenarioRunner.run(scenario)
   end
 
   test "Contexts can start with a custom state provied by starting_state method" do
@@ -99,7 +99,7 @@ defmodule WhiteBread.ScenarioRunnerTest do
     ]
     scenario = %{name: "test scenario", steps: steps}
 
-    {result, _} = ExampleContext |> WhiteBread.ScenarioRunner.run(scenario)
+    {result, _} = ExampleContext |> WhiteBread.Runners.ScenarioRunner.run(scenario)
     assert result == :ok
   end
 

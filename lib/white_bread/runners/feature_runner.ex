@@ -1,4 +1,4 @@
-defmodule WhiteBread.FeatureRunner do
+defmodule WhiteBread.Runners.FeatureRunner do
 
   def run(%{scenarios: scenarios, background_steps: background_steps} = feature, context, output_pid) do
     results = scenarios
@@ -16,7 +16,7 @@ defmodule WhiteBread.FeatureRunner do
   end
 
   defp build_scenario_runner(context, background_steps) do
-    fn(scenario) -> {scenario, WhiteBread.ScenarioRunner.run(context, scenario, background_steps: background_steps)} end
+    fn(scenario) -> {scenario, WhiteBread.Runners.ScenarioRunner.run(context, scenario, background_steps: background_steps)} end
   end
 
   defp output_results(results, feature, output_pid) do
