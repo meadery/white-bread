@@ -17,11 +17,7 @@ defmodule WhiteBread.Context.StepExecutor do
 
   defp apply_regex_function(regex_steps, step_text, state) do
     {regex, function} = regex_steps |> find_regex_and_function(step_text)
-    extra = unless Regex.names(regex) == [] do
-      WhiteBread.RegexExtension.atom_keyed_named_captures(regex, step_text)
-    else
-      []
-    end
+    extra = WhiteBread.RegexExtension.atom_keyed_named_captures(regex, step_text)
     apply(function, [state, extra])
   end
 
