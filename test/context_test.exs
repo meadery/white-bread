@@ -51,6 +51,13 @@ defmodule WhiteBread.ContextTest do
     assert failure == :no_clause_match
   end
 
+  test "A step gets table_data passed as an option if available" do
+    table_data = [["Hello", "World"]]
+    step = %Steps.When{text: "I'm given the table:", table_data: table_data}
+    {:ok, returned_table_data} = ExampleContext.execute_step(step, :whatever)
+    assert table_data == returned_table_data
+  end
+
 end
 
 defmodule WhiteBread.ContextTest.ExampleContext do
@@ -76,8 +83,12 @@ defmodule WhiteBread.ContextTest.ExampleContext do
     {:ok, :new_state}
   end
 
-  then_ ~r/my new state should be (?<new_state>[A-Za-z]+)/, fn _state, new_state: new_state ->
+  then_ ~r/my new state should be (?<new_state>[A-Za-z]+)/, fn _state, %{new_state: new_state} ->
     {:ok, new_state}
+  end
+
+  when_ ~r/I'm given the table:/, fn _state, %{table_data: table_data} ->
+    {:ok, table_data}
   end
 
   then_ "I will always fail" do

@@ -86,9 +86,9 @@ defmodule WhiteBread.Context do
     quote do
       @regex_steps [{unquote(step_regex), &__MODULE__.unquote(function_name)/2} | @regex_steps]
       def unquote(function_name)(state, extra \\ []) do
-        case is_function(unquote(function), 2) do
-          true  -> unquote(function).(state, extra)
-          false -> unquote(function).(state)
+        case is_function(unquote(function), 1) do
+          true  -> unquote(function).(state)
+          false -> apply(unquote(function), [state, extra])
         end
       end
     end
@@ -99,9 +99,9 @@ defmodule WhiteBread.Context do
     quote do
       @string_steps Dict.put(@string_steps, unquote(step_text), &__MODULE__.unquote(function_name)/2)
       def unquote(function_name)(state, extra \\ []) do
-        case is_function(unquote(function), 2) do
-          true  -> unquote(function).(state, extra)
-          false -> unquote(function).(state)
+        case is_function(unquote(function), 1) do
+          true  -> unquote(function).(state)
+          false -> apply(unquote(function), [state, extra])
         end
       end
     end

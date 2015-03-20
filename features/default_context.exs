@@ -5,11 +5,11 @@ defmodule WhiteBread.Example.DefaultContext do
     %{starting_state_loaded: :yes}
   end
 
-  given_ ~r/^there are (?<coffees>[0-9]+) coffees left in the machine$/, fn state, coffees: coffees ->
+  given_ ~r/^there are (?<coffees>[0-9]+) coffees left in the machine$/, fn state, %{coffees: coffees} ->
     {:ok, state |> Dict.put(:coffees, coffees)}
   end
 
-  given_ ~r/^I have deposited £(?<pounds>[0-9]+)$/, fn state, pounds: pounds ->
+  given_ ~r/^I have deposited £(?<pounds>[0-9]+)$/, fn state, %{pounds: pounds} ->
     {:ok, state |> Dict.put(:pounds, pounds)}
   end
 

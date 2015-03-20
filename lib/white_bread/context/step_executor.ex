@@ -4,9 +4,9 @@ defmodule WhiteBread.Context.StepExecutor do
     try do
       if (Dict.has_key?(string_steps, step_text)) do
         function = Dict.fetch!(string_steps, step_text)
-        apply(function, [state, []])
+        apply(function, [state, {:table_data, step.table_data}])
       else
-        regex_steps |> apply_regex_function(step_text, state)
+        regex_steps |> apply_regex_function(step, state)
       end
     rescue
       assertion_error in ExUnit.AssertionError       -> {:assertion_failure, step, assertion_error}
@@ -15,9 +15,12 @@ defmodule WhiteBread.Context.StepExecutor do
     end
   end
 
-  defp apply_regex_function(regex_steps, step_text, state) do
+  defp apply_regex_function(regex_steps, %{text: step_text, table_data: table_data}, state) do
     {regex, function} = regex_steps |> find_regex_and_function(step_text)
-    extra = WhiteBread.RegexExtension.atom_keyed_named_captures(regex, step_text)
+    key_matches = WhiteBread.RegexExtension.atom_keyed_named_captures(regex, step_text)
+
+    extra = Map.new |> Dict.merge(key_matches)
+    |> Dict.put(:table_data, table_data)
     apply(function, [state, extra])
   end
 
