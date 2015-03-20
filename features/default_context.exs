@@ -50,4 +50,22 @@ defmodule WhiteBread.Example.DefaultContext do
     {:ok, :singing}
   end
 
+  given_ ~r/^the following table:$/,
+  &WhiteBread.Example.DefaultContext.TableStuff.load_table/2
+
+  then_ ~r/^everything should be okay.$/,
+  &WhiteBread.Example.DefaultContext.TableStuff.all_okay_with_table/1
+
+end
+
+defmodule WhiteBread.Example.DefaultContext.TableStuff do
+
+  def load_table(state, %{table_data: table_data}) do
+    [[first_god | _ravens], [second_god | _goats] | _extra_rows] = table_data
+    {:ok, {first_god, second_god}}
+  end
+
+  def all_okay_with_table({"Odin", "Thor"} = state) do
+    {:ok, state}
+  end
 end
