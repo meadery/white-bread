@@ -8,7 +8,7 @@ defmodule WhiteBread.CodeGenerator.Step do
 
   @named_group_regex_step_template """
   {{step}}_ ~r/^{{text}}$/,
-  fn state, {{groups}} ->
+  fn state, %{{{groups}}} ->
     {:ok, state}
   end
   """

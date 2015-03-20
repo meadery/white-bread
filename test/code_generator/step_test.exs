@@ -37,7 +37,7 @@ defmodule WhiteBread.CodeGenerator.StepTest do
     step = %Steps.When{text: "I ask to be \"defined\""}
     expected_code = """
     when_ ~r/^I ask to be "(?<argument_one>[^"]+)"$/,
-    fn state, argument_one: _argument_one ->
+    fn state, %{argument_one: _argument_one} ->
       {:ok, state}
     end
     """
