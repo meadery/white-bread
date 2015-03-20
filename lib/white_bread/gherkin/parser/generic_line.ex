@@ -36,6 +36,17 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
     {%{feature | scenarios: [new_scenario | previous_scenarios]}, :scenario_steps}
   end
 
+  # Tables as part of a step
+  def process_line("|" <> line, {feature = %{scenarios: [scenario | rest]}, :scenario_steps}) do
+    log line
+
+    table_row = line |> String.split("|", trim: true)
+    |> Enum.map(&String.strip/1)
+
+    updated_scenario = scenario |> StepsParser.add_table_row_to_last_step(table_row)
+    {%{feature | scenarios: [updated_scenario | rest]}, :scenario_steps}
+  end
+
   def process_line(line, {feature = %{description: current_description}, :feature_description}) do
     log line
     {%{feature | description: current_description <> line <> "\n"}, :feature_description}

@@ -5,11 +5,11 @@ defmodule WhiteBread.Gherkin do
     defmodule Scenario, do: defstruct name: "", tags: [], steps: []
 
     defmodule Steps do
-      defmodule Given, do: defstruct text: ""
-      defmodule When, do: defstruct text: ""
-      defmodule Then, do: defstruct text: ""
-      defmodule And, do: defstruct text: ""
-      defmodule But, do: defstruct text: ""
+      defmodule Given, do: defstruct text: "", table_data: []
+      defmodule When, do: defstruct text: "", table_data: []
+      defmodule Then, do: defstruct text: "", table_data: []
+      defmodule And, do: defstruct text: "", table_data: []
+      defmodule But, do: defstruct text: "", table_data: []
     end
 
   end

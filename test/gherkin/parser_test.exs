@@ -50,6 +50,17 @@ defmodule WhiteBread.Gherkin.ParserTest do
     Given there are 1 coffees left in the machine
   """
 
+  @feature_with_step_with_table """
+  Feature: Have tables
+    Sometimes data is a table
+
+    Scenario: I have a step with a table
+      Given the following table
+      | Column one | Column two |
+      | Hello      | World      |
+      Then everything should be okay
+  """
+
   test "Parses the feature name" do
     %{name: name} = parse_feature(@feature_text)
     assert name == "Serve coffee"
@@ -97,6 +108,19 @@ defmodule WhiteBread.Gherkin.ParserTest do
     ]
     %{background_steps: background_steps} = parse_feature(@feature_with_backgroundtext)
     assert expected_steps == background_steps
+  end
+
+  test "Reads a table in to the correct step" do
+    exptected_table_data = [
+      ["Column one", "Column two"],
+      ["Hello", "World"]
+    ]
+    expected_steps = [
+      %Steps.Given{text: "the following table", table_data: exptected_table_data},
+      %Steps.Then{text: "everything should be okay"},
+    ]
+    %{scenarios: [%{steps: steps} | _]} = parse_feature(@feature_with_step_with_table)
+    assert expected_steps == steps
   end
 
 end
