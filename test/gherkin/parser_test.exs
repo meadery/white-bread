@@ -61,6 +61,20 @@ defmodule WhiteBread.Gherkin.ParserTest do
       Then everything should be okay
   """
 
+  @feature_with_scenario_outline """
+  Feature: Scenario outlines exist
+
+    Scenario Outline: eating
+      Given there are <start> cucumbers
+      When I eat <eat> cucumbers
+      Then I should have <left> cucumbers
+
+    Examples:
+      | start | eat | left |
+      |  12   |  5  |  7   |
+      |  20   |  5  |  15  |
+  """
+
   test "Parses the feature name" do
     %{name: name} = parse_feature(@feature_text)
     assert name == "Serve coffee"
@@ -121,6 +135,22 @@ defmodule WhiteBread.Gherkin.ParserTest do
     ]
     %{scenarios: [%{steps: steps} | _]} = parse_feature(@feature_with_step_with_table)
     assert expected_steps == steps
+  end
+
+  test "Reads Scenario outlines correctly" do
+    exptected_example_data = [
+      ["start", "eat", "left"],
+      ["12",    "5",   "7"   ],
+      ["20",    "5",   "15"  ]
+    ]
+    expected_steps = [
+      %Steps.Given{text: "there are <start> cucumbers"},
+      %Steps.When{text: "I eat <eat> cucumbers"},
+      %Steps.Then{text: "I should have <left> cucumbers"}
+    ]
+    %{scenarios: [%{steps: steps, examples: examples} | _]} = parse_feature(@feature_with_scenario_outline)
+    assert steps == expected_steps
+    assert examples == exptected_example_data
   end
 
 end

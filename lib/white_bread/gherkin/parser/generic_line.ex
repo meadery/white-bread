@@ -2,6 +2,7 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
   require Logger
   alias WhiteBread.Gherkin.Parser.Steps, as: StepsParser
   alias WhiteBread.Gherkin.Elements.Scenario, as: Scenario
+  alias WhiteBread.Gherkin.Elements.ScenarioOutline, as: ScenarioOutline
 
   import String, only: [rstrip: 1, rstrip: 2, lstrip: 1]
 
@@ -29,6 +30,11 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
     {feature, :background_steps}
   end
 
+  def process_line("Examples:" <> _ = line, {feature, _} ) do
+    log line
+    {feature, :scenario_outline_example}
+  end
+
   def process_line("Scenario: " <> name = line, {feature = %{scenarios: previous_scenarios}, parser_state}) do
     log line
     scenario_tags = tags_from_state(parser_state)
@@ -36,15 +42,31 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
     {%{feature | scenarios: [new_scenario | previous_scenarios]}, :scenario_steps}
   end
 
+  def process_line("Scenario Outline: " <> name = line, {feature = %{scenarios: previous_scenarios}, parser_state}) do
+    log line
+    scenario_tags = tags_from_state(parser_state)
+    new_scenario_outline = %ScenarioOutline{name: name, tags: scenario_tags}
+    {%{feature | scenarios: [new_scenario_outline | previous_scenarios]}, :scenario_steps}
+  end
+
   # Tables as part of a step
   def process_line("|" <> line, {feature = %{scenarios: [scenario | rest]}, :scenario_steps}) do
     log line
 
-    table_row = line |> String.split("|", trim: true)
-    |> Enum.map(&String.strip/1)
+    table_row = table_line_to_columns(line)
 
     updated_scenario = scenario |> StepsParser.add_table_row_to_last_step(table_row)
     {%{feature | scenarios: [updated_scenario | rest]}, :scenario_steps}
+  end
+
+  # Tables as part of an example for a scenario
+  def process_line("|" <> line, {feature = %{scenarios: [scenario_outline | rest]}, :scenario_outline_example}) do
+    log line
+
+    table_row = table_line_to_columns(line)
+    update_examples = scenario_outline.examples ++ [table_row]
+    updated_scenario_outline = %{scenario_outline | examples: update_examples}
+    {%{feature | scenarios: [updated_scenario_outline | rest]}, :scenario_outline_example}
   end
 
   def process_line(line, {feature = %{description: current_description}, :feature_description}) do
@@ -78,6 +100,12 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
       %{tags: tags} -> tags
       _             -> []
     end
+  end
+
+  defp table_line_to_columns(line) do
+    line
+    |> String.split("|", trim: true)
+    |> Enum.map(&String.strip/1)
   end
 
 end
