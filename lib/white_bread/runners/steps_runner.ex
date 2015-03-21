@@ -1,5 +1,5 @@
 defimpl WhiteBread.Runners, for: List do
-  def run(steps, context) do
+  def run(steps, context, background_steps) do
     starting_state = context |> get_starting_state
 
     reduction = fn
@@ -8,7 +8,7 @@ defimpl WhiteBread.Runners, for: List do
       (_step, bad_state)                              -> bad_state
     end
 
-    result = steps |> Enum.reduce({:ok, starting_state}, reduction)
+    result = (background_steps ++ steps) |> Enum.reduce({:ok, starting_state}, reduction)
   end
 
   defp run_step(context, step, state) do

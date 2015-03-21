@@ -2,9 +2,7 @@ defmodule WhiteBread.Runners.FeatureRunner do
 
   def run(%{scenarios: scenarios, background_steps: background_steps} = feature, context, output_pid) do
     results = scenarios
-    |> add_background_to_all_scenarios(background_steps)
-    |> run_all_scenarios_for_context(context)
-    |> remove_background_from_scenarios
+    |> run_all_scenarios_for_context(context, background_steps)
     |> output_results(feature, output_pid)
 
     %{
@@ -13,20 +11,9 @@ defmodule WhiteBread.Runners.FeatureRunner do
     }
   end
 
-  defp add_background_to_all_scenarios(scenarios, background_steps) do
-    scenarios |> Stream.map(
-      fn(scenario) -> %WhiteBread.ScenarioAndBackground{scenario: scenario, background_steps: background_steps} end
-    )
-  end
-
-  defp run_all_scenarios_for_context(scenarios, context) do
+  defp run_all_scenarios_for_context(scenarios, context, background_steps) do
     scenarios
-    |> Stream.map(fn(scenario_and_background) -> {scenario_and_background, WhiteBread.Runners.run(scenario_and_background, context)} end)
-  end
-
-  defp remove_background_from_scenarios(scenarios) do
-    scenarios
-    |> Stream.map(fn({scenario_and_background, result}) -> {scenario_and_background.scenario, result} end)
+    |> Stream.map(fn(scenario) -> {scenario, WhiteBread.Runners.run(scenario, context, background_steps)} end)
   end
 
   defp output_results(results, feature, output_pid) do

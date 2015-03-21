@@ -31,8 +31,7 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
 
-    with_background = %ScenarioAndBackground{scenario: scenario, background_steps: background_steps}
-    assert {:ok, "test scenario"} == with_background |> WhiteBread.Runners.run(ExampleContext)
+    assert {:ok, "test scenario"} == scenario |> WhiteBread.Runners.run(ExampleContext, background_steps)
   end
 
   test "Fails if the last step is missing" do
