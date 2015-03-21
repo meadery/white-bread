@@ -2,7 +2,6 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
   use ExUnit.Case
   alias WhiteBread.Gherkin.Elements.Steps, as: Steps
   alias WhiteBread.Gherkin.Elements.Scenario, as: Scenario
-  alias WhiteBread.ScenarioAndBackground, as: ScenarioAndBackground
   alias WhiteBread.ScenarioRunnerTest.ExampleContext, as: ExampleContext
 
   test "Returns okay if all the steps pass" do

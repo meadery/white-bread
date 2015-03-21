@@ -56,6 +56,23 @@ defmodule WhiteBread.Example.DefaultContext do
   then_ ~r/^everything should be okay.$/,
   &WhiteBread.Example.DefaultContext.TableStuff.all_okay_with_table/1
 
+  given_ ~r/^I am Odin$/, fn state ->
+    {:ok, :when_odin}
+  end
+
+  given_ ~r/^I am Thor$/, fn state ->
+    {:ok, :when_thor}
+  end
+
+  then_ ~r/^I should have Huginn and Muninn$/, fn :when_odin ->
+    {:ok, :when_odin}
+  end
+
+  then_ ~r/^I should have Tanngrisnir and Tanngnjóstr$/, fn :when_thor ->
+    {:ok, :when_thor}
+  end
+
+
 end
 
 defmodule WhiteBread.Example.DefaultContext.TableStuff do

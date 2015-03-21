@@ -64,7 +64,7 @@ Then run:
 - [x] Step definitions: '''given''', '''when''', '''then''', '''and''' and '''but'''
 - [x] Feature backgound steps
 - [x] Scenerios
-- [ ] Scenario outlines
+- [x] Scenario outlines
 - [x] Tags (only partial as runner doesn't filter based on them)
 
 
