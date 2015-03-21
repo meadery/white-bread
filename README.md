@@ -65,8 +65,7 @@ Then run:
 - [x] Feature backgound steps
 - [x] Scenerios
 - [x] Scenario outlines
-- [x] Tags (only partial as runner doesn't filter based on them)
-
+- [x] Tags
 
 # Contribute
 Contributions more than welcome but please raise an issue first to discuss any large changes.
