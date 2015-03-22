@@ -31,16 +31,12 @@ defmodule WhiteBread.Context do
       end
 
       def get_string_steps do
-        @sub_context_modules
-        |> Enum.map(fn(sub_module) -> apply(sub_module, :get_string_steps, []) end)
-        |> Enum.flat_map(fn(x) -> x end)
+        get_from_submodule_function(:get_string_steps)
         |> Enum.into(@string_steps)
       end
 
       def get_regex_steps do
-        @sub_context_modules
-        |> Enum.map(fn(sub_module) -> apply(sub_module, :get_regex_steps, []) end)
-        |> Enum.flat_map(fn(x) -> x end)
+        get_from_submodule_function(:get_regex_steps)
         |> Enum.into(@regex_steps)
       end
 
@@ -49,6 +45,12 @@ defmodule WhiteBread.Context do
         def starting_state do
           %{}
         end
+      end
+
+      defp get_from_submodule_function(function) do
+        @sub_context_modules
+        |> Enum.map(fn(sub_module) -> apply(sub_module, function, []) end)
+        |> Enum.flat_map(fn(x) -> x end)
       end
 
     end
