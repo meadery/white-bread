@@ -3,12 +3,11 @@ WhiteBread
 [![Build Status](https://travis-ci.org/meadsteve/white-bread.svg?branch=master)](https://travis-ci.org/meadsteve/white-bread)
 
 # What?
-Very alpha Story BDD tool written in and for Elixir.
-Parses Gherkin formatted feature files and executes them as tests.
-Initially started as an experiment. The API will change heavily.
+Story BDD tool written in and for Elixir. Based on [cucumber](https://cukes.info/).
+Parses Gherkin formatted feature files and executes them as acceptance tests.
 
 ## Why the name?
-Gherkin and cucumber made me think of a [cucumber sandwiches](http://en.wikipedia.org/wiki/Cucumber_sandwich).
+Gherkin and cucumber made me think of [cucumber sandwiches](http://en.wikipedia.org/wiki/Cucumber_sandwich).
 Which are traditionally made with very thin white bread.
 
 # Basic usage
