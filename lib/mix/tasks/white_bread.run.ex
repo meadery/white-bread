@@ -2,6 +2,7 @@ defmodule Mix.Tasks.WhiteBread.Run do
   use Mix.Task
 
   @shortdoc "Runs all the feature files with WhiteBread"
+  @default_context "features/default_context.exs"
 
   def run(argv) do
     {options, arguments, _} = OptionParser.parse(argv)
@@ -13,8 +14,16 @@ defmodule Mix.Tasks.WhiteBread.Run do
   end
 
   def load_default_context do
-    [{context_module, _} | _] = Code.load_file("features/default_context.exs")
+    unless File.exists?(@default_context), do: create_default_context
+    [{context_module, _} | _] = Code.load_file(@default_context)
     context_module
+  end
+
+  def create_default_context do
+    context_text = WhiteBread.CodeGenerator.Context.empty_context
+    IO.puts "Default context module not found in #{@default_context}. Create one [Y/n]?"
+    acceptance = IO.read(:stdio, :line)
+    unless acceptance == "n" <> "\n", do: File.write(@default_context, context_text)
   end
 
   def context_from_string(context_name) do
