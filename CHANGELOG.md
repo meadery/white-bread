@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.5.0 (2015-03-22)
+
+### Enhancements
+* Added stack trace to function clause match errors
+
+### Bug fixes
+no significant fixes
+
+### Backwards incompatible changes
+* error returned for :no_clause_match is now a tuple like {FunctionMatchError, Trace}
+
 ## v0.4.0 (2015-03-21)
 
 ### Enhancements
