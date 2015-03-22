@@ -13,6 +13,8 @@ defmodule WhiteBread.Context do
       # List of tuples {regex, function}
       @regex_steps []
 
+      @sub_context_modules []
+
       @initital_state_definied false
 
       @before_compile WhiteBread.Context
@@ -21,10 +23,25 @@ defmodule WhiteBread.Context do
 
   @doc false
   defmacro __before_compile__(_env) do
+
     quote do
       def execute_step(step, state) do
-        {@string_steps, @regex_steps}
+        {get_string_steps, get_regex_steps}
         |> WhiteBread.Context.StepExecutor.execute_step(step, state)
+      end
+
+      def get_string_steps do
+        @sub_context_modules
+        |> Enum.map(fn(sub_module) -> apply(sub_module, :get_string_steps, []) end)
+        |> Enum.flat_map(fn(x) -> x end)
+        |> Enum.into(@string_steps)
+      end
+
+      def get_regex_steps do
+        @sub_context_modules
+        |> Enum.map(fn(sub_module) -> apply(sub_module, :get_regex_steps, []) end)
+        |> Enum.flat_map(fn(x) -> x end)
+        |> Enum.into(@regex_steps)
       end
 
       if !@initital_state_definied do
@@ -54,6 +71,12 @@ defmodule WhiteBread.Context do
       def starting_state() do
         unquote(block)
       end
+    end
+  end
+
+  defmacro subcontext(context_module) do
+    quote do
+      @sub_context_modules [unquote(context_module) | @sub_context_modules]
     end
   end
 

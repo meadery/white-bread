@@ -1,9 +1,18 @@
 defmodule WhiteBread.Example.DefaultContext do
   use WhiteBread.Context
 
+  subcontext WhiteBread.Example.CoffeeContext
+  subcontext WhiteBread.Example.SongContext
+  subcontext WhiteBread.Example.TableContext
+
   initial_state do
     %{starting_state_loaded: :yes}
   end
+
+end
+
+defmodule WhiteBread.Example.CoffeeContext do
+  use WhiteBread.Context
 
   given_ ~r/^there are (?<coffees>[0-9]+) coffees left in the machine$/, fn state, %{coffees: coffees} ->
     {:ok, state |> Dict.put(:coffees, coffees)}
@@ -30,6 +39,11 @@ defmodule WhiteBread.Example.DefaultContext do
     {:ok, :whatever}
   end
 
+end
+
+defmodule WhiteBread.Example.SongContext do
+  use WhiteBread.Context
+
   given_ "I want more", fn %{starting_state_loaded: :yes} ->
     {:ok, :want_more}
   end
@@ -49,6 +63,11 @@ defmodule WhiteBread.Example.DefaultContext do
   then_ "I would sing", fn "have a voice" ->
     {:ok, :singing}
   end
+
+end
+
+defmodule WhiteBread.Example.TableContext do
+  use WhiteBread.Context
 
   given_ ~r/^the following table:$/,
   &WhiteBread.Example.DefaultContext.TableStuff.load_table/2
@@ -71,7 +90,6 @@ defmodule WhiteBread.Example.DefaultContext do
   then_ ~r/^I should have Tanngrisnir and Tanngnjóstr$/, fn :when_thor ->
     {:ok, :when_thor}
   end
-
 
 end
 
