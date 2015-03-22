@@ -67,5 +67,13 @@ Then run:
 - [x] Scenario outlines
 - [x] Tags
 
+# Public interface and BC breaks
+The public interface of this library covers:
+* The exported mix command: ```mix white_bread.run```
+* The ```WhiteBread``` and ```WhiteBread.Helpers``` modules.
+* The macros exported by the ```WhiteBread.Context``` module.
+* The structures defined in ```WhiteBread.Gherkin```.
+Any changes outside of this will not be considered a BC break.
+
 # Contribute
 Contributions more than welcome but please raise an issue first to discuss any large changes.

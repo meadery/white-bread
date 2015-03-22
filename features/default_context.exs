@@ -76,9 +76,12 @@ defmodule WhiteBread.Example.DefaultContext do
 end
 
 defmodule WhiteBread.Example.DefaultContext.TableStuff do
+  import WhiteBread.Helpers
 
-  def load_table(state, %{table_data: table_data}) do
-    [[first_god | _ravens], [second_god | _goats] | _extra_rows] = table_data
+  def load_table(_state, %{table_data: raw_table_data}) do
+    table_data = raw_table_data |> index_table_by_first_row
+
+    [%{'Person': first_god}, %{'Person': second_god} | _extra_rows] = table_data
     {:ok, {first_god, second_god}}
   end
 

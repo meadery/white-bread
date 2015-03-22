@@ -3,8 +3,9 @@ Feature: Tables for steps are a thing
 
     Scenario: Table with step
       Given the following table:
-      | Odin | Huginn      | Muninn      |
-      | Thor | Tanngrisnir | Tanngnjóstr |
+      | Person | First animal | Second Animal |
+      | Odin   | Huginn       | Muninn        |
+      | Thor   | Tanngrisnir  | Tanngnjóstr   |
       Then everything should be okay.
 
     Scenario Outline: These can run two
