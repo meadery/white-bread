@@ -16,6 +16,7 @@ defmodule WhiteBread.Context do
       @sub_context_modules []
 
       @initital_state_definied false
+      @global_state_definied false
 
       @before_compile WhiteBread.Context
     end
@@ -40,9 +41,16 @@ defmodule WhiteBread.Context do
         |> Enum.into(@regex_steps)
       end
 
+      if !@global_state_definied do
+        def global_state() do
+          # Always default to an empty map
+          %{}
+        end
+      end
+
       if !@initital_state_definied do
-        def starting_state(global_starting_state) do
-          global_starting_state
+        def starting_state(state) do
+          state
         end
       end
 
@@ -66,11 +74,20 @@ defmodule WhiteBread.Context do
     end
   end
 
-  defmacro initial_state(function) do
+  defmacro global_starting_state(function) do
+    quote do
+      @global_state_definied true
+      def global_state() do
+        unquote(function).()
+      end
+    end
+  end
+
+  defmacro scenario_starting_state(function) do
     quote do
       @initital_state_definied true
-      def starting_state(global_starting_state) do
-        unquote(function).(global_starting_state)
+      def starting_state(state) do
+        unquote(function).(state)
       end
     end
   end

@@ -5,8 +5,12 @@ defmodule WhiteBread.Example.DefaultContext do
   subcontext WhiteBread.Example.SongContext
   subcontext WhiteBread.Example.TableContext
 
-  initial_state fn _global_state ->
-    %{starting_state_loaded: :yes}
+  global_starting_state fn  ->
+    %{global_state_loaded: :yes}
+  end
+
+  scenario_starting_state fn global_state ->
+    global_state |> Dict.put(:starting_state_loaded, :yes)
   end
 
 end
@@ -44,7 +48,7 @@ end
 defmodule WhiteBread.Example.SongContext do
   use WhiteBread.Context
 
-  given_ "I want more", fn %{starting_state_loaded: :yes} ->
+  given_ "I want more", fn %{starting_state_loaded: :yes, global_state_loaded: :yes} ->
     {:ok, :want_more}
   end
 

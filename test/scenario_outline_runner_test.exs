@@ -55,7 +55,7 @@ end
 defmodule WhiteBread.ScenarioOutlineRunnerTest.ExampleContext do
   use WhiteBread.Context
 
-  initial_state fn _global_state ->
+  scenario_starting_state fn _global_state ->
     %{starting_state: :yes}
   end
 
