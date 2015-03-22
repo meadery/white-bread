@@ -38,8 +38,9 @@ defmodule WhiteBread.FinalResultPrinter do
     code_to_implement = WhiteBread.CodeGenerator.Step.regex_code_for_step(step)
     "undefined step: #{step_text} implement with\n\n" <> code_to_implement
   end
-  defp failure_reason_text({:no_clause_match, %{text: step_text}, _error}) do
-    "unable to match clauses: #{step_text}"
+  defp failure_reason_text({:no_clause_match, %{text: step_text}, {clause_match_error, stacktrace}}) do
+    trace_message = Exception.format_stacktrace(stacktrace)
+    "unable to match clauses: #{step_text}:\n trace:\n #{trace_message}"
   end
   defp failure_reason_text({:assertion_failure, %{text: step_text}, assertion_failure}) do
     %{message: assestion_message} = assertion_failure

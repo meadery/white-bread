@@ -11,7 +11,7 @@ defmodule WhiteBread.Context.StepExecutor do
     rescue
       assertion_error in ExUnit.AssertionError       -> {:assertion_failure, step, assertion_error}
       missing_step in WhiteBread.Context.MissingStep -> {:missing_step, step, missing_step}
-      clause_match_error in FunctionClauseError      -> {:no_clause_match, step, clause_match_error}
+      clause_match_error in FunctionClauseError      -> {:no_clause_match, step, {clause_match_error, System.stacktrace}}
     end
   end
 
