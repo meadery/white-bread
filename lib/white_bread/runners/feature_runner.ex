@@ -13,9 +13,9 @@ defmodule WhiteBread.Runners.FeatureRunner do
   end
 
   defp run_all_scenarios_for_context(scenarios, context, background_steps) do
-    global_starting_state = apply(context, :global_state, [])
+    feature_starting_state = apply(context, :feature_state, [])
     scenarios
-    |> Stream.map(fn(scenario) -> {scenario, scenario |> run(context, background_steps, global_starting_state)} end)
+    |> Stream.map(fn(scenario) -> {scenario, scenario |> run(context, background_steps, feature_starting_state)} end)
   end
 
   defp flatten_any_result_lists(results) do
@@ -41,8 +41,8 @@ defmodule WhiteBread.Runners.FeatureRunner do
     success == :failed
   end
 
-  defp run(scenario, context, background_steps, global_starting_state) do
-    scenario |> WhiteBread.Runners.run(context, background_steps, global_starting_state)
+  defp run(scenario, context, background_steps, feature_starting_state) do
+    scenario |> WhiteBread.Runners.run(context, background_steps, feature_starting_state)
   end
 
 end
