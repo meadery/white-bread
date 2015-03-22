@@ -1,9 +1,9 @@
 defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.ScenarioOutline do
-  def run(scenario_outline, context, background_steps) do
+  def run(scenario_outline, context, background_steps, starting_state) do
 
     scenario_outline
     |> build_individual_step_collections
-    |> Enum.map(fn(steps) -> WhiteBread.Runners.run(steps, context, background_steps) end)
+    |> Enum.map(fn(steps) -> WhiteBread.Runners.run(steps, context, background_steps, starting_state) end)
     |> Enum.map(fn
            ({:ok, _last_state}) -> {:ok, scenario_outline.name}
            (error_data)         -> {:failed, error_data}

@@ -110,7 +110,7 @@ end
 defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
   use WhiteBread.Context
 
-  initial_state do
+  initial_state fn _global_state ->
     %{starting_state: :yes}
   end
 

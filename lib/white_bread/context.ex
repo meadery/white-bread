@@ -41,9 +41,8 @@ defmodule WhiteBread.Context do
       end
 
       if !@initital_state_definied do
-        # Default starting state should always be an empty map.
-        def starting_state do
-          %{}
+        def starting_state(global_starting_state) do
+          global_starting_state
         end
       end
 
@@ -67,11 +66,11 @@ defmodule WhiteBread.Context do
     end
   end
 
-  defmacro initial_state(do: block) do
+  defmacro initial_state(function) do
     quote do
       @initital_state_definied true
-      def starting_state() do
-        unquote(block)
+      def starting_state(global_starting_state) do
+        unquote(function).(global_starting_state)
       end
     end
   end

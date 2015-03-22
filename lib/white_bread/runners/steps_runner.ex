@@ -1,6 +1,7 @@
 defimpl WhiteBread.Runners, for: List do
-  def run(steps, context, background_steps) do
-    starting_state = context |> get_starting_state
+  def run(steps, context, background_steps, global_starting_state) do
+
+    starting_state = context |> update_starting_state(global_starting_state)
 
     reduction = fn
       (step, {:ok, state})                            -> run_step(context, step, state)
@@ -15,8 +16,8 @@ defimpl WhiteBread.Runners, for: List do
     apply(context, :execute_step, [step, state])
   end
 
-  defp get_starting_state(context) do
-    apply(context, :starting_state, [])
+  defp update_starting_state(context, global_starting_state) do
+    apply(context, :starting_state, [global_starting_state])
   end
 
 end

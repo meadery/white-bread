@@ -5,7 +5,7 @@ defmodule WhiteBread.Example.DefaultContext do
   subcontext WhiteBread.Example.SongContext
   subcontext WhiteBread.Example.TableContext
 
-  initial_state do
+  initial_state fn _global_state ->
     %{starting_state_loaded: :yes}
   end
 
