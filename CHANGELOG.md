@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.6.0 (2015-03-22)
+
+### Enhancements
+* add subcontext macro to context to help break up big contexts
+
+### Bug fixes
+no significant fixes
+
+### Backwards incompatible changes
+none
+
 ## v0.5.0 (2015-03-22)
 
 ### Enhancements
