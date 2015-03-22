@@ -21,12 +21,13 @@ defmodule WhiteBread.FinalResultPrinterTest do
   end
 
   test "Prints out failures" do
+    trace = System.stacktrace
     result = %{
       failures: [
         {
           %{name: "feature name"},
           %{failures: [
-            {%{name: "failing scenario"}, {:failed, {:no_clause_match, %{text: "failing step"}, %{}}}}
+            {%{name: "failing scenario"}, {:failed, {:no_clause_match, %{text: "failing step"}, {%{}, trace}}}}
           ]}
         }
       ]
@@ -35,7 +36,9 @@ defmodule WhiteBread.FinalResultPrinterTest do
     output = WhiteBread.FinalResultPrinter.text(result)
     assert output == """
     1 scenario failed for feature name
-      - failing scenario --> unable to match clauses: failing step
+      - failing scenario --> unable to match clauses: failing step:
+     trace:
+     #{Exception.format_stacktrace trace}
     """
   end
 
