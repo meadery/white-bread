@@ -101,7 +101,7 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
 
-    {result, error} = scenario |> WhiteBread.Runners.run(ExampleContext)
+    {result, _error} = scenario |> WhiteBread.Runners.run(ExampleContext)
     assert result == :ok
   end
 
@@ -110,7 +110,7 @@ end
 defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
   use WhiteBread.Context
 
-  scenario_starting_state fn global_state ->
+  scenario_starting_state fn _global_state ->
     %{starting_state: :yes}
   end
 
