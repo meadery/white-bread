@@ -85,7 +85,7 @@ defmodule WhiteBread.Context do
 
   defmacro scenario_starting_state(function) do
     quote do
-      @initital_state_definied true
+      @scenario_state_definied true
       def starting_state(state) do
         unquote(function).(state)
       end
