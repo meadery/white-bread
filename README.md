@@ -6,6 +6,9 @@ WhiteBread
 Story BDD tool written in and for Elixir. Based on [cucumber](https://cukes.info/).
 Parses Gherkin formatted feature files and executes them as acceptance tests.
 
+## Is this a testing tool?
+The short answer is no. The medium answer is it's a development tool that should really be used in conjuction with some testing framework. For a longer answer checkout this post by Aslak Hellesøy: [the world's most misunderstood collaboration tool](https://cukes.info/blog/2014/03/03/the-worlds-most-misunderstood-collaboration-tool).
+
 ## Why the name?
 Gherkin and cucumber made me think of [cucumber sandwiches](http://en.wikipedia.org/wiki/Cucumber_sandwich).
 Which are traditionally made with very thin white bread.
