@@ -79,11 +79,11 @@ defmodule WhiteBread.Example.TableContext do
   then_ ~r/^everything should be okay.$/,
   &WhiteBread.Example.DefaultContext.TableStuff.all_okay_with_table/1
 
-  given_ ~r/^I am Odin$/, fn state ->
+  given_ ~r/^I am Odin$/, fn _state ->
     {:ok, :when_odin}
   end
 
-  given_ ~r/^I am Thor$/, fn state ->
+  given_ ~r/^I am Thor$/, fn _state ->
     {:ok, :when_thor}
   end
 
