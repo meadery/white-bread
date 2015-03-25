@@ -1,6 +1,7 @@
 WhiteBread
 ==========
 [![Build Status](https://travis-ci.org/meadsteve/white-bread.svg?branch=master)](https://travis-ci.org/meadsteve/white-bread)
+[![Hex Version](http://img.shields.io/hexpm/v/white_bread.svg?style=flat)](https://hex.pm/packages/white_bread)
 
 # What?
 Story BDD tool written in and for Elixir. Based on [cucumber](https://cukes.info/).
