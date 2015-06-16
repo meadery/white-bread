@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.0.0 (2015-06-16)
+This is the same as version 0.6.0 but pinned to 1.0.0 as the interface of the feature context can now be considered stable. 
+
+### Enhancements
+none
+
+### Bug fixes
+none
+
+### Backwards incompatible changes
+none
+
+
 ## v0.6.0 (2015-03-22)
 
 ### Enhancements
