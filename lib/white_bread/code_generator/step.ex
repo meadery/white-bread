@@ -63,7 +63,7 @@ defmodule WhiteBread.CodeGenerator.Step do
         [before, remaining] ->
           named_groups_for_string %{template: old_template <> before <> "\"(?<" <> argument <> ">[^\"]+)\"", groups: current_groups ++ [argument], unproccessed_string: remaining}
         [string_end] ->
-          named_groups_for_string %{template: old_template <> string_end, groups: current_groups, unproccessed_string: ""}
+          %{template: old_template <> string_end, groups: current_groups}
     end
   end
 
