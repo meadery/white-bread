@@ -52,7 +52,11 @@ defmodule SunDoe.CoffeeShopContext do
 
   then_ "I should be served a coffee", fn state ->
     served_coffees = state |> Dict.get(:coffees_served)
+    
+    # The context automatically imports ExUnit.Assertions
+    # so any usual assertions can be made
     assert served_coffees == 1
+    
     {:ok, :whatever}
   end
 end
