@@ -59,10 +59,12 @@ defmodule WhiteBread.CodeGenerator.Step do
     argument = (Enum.count(current_groups) + 1)
     |> string_for_number
 
-    [before, remaining] = Regex.split(@quoted_string_regex, string, [parts: 2])
-    template = old_template <> before <> "\"(?<" <> argument <> ">[^\"]+)\""
-
-    named_groups_for_string %{template: template, groups: current_groups ++ [argument], unproccessed_string: remaining}
+    case Regex.split(@quoted_string_regex, string, [parts: 2]) do
+        [before, remaining] ->
+          named_groups_for_string %{template: old_template <> before <> "\"(?<" <> argument <> ">[^\"]+)\"", groups: current_groups ++ [argument], unproccessed_string: remaining}
+        [string_end] ->
+          named_groups_for_string %{template: old_template <> string_end, groups: current_groups, unproccessed_string: ""}
+    end
   end
 
   defp string_for_number(number) do

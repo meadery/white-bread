@@ -14,10 +14,10 @@ defmodule WhiteBread.CodeGenerator.StepTest do
   end
 
   test "quoted part of a string is replaced with a named group" do
-    step_string = "I ask to be \"defined\""
+    step_string = "I ask to be \"defined\" thanks"
 
     expected = %{
-      template: "I ask to be \"(?<argument_one>[^\"]+)\"",
+      template: "I ask to be \"(?<argument_one>[^\"]+)\" thanks",
       groups: ["argument_one"]
     }
     assert CodeGenerator.named_groups_for_string(step_string) == expected
