@@ -1,5 +1,6 @@
 defmodule WhiteBread.FinalResultPrinterTest do
   use ExUnit.Case
+  alias WhiteBread.Formatter
 
   test "Knows if nothing was run" do
     result = %{
@@ -22,23 +23,23 @@ defmodule WhiteBread.FinalResultPrinterTest do
 
   test "Prints out failures" do
     trace = System.stacktrace
+    step_failure = {:no_clause_match, %{text: "failing step"}, {%{}, trace}}
     result = %{
       failures: [
         {
           %{name: "feature name"},
           %{failures: [
-            {%{name: "failing scenario"}, {:failed, {:no_clause_match, %{text: "failing step"}, {%{}, trace}}}}
+            {%{name: "failing scenario"}, {:failed, step_failure}}
           ]}
         }
       ]
     }
+    step_fail_text = Formatter.FailedStep.text(step_failure)
 
     output = WhiteBread.FinalResultPrinter.text(result)
     assert output == """
     1 scenario failed for feature name
-      - failing scenario --> unable to match clauses: failing step:
-     trace:
-     #{Exception.format_stacktrace trace}
+      - failing scenario --> #{step_fail_text}
     """
   end
 
