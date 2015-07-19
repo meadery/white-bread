@@ -35,6 +35,9 @@ defmodule WhiteBread.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    []
+    [
+      #{:dogma, "~> 0.0.2"}
+      {:dogma, git: "https://github.com/meadsteve/dogma.git", ref: "9b21429dbced0c2a5254395ee19a0a8c259d1994"}
+    ]
   end
 end
