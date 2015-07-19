@@ -1,8 +1,10 @@
 language: erlang
-elixir:
-  - 1.0.3
 otp_release:
-  - 17.1
+  - 17.5
+  - 18.0
+elixir:
+  - 1.0.4
+  - 1.0.5
 env:
   - MIX_ENV=test
 script:
