@@ -41,14 +41,14 @@ defmodule WhiteBread.Context do
         |> Enum.into(@regex_steps)
       end
 
-      if !@feature_state_definied do
+      unless @feature_state_definied do
         def feature_state() do
           # Always default to an empty map
           %{}
         end
       end
 
-      if !@scenario_state_definied do
+      unless @scenario_state_definied do
         def starting_state(state) do
           state
         end
@@ -102,7 +102,8 @@ defmodule WhiteBread.Context do
   defp define_block_step({:sigil_r, _, _} = step_regex, block) do
     function_name = regex_to_step_atom(step_regex)
     quote do
-      @regex_steps [{unquote(step_regex), &__MODULE__.unquote(function_name)/2} | @regex_steps]
+      @regex_steps [{unquote(step_regex), &__MODULE__.unquote(function_name)/2}
+                    | @regex_steps]
       def unquote(function_name)(state, _extra \\ []) do
         unquote(block)
         {:ok, state}
@@ -113,7 +114,8 @@ defmodule WhiteBread.Context do
   defp define_block_step(step_text, block) do
     function_name = String.to_atom("step_" <> step_text)
     quote do
-      @string_steps Dict.put(@string_steps, unquote(step_text), &__MODULE__.unquote(function_name)/2)
+      @string_steps @string_steps
+        |> Dict.put(unquote(step_text), &__MODULE__.unquote(function_name)/2)
       def unquote(function_name)(state, _extra \\ []) do
         unquote(block)
         {:ok, state}
@@ -125,7 +127,8 @@ defmodule WhiteBread.Context do
   defp define_function_step({:sigil_r, _, _} = step_regex, function) do
     function_name = regex_to_step_atom(step_regex)
     quote do
-      @regex_steps [{unquote(step_regex), &__MODULE__.unquote(function_name)/2} | @regex_steps]
+      @regex_steps [{unquote(step_regex), &__MODULE__.unquote(function_name)/2}
+                    | @regex_steps]
       def unquote(function_name)(state, extra \\ []) do
         case is_function(unquote(function), 1) do
           true  -> unquote(function).(state)
@@ -138,7 +141,8 @@ defmodule WhiteBread.Context do
   defp define_function_step(step_text, function) do
     function_name = String.to_atom("step_" <> step_text)
     quote do
-      @string_steps Dict.put(@string_steps, unquote(step_text), &__MODULE__.unquote(function_name)/2)
+      @string_steps @string_steps
+       |> Dict.put(unquote(step_text), &__MODULE__.unquote(function_name)/2)
       def unquote(function_name)(state, extra \\ []) do
         case is_function(unquote(function), 1) do
           true  -> unquote(function).(state)

@@ -10,8 +10,10 @@ defmodule WhiteBread.Outputers.Console do
 
   defp work do
     continue = receive do
-      {:scenario_result, result, scenario, feature} -> output_scenario_result(result, scenario, feature)
-      {:stop} -> :stop
+      {:scenario_result, result, scenario, feature}
+        -> output_scenario_result(result, scenario, feature)
+      {:stop}
+        -> :stop
     end
     unless continue == :stop, do: work
   end

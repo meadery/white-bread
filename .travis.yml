@@ -6,10 +6,13 @@ otp_release:
 env:
   - MIX_ENV=test
 script:
-  - MIX_ENV=test mix do test
-  - MIX_ENV=test mix whiteBread.run
-  - MIX_ENV=test mix whiteBread.run --tags songs
-  
+  - mix local.hex --force
+  - mix deps.get
+  - mix dogma lib/ --rules Dogma.WhiteBread.Rules
+  - mix test
+  - mix whiteBread.run
+  - mix whiteBread.run --tags songs
+
 notifications:
   webhooks:
     urls:
@@ -17,4 +20,3 @@ notifications:
     on_success: change
     on_failure: always
     on_start: false
-

@@ -13,7 +13,8 @@ defmodule WhiteBread.Tags.FeatureFilterer do
   end
 
   defp remove_scenarios_without_tags(features, tags) do
-    features |> Enum.map(fn(feature) -> filter_features_scenarios(feature, tags) end)
+    features
+      |> Enum.map(fn(feature) -> filter_features_scenarios(feature, tags) end)
   end
 
   defp filter_features_scenarios(feature = %{scenarios: scenarios}, tags) do

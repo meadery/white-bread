@@ -17,9 +17,9 @@ defmodule WhiteBread.CodeGenerator.Step do
 
   def regex_code_for_step(%{text: text, __struct__: struct_type}) do
     step_type = struct_type
-    |> Atom.to_string
-    |> String.replace("Elixir.WhiteBread.Gherkin.Elements.Steps.", "")
-    |> String.downcase
+      |> Atom.to_string
+      |> String.replace("Elixir.WhiteBread.Gherkin.Elements.Steps.", "")
+      |> String.downcase
 
     case @quoted_string_regex |> Regex.match?(text) do
       true  -> regex_code_for_step(:complex, text, step_type)
@@ -30,41 +30,52 @@ defmodule WhiteBread.CodeGenerator.Step do
 
   def regex_code_for_step(:simple, text, step_type) do
     @regex_step_template
-    |> String.replace("{{step}}", step_type)
-    |> String.replace("{{text}}", text)
+      |> String.replace("{{step}}", step_type)
+      |> String.replace("{{text}}", text)
   end
 
   def regex_code_for_step(:complex, text, step_type) do
     %{template: regex, groups: groups} = named_groups_for_string(text)
 
     group_text = groups
-    |> Enum.map(fn(name) -> "#{name}: _#{name}" end)
-    |> Enum.join(",")
+      |> Enum.map(fn(name) -> "#{name}: _#{name}" end)
+      |> Enum.join(",")
 
     @named_group_regex_step_template
-    |> String.replace("{{step}}", step_type)
-    |> String.replace("{{text}}", regex)
-    |> String.replace("{{groups}}", group_text)
+      |> String.replace("{{step}}", step_type)
+      |> String.replace("{{text}}", regex)
+      |> String.replace("{{groups}}", group_text)
   end
 
   def named_groups_for_string(string) when is_binary(string) do
-    named_groups_for_string %{template: "", groups: [], unproccessed_string: string}
+    struct = %{template: "", groups: [], unproccessed_string: string}
+    named_groups_for_string(struct)
   end
 
-  def named_groups_for_string(%{unproccessed_string: "", template: template, groups: groups}) do
-    %{template: template, groups: groups}
+  def named_groups_for_string(%{unproccessed_string: ""} = struct) do
+    %{template: struct.template, groups: struct.groups}
   end
 
-  def named_groups_for_string(%{template: old_template, groups: current_groups, unproccessed_string: string}) do
-    argument = (Enum.count(current_groups) + 1)
-    |> string_for_number
+  def named_groups_for_string(struct) do
+    %{template: template, groups: groups, unproccessed_string: string} = struct
+
+    argument = (Enum.count(groups) + 1)
+      |> string_for_number
 
     case Regex.split(@quoted_string_regex, string, [parts: 2]) do
         [before, remaining] ->
-          named_groups_for_string %{template: old_template <> before <> "\"(?<" <> argument <> ">[^\"]+)\"", groups: current_groups ++ [argument], unproccessed_string: remaining}
+          %{}
+            |> Dict.put(:template, update_template(template, before, argument))
+            |> Dict.put(:groups, groups ++ [argument])
+            |> Dict.put(:unproccessed_string, remaining)
+            |> named_groups_for_string
         [string_end] ->
-          %{template: old_template <> string_end, groups: current_groups}
+          %{template: template <> string_end, groups: groups}
     end
+  end
+
+  defp update_template(old_template, before, argument) do
+    old_template <> before <> ~s/\"(?</ <> argument <> ~s/>[^\"]+)\"/
   end
 
   defp string_for_number(number) do

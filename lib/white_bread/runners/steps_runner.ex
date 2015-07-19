@@ -4,12 +4,16 @@ defimpl WhiteBread.Runners, for: List do
     starting_state = context |> update_starting_state(global_starting_state)
 
     reduction = fn
-      (step, {:ok, state})                            -> run_step(context, step, state)
-      (_step, {fail_reason, failing_step, error})     -> {fail_reason, failing_step, error}
-      (_step, bad_state)                              -> bad_state
+      (step, {:ok, state})
+        -> run_step(context, step, state)
+      (_step, {fail_reason, failing_step, error})
+        -> {fail_reason, failing_step, error}
+      (_step, bad_state)
+        -> bad_state
     end
 
-    result = (background_steps ++ steps) |> Enum.reduce({:ok, starting_state}, reduction)
+    result = (background_steps ++ steps)
+      |> Enum.reduce({:ok, starting_state}, reduction)
   end
 
   defp run_step(context, step, state) do
