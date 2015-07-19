@@ -7,8 +7,10 @@ defmodule Mix.Tasks.WhiteBread.Run do
   def run(argv) do
     {options, arguments, _} = OptionParser.parse(argv)
     case arguments do
-      [context_name | _ ] -> context_from_string(context_name) |> run("features/", options)
-      []                  -> load_default_context |> run("features/", options)
+      [context_name | _ ] ->
+        context_from_string(context_name) |> run("features/", options)
+      [] ->
+        load_default_context |> run("features/", options)
     end
 
   end
@@ -21,9 +23,13 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
   def create_default_context do
     context_text = WhiteBread.CodeGenerator.Context.empty_context
-    IO.puts "Default context module not found in #{@default_context}. Create one [Y/n]?"
+    IO.puts "Default context module not found in #{@default_context}. "
+    IO.puts "Create one [Y/n]? "
     acceptance = IO.read(:stdio, :line)
-    unless acceptance == "n" <> "\n", do: File.write(@default_context, context_text)
+
+    unless acceptance == "n" <> "\n" do
+      File.write(@default_context, context_text)
+    end
   end
 
   def context_from_string(context_name) do
@@ -34,13 +40,13 @@ defmodule Mix.Tasks.WhiteBread.Run do
   def run(context, path, raw_options \\ []) do
 
     options = raw_options
-    |> Keyword.update(:tags, nil, &breakup_tag_string/1)
+      |> Keyword.update(:tags, nil, &breakup_tag_string/1)
 
     result = context |> WhiteBread.run(path, options)
 
     result
-    |> WhiteBread.FinalResultPrinter.text
-    |> IO.puts
+      |> WhiteBread.FinalResultPrinter.text
+      |> IO.puts
 
     %{failures: failures} = result
     System.at_exit fn _ ->

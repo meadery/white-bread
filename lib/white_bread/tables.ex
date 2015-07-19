@@ -14,11 +14,22 @@ defmodule WhiteBread.Tables do
 
   def index_row_with_headings(row, header_row) do
     row
-    |> Stream.with_index
-    |> Stream.map(fn({content, position}) -> {content, Enum.at(header_row, position)} end)
-    |> Stream.map(fn({content, key}) -> {content, String.to_atom(key)} end)
-    |> Enum.reduce(%{}, fn({value, index}, dict) -> dict |> Dict.put(index, value) end)
+      |> Stream.with_index
+      |> Stream.map(fn(row) -> get_header(row, header_row) end)
+      |> Stream.map(&header_atom_to_string/1)
+      |> Enum.reduce(%{}, &build_indexed_row/2)
   end
 
+  defp get_header({content, position}, header_row) do
+    {content, Enum.at(header_row, position)}
+  end
+
+  defp header_atom_to_string({content, header_atom}) do
+    {content, String.to_atom(header_atom)}
+  end
+
+  defp build_indexed_row({value, index}, indexed_row) do
+    indexed_row |> Dict.put(index, value)
+  end
 
 end

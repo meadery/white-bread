@@ -12,16 +12,16 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
     state
   end
 
-  def process_line("@" <> line, {feature, _parser_state}) do
+  def process_line("@" <> line, {feature, _state}) do
     log line
     tags = line
-    |> String.split("@", trim: true)
-    |> Enum.map(&String.strip/1)
+      |> String.split("@", trim: true)
+      |> Enum.map(&String.strip/1)
     {feature, %{tags: tags}}
   end
 
-  def process_line("Feature: " <> name = line, {feature, parser_state}) do
-    feature_tags = tags_from_state(parser_state)
+  def process_line("Feature: " <> name = line, {feature, state}) do
+    feature_tags = tags_from_state(state)
     log line
     {%{feature | name: rstrip(name), tags: feature_tags}, :feature_description}
   end
@@ -36,49 +36,78 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
     {feature, :scenario_outline_example}
   end
 
-  def process_line("Scenario: " <> name = line, {feature = %{scenarios: previous_scenarios}, parser_state}) do
+  def process_line("Scenario: " <> name = line, {feature, state}) do
     log line
-    scenario_tags = tags_from_state(parser_state)
+    previous_scenarios = feature.scenarios
+    scenario_tags = tags_from_state(state)
     new_scenario = %Scenario{name: name, tags: scenario_tags}
-    {%{feature | scenarios: [new_scenario | previous_scenarios]}, :scenario_steps}
+    {
+      %{feature | scenarios: [new_scenario | previous_scenarios]},
+      :scenario_steps
+    }
   end
 
-  def process_line("Scenario Outline: " <> name = line, {feature = %{scenarios: previous_scenarios}, parser_state}) do
+  def process_line("Scenario Outline: " <> name = line, {feature, state}) do
     log line
-    scenario_tags = tags_from_state(parser_state)
+    previous_scenarios = feature.scenarios
+    scenario_tags = tags_from_state(state)
     new_scenario_outline = %ScenarioOutline{name: name, tags: scenario_tags}
-    {%{feature | scenarios: [new_scenario_outline | previous_scenarios]}, :scenario_steps}
+    {
+      %{feature | scenarios: [new_scenario_outline | previous_scenarios]},
+      :scenario_steps
+    }
   end
 
   # Tables as part of a step
-  def process_line("|" <> line, {feature = %{scenarios: [scenario | rest]}, :scenario_steps}) do
+  def process_line("|" <> line, {feature, :scenario_steps}) do
     log line
+    %{scenarios: [scenario | rest]} = feature
     updated_scenario = scenario |> TableParser.add_table_row_to_last_step(line)
-    {%{feature | scenarios: [updated_scenario | rest]}, :scenario_steps}
+    {
+      %{feature | scenarios: [updated_scenario | rest]},
+      :scenario_steps
+    }
   end
 
   # Tables as part of an example for a scenario
-  def process_line("|" <> line, {feature = %{scenarios: [scenario_outline | rest]}, :scenario_outline_example}) do
+  def process_line("|" <> line, {feature, :scenario_outline_example}) do
     log line
-    updated_scenario_outline = scenario_outline |> TableParser.add_table_row_to_example(line)
-    {%{feature | scenarios: [updated_scenario_outline | rest]}, :scenario_outline_example}
+    %{scenarios: [scenario_outline | rest]} = feature
+    updated_scenario_outline = scenario_outline
+      |> TableParser.add_table_row_to_example(line)
+    {
+      %{feature | scenarios: [updated_scenario_outline | rest]},
+      :scenario_outline_example
+    }
   end
 
-  def process_line(line, {feature = %{description: current_description}, :feature_description}) do
+  def process_line(line, {feature, :feature_description}) do
     log line
-    {%{feature | description: current_description <> line <> "\n"}, :feature_description}
+    %{description: current_description} = feature
+    {
+      %{feature | description: current_description <> line <> "\n"},
+      :feature_description
+    }
   end
 
-  def process_line(line, {feature = %{background_steps: current_background_steps}, :background_steps}) do
+  def process_line(line, {feature, :background_steps}) do
     log line
+    %{background_steps: current_background_steps} = feature
     new_step = StepsParser.string_to_step(line)
-    {%{feature | background_steps: current_background_steps ++ [new_step]}, :background_steps}
+    {
+      %{feature | background_steps: current_background_steps ++ [new_step]},
+      :background_steps
+    }
   end
 
-  def process_line(line, {feature = %{scenarios: [scenario | rest]}, :scenario_steps}) do
+  def process_line(line, {feature, :scenario_steps}) do
     log line
+    %{scenarios: [scenario | rest]} = feature
     updated_scenario = StepsParser.add_step_to_scenario(scenario, line)
-    {%{feature | scenarios: [updated_scenario | rest]}, :scenario_steps}
+    {
+      %{feature | scenarios: [updated_scenario | rest]},
+      :scenario_steps
+    }
   end
 
   def process_line(line, state) do
@@ -87,11 +116,11 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
   end
 
   defp log(line) do
-    Logger.debug("Parsing line: \"#{line}\"")
+    Logger.debug(~s(Parsing line: "#{line}"))
   end
 
-  defp tags_from_state(parser_state) do
-    case parser_state do
+  defp tags_from_state(state) do
+    case state do
       %{tags: tags} -> tags
       _             -> []
     end
