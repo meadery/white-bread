@@ -1,6 +1,9 @@
 defmodule WhiteBread.FinalResultPrinterTest do
   use ExUnit.Case
-  alias WhiteBread.Formatter
+
+  defmodule MockStepFailure do
+    def text(_), do: "STEP_FAILURE_TEXT"
+  end
 
   test "Knows if nothing was run" do
     result = %{
@@ -34,12 +37,11 @@ defmodule WhiteBread.FinalResultPrinterTest do
         }
       ]
     }
-    step_fail_text = Formatter.FailedStep.text(step_failure)
 
-    output = WhiteBread.FinalResultPrinter.text(result)
+    output = WhiteBread.FinalResultPrinter.text(result, MockStepFailure)
     assert output == """
     1 scenario failed for feature name
-      - failing scenario --> #{step_fail_text}
+      - failing scenario --> STEP_FAILURE_TEXT
     """
   end
 

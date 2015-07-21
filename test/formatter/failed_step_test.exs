@@ -14,7 +14,7 @@ defmodule WhiteBread.Formatter.FailedStepTest do
   end
 
   test "Prints out regex for a missing step" do
-    step = step = %Steps.When{text: "missing step"}
+    step = %Steps.When{text: "missing step"}
     failure = {:missing_step, step, :unused}
     code_to_implement = CodeGenerator.Step.regex_code_for_step(step)
 

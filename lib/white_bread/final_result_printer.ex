@@ -5,33 +5,38 @@ defmodule WhiteBread.FinalResultPrinter do
     IO.puts result
   end
 
-  def text(%{successes: [], failures: []}) do
+  def text(_, step_helper \\ FailedStep)
+
+  def text(%{successes: [], failures: []}, _step_helper) do
     "Nothing to run."
   end
 
-  def text(%{failures: []}) do
+  def text(%{failures: []}, _step_helper) do
     "All features passed."
   end
 
-  def text(%{failures: failures}) do
+  def text(%{failures: failures}, step_helper) do
     text = failures
-    |> Enum.map(&failing_feature_text/1)
-    |> Enum.join("\n")
+      |> Enum.map(fn(failure) -> failing_feature_text(failure, step_helper) end)
+      |> Enum.join("\n")
     text <> "\n"
   end
 
-  defp failing_feature_text({feature, %{failures: failing_scenarios}}) do
-
+  defp failing_feature_text(failing_feature, step_helper) do
+    {feature, %{failures: failing_scenarios}} = failing_feature
     scenerios_text = failing_scenarios
-    |> Enum.map(&failing_scenerio_text/1)
-    |> Enum.join("\n")
+      |> Enum.map(fn(failing_scenario) ->
+           failing_scenerio_text(failing_scenario, step_helper)
+         end)
+      |> Enum.join("\n")
 
     failing_count = Enum.count(failing_scenarios)
     "#{failing_count} scenario failed for #{feature.name}\n" <> scenerios_text
   end
 
-  defp failing_scenerio_text({failing_scenario, {:failed, failure}}) do
-    reason = FailedStep.text(failure)
+  defp failing_scenerio_text(scenario_faliure, step_helper) do
+    {failing_scenario, {:failed, failure}} = scenario_faliure
+    reason = step_helper.text(failure)
     "  - #{failing_scenario.name} --> #{reason}"
   end
 
