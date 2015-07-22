@@ -14,12 +14,14 @@ defmodule WhiteBread.Runners.FeatureRunner do
   end
 
   defp run_all_scenarios_for_context(scenarios, context, background_steps) do
-    feature_starting_state = apply(context, :feature_state, [])
-    run = fn(scenario) ->
-      result = run(scenario, context, background_steps, feature_starting_state)
-      {scenario, result}
-    end
-    scenarios |> Stream.map(run)
+    starting_state = apply(context, :feature_state, [])
+    scenarios
+      |> Stream.map(&run_scenario(&1,context, background_steps, starting_state))
+  end
+
+  defp run_scenario(scenario,context, background_steps, starting_state) do
+    result = run(scenario, context, background_steps, starting_state)
+    {scenario, result}
   end
 
   defp flatten_any_result_lists(results) do

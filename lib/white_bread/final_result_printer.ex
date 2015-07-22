@@ -17,7 +17,7 @@ defmodule WhiteBread.FinalResultPrinter do
 
   def text(%{failures: failures}, step_helper) do
     text = failures
-      |> Enum.map(fn(failure) -> failing_feature_text(failure, step_helper) end)
+      |> Enum.map(&failing_feature_text(&1, step_helper))
       |> Enum.join("\n")
     text <> "\n"
   end
@@ -25,9 +25,7 @@ defmodule WhiteBread.FinalResultPrinter do
   defp failing_feature_text(failing_feature, step_helper) do
     {feature, %{failures: failing_scenarios}} = failing_feature
     scenerios_text = failing_scenarios
-      |> Enum.map(fn(failing_scenario) ->
-           failing_scenerio_text(failing_scenario, step_helper)
-         end)
+      |> Enum.map(&failing_scenerio_text(&1, step_helper))
       |> Enum.join("\n")
 
     failing_count = Enum.count(failing_scenarios)
