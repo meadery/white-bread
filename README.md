@@ -2,6 +2,7 @@ WhiteBread
 ==========
 [![Build Status](https://travis-ci.org/meadsteve/white-bread.svg?branch=master)](https://travis-ci.org/meadsteve/white-bread)
 [![Hex Version](http://img.shields.io/hexpm/v/white_bread.svg?style=flat)](https://hex.pm/packages/white_bread)
+[![Stories in Ready](https://badge.waffle.io/meadsteve/white-bread.png?label=ready&title=Ready)](https://waffle.io/meadsteve/white-bread)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/meadsteve/white-bread?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 # What?
