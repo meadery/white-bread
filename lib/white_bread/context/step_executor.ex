@@ -21,12 +21,13 @@ defmodule WhiteBread.Context.StepExecutor do
   end
 
   defp apply_regex_function(regex_steps, step, state) do
-    %{text: step_text, table_data: table_data} = step
+    %{text: step_text, table_data: table_data, doc_string: doc_string} = step
     {regex, function} = regex_steps |> find_regex_and_function(step_text)
     key_matches = RegexExtension.atom_keyed_named_captures(regex, step_text)
 
     extra = Map.new |> Dict.merge(key_matches)
     |> Dict.put(:table_data, table_data)
+    |> Dict.put(:doc_string, doc_string)
     apply(function, [state, extra])
   end
 
