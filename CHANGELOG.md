@@ -1,5 +1,16 @@
 # Changelog
 
+## UPCOMING V1.1.0 (NOT RELEASED YET)
+
+### Enhancements
+* Add Doc string support (see http://www.relishapp.com/cucumber/cucumber/docs/gherkin/doc-strings).
+
+### Bug fixes
+none yet.
+
+### Backwards incompatible changes
+none.
+
 ## v1.0.1 (2015-06-24)
 
 ### Enhancements
