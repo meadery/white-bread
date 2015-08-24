@@ -24,11 +24,11 @@ defmodule WhiteBread.Gherkin do
     end
 
     defmodule Steps do
-      defmodule Given, do: defstruct text: "", table_data: []
-      defmodule When,  do: defstruct text: "", table_data: []
-      defmodule Then,  do: defstruct text: "", table_data: []
-      defmodule And,   do: defstruct text: "", table_data: []
-      defmodule But,   do: defstruct text: "", table_data: []
+      defmodule Given, do: defstruct text: "", table_data: [], doc_string: ""
+      defmodule When,  do: defstruct text: "", table_data: [], doc_string: ""
+      defmodule Then,  do: defstruct text: "", table_data: [], doc_string: ""
+      defmodule And,   do: defstruct text: "", table_data: [], doc_string: ""
+      defmodule But,   do: defstruct text: "", table_data: [], doc_string: ""
     end
 
   end

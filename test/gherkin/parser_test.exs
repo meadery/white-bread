@@ -61,6 +61,20 @@ defmodule WhiteBread.Gherkin.ParserTest do
       Then everything should be okay
   """
 
+  @feature_with_doc_string "
+  Feature: Have tables
+    Sometimes data is a table
+
+    Scenario: I have a step with a doc string
+      Given the following data
+      \"\"\"json
+      {
+        \"a\": \"b\"
+      }
+      \"\"\"
+      Then everything should be okay
+  "
+
   @feature_with_scenario_outline """
   Feature: Scenario outlines exist
 
@@ -122,6 +136,16 @@ defmodule WhiteBread.Gherkin.ParserTest do
     ]
     %{background_steps: background_steps} = parse_feature(@feature_with_backgroundtext)
     assert expected_steps == background_steps
+  end
+
+  test "Reads a doc string in to the correct step" do
+    expected_data = "{\n  \"a\": \"b\"\n}\n"
+    expected_steps = [
+      %Steps.Given{text: "the following data", doc_string: expected_data},
+      %Steps.Then{text: "everything should be okay"},
+    ]
+    %{scenarios: [%{steps: steps} | _]} = parse_feature(@feature_with_doc_string)
+    assert expected_steps == steps
   end
 
   test "Reads a table in to the correct step" do

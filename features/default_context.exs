@@ -1,6 +1,7 @@
 defmodule WhiteBread.Example.DefaultContext do
   use WhiteBread.Context
 
+  subcontext WhiteBread.Example.DocStringContext
   subcontext WhiteBread.Example.CoffeeContext
   subcontext WhiteBread.Example.SongContext
   subcontext WhiteBread.Example.TableContext
@@ -66,6 +67,20 @@ defmodule WhiteBread.Example.SongContext do
 
   then_ "I would sing", fn "have a voice" ->
     {:ok, :singing}
+  end
+
+end
+
+defmodule WhiteBread.Example.DocStringContext do
+  use WhiteBread.Context
+
+  given_ ~r/^the following doc string:$/, fn _state, %{doc_string: doc_string} ->
+    {:ok, doc_string}
+  end
+
+  then_ ~r/^the doc string should be okay.$/, fn state ->
+    assert state == "This should\n  Work!\n"
+    {:ok, state}
   end
 
 end
