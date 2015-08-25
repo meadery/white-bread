@@ -37,7 +37,9 @@ defmodule WhiteBread.Mixfile do
   defp deps do
     [
       #{:dogma, "~> 0.0.2"}
-      {:dogma, git: "https://github.com/meadsteve/dogma.git", ref: "9b21429dbced0c2a5254395ee19a0a8c259d1994"}
+      {:dogma, git: "https://github.com/meadsteve/dogma.git", ref: "9b21429dbced0c2a5254395ee19a0a8c259d1994"},
+      {:earmark, "~> 0.1", only: :dev},
+      {:ex_doc, "~> 0.8", only: :dev}
     ]
   end
 end
