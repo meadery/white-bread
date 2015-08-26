@@ -15,7 +15,7 @@ defmodule WhiteBread.Gherkin.Parser do
 
   defp process_lines(string) do
     {:ok, output} =
-      string |> String.split("\n", trim: true)
+      string |> String.split(~r/\r?\n/, trim: true)
              |> Enum.reduce({:ok, []}, &__MODULE__.process_line/2)
 
     Enum.reverse(output)
