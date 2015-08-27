@@ -34,7 +34,7 @@ defmodule WhiteBread do
     Task.async(fn -> WhiteBread.Gherkin.Parser.parse_feature(feature_text) end)
   end
 
-  defp filter_features(features, tags = nil) do
+  defp filter_features(features, _tags = nil) do
     features
   end
   defp filter_features(features, tags) do
