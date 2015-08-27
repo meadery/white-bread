@@ -12,6 +12,6 @@ defmodule Dogma.WhiteBread.Rules do
 
   defp skipped?({rule, _}),   do: skipped?({rule})
   defp skipped?({ModuleDoc}), do: true
-  defp skipped?({rule}),      do: false
+  defp skipped?({_rule}),     do: false
 
 end

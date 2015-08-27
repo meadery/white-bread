@@ -9,7 +9,7 @@ defmodule WhiteBread.Formatter.FailedStep do
 
   def text({:no_clause_match, step, error}) do
     %{text: step_text} = step
-    {clause_match_error, stacktrace} = error
+    {_clause_match_error, stacktrace} = error
     trace_message = Exception.format_stacktrace(stacktrace)
     "unable to match clauses: #{step_text}:\ntrace:\n#{trace_message}"
   end
