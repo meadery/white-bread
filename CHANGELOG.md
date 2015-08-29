@@ -1,15 +1,16 @@
 # Changelog
 
-## UPCOMING V1.1.0 (NOT RELEASED YET)
+## UPCOMING V2.0.0 (NOT RELEASED YET)
 
 ### Enhancements
 * Add Doc string support (see http://www.relishapp.com/cucumber/cucumber/docs/gherkin/doc-strings).
+* Application is automatically started on run.
 
 ### Bug fixes
 none yet.
 
 ### Backwards incompatible changes
-none.
+ * Application will be automatically started unless --no-start is added: ```dogma WhiteBread.run --no-start```
 
 ## v1.0.1 (2015-06-24)
 
