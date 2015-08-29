@@ -6,6 +6,7 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
   def run(argv) do
     {options, arguments, _} = OptionParser.parse(argv)
+    start_app(argv)
     case arguments do
       [context_name | _ ] ->
         context_from_string(context_name) |> run("features/", options)
@@ -13,6 +14,12 @@ defmodule Mix.Tasks.WhiteBread.Run do
         load_default_context |> run("features/", options)
     end
 
+  end
+
+  def start_app(argv) do
+    unless "--no-start" in argv do
+      Mix.Task.run "app.start", argv
+    end
   end
 
   def load_default_context do
