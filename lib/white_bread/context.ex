@@ -1,4 +1,4 @@
-defmodule WhiteBread.Context do
+defmodule WhiteBread.Context.FAIL do
 
   @steps_to_macro [:given_, :when_, :then_, :and_, :but_]
 
