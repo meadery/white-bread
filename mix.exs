@@ -36,7 +36,6 @@ defmodule WhiteBread.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:dogma, "0.0.7", only: [:dev, :test]},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.8", only: :dev}
     ]
