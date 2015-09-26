@@ -6,7 +6,7 @@ defmodule Dogma.WhiteBread.Rules do
   """
 
   def rules do
-    Dogma.Rules.Sets.All.rules
+    Dogma.RuleSet.All.rules
       |> Enum.reject(&skipped?/1)
   end
 
