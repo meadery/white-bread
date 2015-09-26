@@ -5,13 +5,15 @@ defmodule Dogma.WhiteBread.Rules do
   Rules to be run are returned by `list/0`
   """
 
-  def list do
-    Dogma.Rules.Sets.All.list
+  def rules do
+    Dogma.RuleSet.All.rules
       |> Enum.reject(&skipped?/1)
   end
 
-  defp skipped?({rule, _}),   do: skipped?({rule})
-  defp skipped?({ModuleDoc}), do: true
-  defp skipped?({_rule}),     do: false
+  defp skipped?({rule, _}),            do: skipped?({rule})
+  defp skipped?({ModuleDoc}),          do: true
+  defp skipped?({BarePipeChainStart}), do: true
+  defp skipped?({PredicateName}),      do: true
+  defp skipped?({_rule}),              do: false
 
 end
