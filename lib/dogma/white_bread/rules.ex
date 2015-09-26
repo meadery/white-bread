@@ -10,8 +10,10 @@ defmodule Dogma.WhiteBread.Rules do
       |> Enum.reject(&skipped?/1)
   end
 
-  defp skipped?({rule, _}),   do: skipped?({rule})
-  defp skipped?({ModuleDoc}), do: true
-  defp skipped?({_rule}),     do: false
+  defp skipped?({rule, _}),            do: skipped?({rule})
+  defp skipped?({ModuleDoc}),          do: true
+  defp skipped?({BarePipeChainStart}), do: true
+  defp skipped?({PredicateName}),      do: true
+  defp skipped?({_rule}),              do: false
 
 end
