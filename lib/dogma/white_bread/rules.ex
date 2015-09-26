@@ -5,8 +5,8 @@ defmodule Dogma.WhiteBread.Rules do
   Rules to be run are returned by `list/0`
   """
 
-  def list do
-    Dogma.Rules.Sets.All.list
+  def rules do
+    Dogma.RuleSet.All.rules
       |> Enum.reject(&skipped?/1)
   end
 
