@@ -12,7 +12,8 @@ defimpl WhiteBread.Runners, for: List do
         -> bad_state
     end
 
-    (background_steps ++ steps)
+    background_steps
+      |> Enum.concat(steps)
       |> Enum.reduce({:ok, starting_state}, reduction)
   end
 

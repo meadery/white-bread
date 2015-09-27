@@ -59,8 +59,8 @@ defmodule WhiteBread.CodeGenerator.Step do
   def named_groups_for_string(struct) do
     %{template: template, groups: groups, unproccessed_string: string} = struct
 
-    argument = (Enum.count(groups) + 1)
-      |> string_for_number
+    next_number = Enum.count(groups) + 1
+    argument = string_for_number(next_number)
 
     case Regex.split(@quoted_string_regex, string, [parts: 2]) do
         [before, remaining] ->

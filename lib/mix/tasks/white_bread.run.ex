@@ -9,7 +9,9 @@ defmodule Mix.Tasks.WhiteBread.Run do
     start_app(argv)
     case arguments do
       [context_name | _ ] ->
-        context_from_string(context_name) |> run("features/", options)
+        context_name
+          |> context_from_string
+          |> run("features/", options)
       [] ->
         load_default_context |> run("features/", options)
     end

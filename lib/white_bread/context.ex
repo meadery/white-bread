@@ -32,13 +32,15 @@ defmodule WhiteBread.Context do
       end
 
       def get_string_steps do
-        get_from_submodule_function(:get_string_steps)
-        |> Enum.into(@string_steps)
+        :get_string_steps
+          |> get_from_submodule_function
+          |> Enum.into(@string_steps)
       end
 
       def get_regex_steps do
-        get_from_submodule_function(:get_regex_steps)
-        |> Enum.into(@regex_steps)
+        :get_regex_steps
+          |> get_from_submodule_function
+          |> Enum.into(@regex_steps)
       end
 
       unless @feature_state_definied do

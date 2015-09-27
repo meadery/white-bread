@@ -2,14 +2,15 @@ defmodule WhiteBread.Tags.FeatureFilterer do
   import WhiteBread.Tags.Filterer
 
   def get_for_tags(features, tags) when is_list(features) do
-    filter(features, tags)
-    |> Enum.into(features_with_matching_scenarios(features, tags))
+    features
+      |> filter(tags)
+      |> Enum.into(features_with_matching_scenarios(features, tags))
   end
 
   defp features_with_matching_scenarios(features, tags) do
     features
-    |> remove_scenarios_without_tags(tags)
-    |> remove_empty_features
+      |> remove_scenarios_without_tags(tags)
+      |> remove_empty_features
   end
 
   defp remove_scenarios_without_tags(features, tags) do

@@ -4,13 +4,14 @@ defmodule WhiteBread do
 
     output = WhiteBread.Outputers.Console.start
 
-    features = WhiteBread.Feature.Finder.find_in_path(path)
-    |> read_in_feature_files
-    |> parse_features
-    |> filter_features(tags)
+    features = path
+      |> WhiteBread.Feature.Finder.find_in_path
+      |> read_in_feature_files
+      |> parse_features
+      |> filter_features(tags)
 
     results = features
-    |> run_all_features(context, output)
+      |> run_all_features(context, output)
 
     output |> WhiteBread.Outputers.Console.stop
 

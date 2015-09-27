@@ -16,7 +16,10 @@ defimpl WhiteBread.Tags.Filterer, for: Any do
   end
 
   def any_of_tags?(%{tags: element_tags}, tags) do
-    !(tag_overlap(tags, element_tags) |> Enum.empty?)
+    overlapping_tags? = tags
+      |> tag_overlap(element_tags)
+      |> Enum.empty?
+    !overlapping_tags?
   end
 
   defp tag_overlap(tags_one, tags_two) do
