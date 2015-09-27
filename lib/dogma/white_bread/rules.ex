@@ -13,7 +13,6 @@ defmodule Dogma.WhiteBread.Rules do
   defp skipped?({rule, _}),            do: skipped?({rule})
   defp skipped?({ModuleDoc}),          do: true
   defp skipped?({BarePipeChainStart}), do: true
-  defp skipped?({PredicateName}),      do: true
   defp skipped?({_rule}),              do: false
 
 end
