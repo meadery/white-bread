@@ -1,13 +1,15 @@
 # Changelog
 
-## UPCOMING V2.0.0 (NOT RELEASED YET)
+## V2.0.0 (2015-10-14)
 
 ### Enhancements
 * Add Doc string support (see http://www.relishapp.com/cucumber/cucumber/docs/gherkin/doc-strings).
 * Application is automatically started on run.
+* Elixir 1.1.0 is supported.
 
 ### Bug fixes
-none yet.
+* Lines commented out with a # no longer break the parser.
+* windows line endings handled correctly.
 
 ### Backwards incompatible changes
  * Application will be automatically started unless --no-start is added: ```dogma WhiteBread.run --no-start```
@@ -24,7 +26,7 @@ none
 none
 
 ## v1.0.0 (2015-06-16)
-This is the same as version 0.6.0 but pinned to 1.0.0 as the interface of the feature context can now be considered stable. 
+This is the same as version 0.6.0 but pinned to 1.0.0 as the interface of the feature context can now be considered stable.
 
 ### Enhancements
 none
