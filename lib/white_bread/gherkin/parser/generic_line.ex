@@ -12,6 +12,10 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
     state
   end
 
+  def process_line("#" <> _comment, state) do
+    state
+  end
+
   def process_line("@" <> line, {feature, _state}) do
     log line
     tags = line

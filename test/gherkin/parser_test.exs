@@ -89,6 +89,21 @@ defmodule WhiteBread.Gherkin.ParserTest do
       |  20   |  5  |  15  |
   """
 
+  @feature__with_comments """
+    Feature: Serve coffee
+      Coffee should not be served until paid for
+      Coffee should not be served until the button has been pressed
+      If there is no coffee left then money should be refunded
+
+      #Only one coffee? this is bad!
+      Scenario: Buy last coffee
+        Given there are 1 coffees left in the machine
+        And I have deposited 1$
+        When I press the coffee button
+        # I better get some coffee
+        Then I should be served a coffee
+  """
+
   test "Parses the feature name" do
     %{name: name} = parse_feature(@feature_text)
     assert name == "Serve coffee"
@@ -175,6 +190,12 @@ defmodule WhiteBread.Gherkin.ParserTest do
     %{scenarios: [%{steps: steps, examples: examples} | _]} = parse_feature(@feature_with_scenario_outline)
     assert steps == expected_steps
     assert examples == exptected_example_data
+  end
+
+  test "Commented out lines are ignored" do
+    %{scenarios: [%{steps: steps} | _]} = parse_feature(@feature__with_comments)
+    # Only should be 4 steps as the commented out line should be ignored
+    assert Enum.count(steps) == 4
   end
 
 end
