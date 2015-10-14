@@ -9,7 +9,7 @@ defmodule WhiteBread.Mixfile do
      Parses Gherkin formatted feature files and executes them as tests.
      """,
      package: [
-       contributors: ["Steve Brazier"],
+       maintainers: ["Steve Brazier"],
        licenses: ["MIT"],
        links: %{"GitHub" => "https://github.com/meadsteve/white-bread"},
        ],
