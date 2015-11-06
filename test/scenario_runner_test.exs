@@ -82,6 +82,17 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
     assert result == :failed
   end
 
+  test "Fails if a step raises an exception" do
+    assertion_failure_step = %Steps.When{text: "I raise an exception"}
+    steps = [
+      assertion_failure_step,
+      %Steps.When{text: "step two"}
+    ]
+    scenario = %Scenario{name: "test scenario", steps: steps}
+    {result, {:other_failure, _, {_failure, _}}} = scenario |> WhiteBread.Runners.run(ExampleContext)
+    assert result == :failed
+  end
+
   test "Fails if a step returns anything but {:ok, state}" do
     failure_step = %Steps.When{text: "I return not okay"}
     expected_step_result = {:no_way, :impossible}
@@ -105,6 +116,34 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
     assert result == :ok
   end
 
+  test "Contexts can run finalization provided by scenario_finalize method for both failed and normal steps" do
+    steps = [
+      %Steps.When{text: "I raise an exception"}
+    ]
+
+    scenario = %Scenario{name: "test scenario", steps: steps}
+
+    {_, _error} = scenario |> WhiteBread.Runners.run(ExampleContext)
+    assert Process.get(:finalized) == true
+
+    steps = [
+      %Steps.When{text: "I return not okay"}
+    ]
+
+    scenario = %Scenario{name: "test scenario", steps: steps}
+
+    {_, _error} = scenario |> WhiteBread.Runners.run(ExampleContext)
+    assert Process.get(:finalized) == true
+
+    steps = [
+      %Steps.When{text: "step one"}
+    ]
+
+    scenario = %Scenario{name: "test scenario", steps: steps}
+
+    {_, _error} = scenario |> WhiteBread.Runners.run(ExampleContext)
+    assert Process.get(:finalized) == true
+  end
 end
 
 defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
@@ -112,6 +151,10 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
 
   scenario_starting_state fn _global_state ->
     %{starting_state: :yes}
+  end
+
+  scenario_finalize fn ->
+    Process.put :finalized, true
   end
 
   when_ "step one", fn _state ->
@@ -135,8 +178,11 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
     {:no_way, :impossible}
   end
 
+  when_ "I raise an exception", fn _state ->
+    raise "Runtime Exception"
+  end
+
   then_ "starting state was correct", fn %{starting_state: :yes} = state ->
     {:ok, state}
   end
-
 end

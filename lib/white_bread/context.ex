@@ -16,6 +16,7 @@ defmodule WhiteBread.Context do
       @sub_context_modules []
 
       @scenario_state_definied false
+      @scenario_finalize_defined false
       @feature_state_definied false
 
       @before_compile WhiteBread.Context
@@ -56,6 +57,10 @@ defmodule WhiteBread.Context do
         end
       end
 
+      unless @scenario_finalize_defined do
+        def finalize(), do: nil
+      end
+
       defp get_from_submodule_function(function) do
         @sub_context_modules
         |> Enum.map(fn(sub_module) -> apply(sub_module, function, []) end)
@@ -90,6 +95,15 @@ defmodule WhiteBread.Context do
       @scenario_state_definied true
       def starting_state(state) do
         unquote(function).(state)
+      end
+    end
+  end
+
+  defmacro scenario_finalize(function) do
+    quote do
+      @scenario_finalize_defined true
+      def finalize() do
+        unquote(function).()
       end
     end
   end

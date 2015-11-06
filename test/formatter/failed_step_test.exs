@@ -31,4 +31,15 @@ defmodule WhiteBread.Formatter.FailedStepTest do
     assert output == "failing step: this is my assestion message"
   end
 
+  test "Prints out other failing steps" do
+    step = %{text: "failing step"}
+    exception = %RuntimeError{message: "exception message"}
+
+    stacktrace = [{Module, :failure, 0, [{:file, "somefile"}, {:line, 10}]}]
+
+    failure = {:other_failure, step, {exception, stacktrace}}
+
+    output = FailedStep.text(failure)
+    assert output == "execution failure: #{step.text}:\nException: #{Exception.message exception}: \n#{Exception.format_stacktrace stacktrace}"
+  end
 end

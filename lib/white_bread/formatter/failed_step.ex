@@ -20,4 +20,9 @@ defmodule WhiteBread.Formatter.FailedStep do
     "#{step_text}: #{assestion_message}"
   end
 
+  def text({:other_failure, step, {other_failure, stacktrace}}) do
+    %{text: step_text} = step
+    trace_message = Exception.format_stacktrace(stacktrace)
+    "execution failure: #{step_text}:\nException: #{Exception.message other_failure}: \n#{trace_message}"
+  end
 end
