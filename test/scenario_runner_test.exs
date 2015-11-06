@@ -116,16 +116,18 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
     assert result == :ok
   end
 
-  test "Contexts can run finalization provided by scenario_finalize method for both failed and normal steps" do
+  test "Contexts can run finalization provided by scenario_finalize method for a normal step" do
     steps = [
-      %Steps.When{text: "I raise an exception"}
+      %Steps.When{text: "step one"}
     ]
 
     scenario = %Scenario{name: "test scenario", steps: steps}
 
     {_, _error} = scenario |> WhiteBread.Runners.run(ExampleContext)
     assert Process.get(:finalized) == true
+  end
 
+  test "Contexts can run finalization provided by scenario_finalize method for a failing step" do
     steps = [
       %Steps.When{text: "I return not okay"}
     ]
@@ -134,9 +136,11 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
 
     {_, _error} = scenario |> WhiteBread.Runners.run(ExampleContext)
     assert Process.get(:finalized) == true
+  end
 
+  test "Contexts can run finalization provided by scenario_finalize method for a step that raises exception" do
     steps = [
-      %Steps.When{text: "step one"}
+      %Steps.When{text: "I raise an exception"}
     ]
 
     scenario = %Scenario{name: "test scenario", steps: steps}
