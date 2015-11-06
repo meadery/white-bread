@@ -3,7 +3,7 @@ defmodule WhiteBread.Context.StepExecutor do
 
   defprotocol ErrorHandler do
     @fallback_to_any true
-    def get_tuple(error, step, _stacktrace)
+    def get_tuple(error, step, stacktrace)
   end
 
   defimpl ErrorHandler, for: [ESpec.AssertionError, ExUnit.AssertionError] do
