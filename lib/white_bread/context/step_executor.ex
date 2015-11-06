@@ -6,7 +6,7 @@ defmodule WhiteBread.Context.StepExecutor do
     def get_tuple(error, step, _stacktrace)
   end
 
-  defimpl ErrorHandler, for: [Espec.AssertionError, ExUnit.AssertionError] do
+  defimpl ErrorHandler, for: [ESpec.AssertionError, ExUnit.AssertionError] do
     def get_tuple(error, step, _stacktrace) do
       {:assertion_failure, step, error}
     end
