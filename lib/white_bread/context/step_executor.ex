@@ -1,6 +1,23 @@
 defmodule WhiteBread.Context.StepExecutor do
   alias WhiteBread.RegexExtension
 
+  defprotocol ErrorHandler do
+    @fallback_to_any true
+    def get_tuple(error, step, stacktrace)
+  end
+
+  defimpl ErrorHandler, for: [ESpec.AssertionError, ExUnit.AssertionError] do
+    def get_tuple(error, step, _stacktrace) do
+      {:assertion_failure, step, error}
+    end
+  end
+
+  defimpl ErrorHandler, for: Any do
+    def get_tuple(error, step, stacktrace) do
+      {:other_failure, step, {error, stacktrace}}
+    end
+  end
+
   def execute_step({string_steps, regex_steps}, step, state) do
     %{text: step_text} = step
     try do
@@ -11,12 +28,12 @@ defmodule WhiteBread.Context.StepExecutor do
         regex_steps |> apply_regex_function(step, state)
       end
     rescue
-      assertion_error in ExUnit.AssertionError
-        -> {:assertion_failure, step, assertion_error}
       missing_step in WhiteBread.Context.MissingStep
         -> {:missing_step, step, missing_step}
       clause_match_error in FunctionClauseError
         -> {:no_clause_match, step, {clause_match_error, System.stacktrace}}
+      external_error
+        -> ErrorHandler.get_tuple(external_error, step, System.stacktrace)
     end
   end
 
@@ -43,3 +60,4 @@ defmodule WhiteBread.Context.StepExecutor do
   end
 
 end
+
