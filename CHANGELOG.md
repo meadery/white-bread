@@ -1,5 +1,18 @@
 # Changelog
 
+## V2.1.0 (2015-11-08)
+
+### Enhancements
+* Add finalize() function to contexts called after every scenario.
+* Handle any error thrown in a step.
+* Format assertion errors from Espec (as well as the previously handled ExUnit)
+
+### Bug fixes
+none
+
+### Backwards incompatible changes
+none
+
 ## V2.0.0 (2015-10-14)
 
 ### Enhancements
