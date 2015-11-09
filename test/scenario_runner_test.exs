@@ -116,6 +116,18 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
     assert result == :ok
   end
 
+  test "Scenario starting state runs once per scenario" do
+    steps = [
+      %Steps.When{text: "step passthru"},
+      %Steps.When{text: "step passthru"},
+      %Steps.Then{text: "scenario_starting_state only ran once"},
+    ]
+    scenario = %Scenario{name: "test scenario", steps: steps}
+
+    {result, _error} = scenario |> WhiteBread.Runners.run(ExampleContext)
+    assert result == :ok
+  end
+
   test "Contexts can run finalization provided by scenario_finalize method for a normal step" do
     steps = [
       %Steps.When{text: "step one"}
@@ -148,13 +160,25 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
     {_, _error} = scenario |> WhiteBread.Runners.run(ExampleContext)
     assert Process.get(:finalized) == true
   end
+
+  test "Scenario finalize doesn't run till the end of scenario" do
+    steps = [
+      %Steps.When{text: "step one"},
+      %Steps.When{text: "step two"},
+      %Steps.Then{text: "scenario_finalize doesnt run until the end"},
+    ]
+    scenario = %Scenario{name: "test scenario", steps: steps}
+
+    {result, _error} = scenario |> WhiteBread.Runners.run(ExampleContext)
+    assert result == :ok
+  end
 end
 
 defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
   use WhiteBread.Context
 
-  scenario_starting_state fn _global_state ->
-    %{starting_state: :yes}
+  scenario_starting_state fn global_state ->
+    %{starting_state: :yes, starting_state_run_count: (global_state |> Dict.get(:starting_state_run_count, 0)) + 1}
   end
 
   scenario_finalize fn ->
@@ -173,6 +197,11 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
     {:ok, :step_two_complete}
   end
 
+  when_ "step passthru", fn state ->
+    {:ok, state}
+  end
+
+
   when_ "make a failing asserstion", fn _state ->
     assert 1 == 0
     {:ok, :impossible}
@@ -188,5 +217,17 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
 
   then_ "starting state was correct", fn %{starting_state: :yes} = state ->
     {:ok, state}
+  end
+
+  then_ "scenario_starting_state only ran once", fn %{starting_state_run_count: 1} = state ->
+    {:ok, state}
+  end
+
+  then_ "scenario_finalize doesnt run until the end", fn state ->
+    unless Process.get(:finalized, false) do
+      {:ok, state}
+    else
+      {:error, :already_finalized}
+    end
   end
 end
