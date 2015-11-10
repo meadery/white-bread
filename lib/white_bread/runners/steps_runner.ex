@@ -6,10 +6,8 @@ defimpl WhiteBread.Runners, for: List do
     reduction = fn
       (step, {:ok, state})
         -> run_step(context, step, state)
-      (_step, {fail_reason, failing_step, error})
-        -> {fail_reason, failing_step, error}
-      (_step, bad_state)
-        -> bad_state
+      (_step, failure_state)
+        -> failure_state
     end
 
     try do
