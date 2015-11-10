@@ -8,8 +8,8 @@ defmodule WhiteBread.Runners.FeatureRunner do
       |> output_results(feature, output_pid)
 
     %{
-      successes: results |> Enum.filter(&is_success/1),
-      failures:  results |> Enum.filter(&is_failure/1)
+      successes: results |> Enum.filter(&success?/1),
+      failures:  results |> Enum.filter(&failure?/1)
     }
   end
 
@@ -45,13 +45,8 @@ defmodule WhiteBread.Runners.FeatureRunner do
     results
   end
 
-  defp is_success({_scenario, {success, _}}) do
-    success == :ok
-  end
-
-  defp is_failure({_scenario, {success, _}}) do
-    success == :failed
-  end
+  defp success?({_scenario, {success, _}}), do: success == :ok
+  defp failure?({_scenario, {success, _}}), do: success == :failed
 
   defp run(scenario, context, background_steps, starting_state) do
     scenario
