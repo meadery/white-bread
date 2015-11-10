@@ -2,31 +2,30 @@ defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.ScenarioOutline do
   def run(scenario_outline, context, background_steps, starting_state) do
     setup = {context, background_steps, starting_state}
     scenario_outline
-      |> build_individual_step_collections
-      |> Enum.map(fn(steps) -> run(steps, setup) end)
-      |> Enum.map(fn
-             ({:ok, _last_state}) -> {:ok, scenario_outline.name}
-             (error_data)         -> {:failed, error_data}
-         end)
+      |> build_each_example
+      |> Enum.map(&run(&1, setup))
+      |> Enum.map(&process_result(&1, scenario_outline))
   end
 
   defp run(steps, {context, background_steps, starting_state}) do
     WhiteBread.Runners.run(steps, context, background_steps, starting_state)
   end
 
-  defp build_individual_step_collections(outline) do
-    steps = outline.steps
+  defp process_result({:ok, _last_state}, scenario), do: {:ok, scenario.name}
+  defp process_result(error_data,        _scenario), do: {:failed, error_data}
+
+  defp build_each_example(outline) do
     outline.examples
       |> WhiteBread.Tables.index_table_by_first_row
-      |> Enum.map(fn(example) -> steps |> update_with_example(example) end)
+      |> Enum.map(&create_steps(&1, outline.steps))
   end
 
-  defp update_with_example(steps, example) do
-    steps
-      |> Enum.map(fn(step) -> update_step_with_example(step, example) end)
+  defp create_steps(example, step_outlines) do
+    step_outlines
+      |> Enum.map(&update_step_using_example(&1, example))
   end
 
-  defp update_step_with_example(starting_step, example) do
+  defp update_step_using_example(starting_step, example) do
     example
       |> Enum.reduce(starting_step, &replace_in_step/2)
   end
