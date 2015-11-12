@@ -71,6 +71,20 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
       successes: [{scenario, {:ok, "test scenario"}}]
     }
   end
+
+  test "feature runner should run given scenarios only once" do
+    steps = [
+      %Steps.When{text: "increment process dictionary"}
+    ]
+
+    scenario = %Scenario{name: "test scenario", steps: steps}
+    feature = %Feature{name: "test feature", scenarios: [scenario]}
+    output = WhiteBread.Outputers.Console.start
+    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output)
+    output |> WhiteBread.Outputers.Console.stop
+
+    assert Process.get(:run_count) == 1
+  end
 end
 
 defmodule WhiteBread.FeatureRunnerTest.ExampleContext do
@@ -93,4 +107,8 @@ defmodule WhiteBread.FeatureRunnerTest.ExampleContext do
     {:ok, :impossible}
   end
 
+  when_ "increment process dictionary", fn _state->
+    value = (Process.get(:run_count, 0) + 1)
+    Process.put(:run_count, value)
+  end
 end

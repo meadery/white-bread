@@ -38,9 +38,10 @@ defmodule WhiteBread.Runners.FeatureRunner do
     send_results = fn({scenario, result}) ->
       send(output_pid, {:scenario_result, result, scenario, feature})
     end
-    results
-      |> Stream.each(send_results)
-      |> Stream.run
+
+    results = Enum.to_list(results)
+
+    results |> Enum.each(send_results)
 
     results
   end
