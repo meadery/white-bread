@@ -16,7 +16,7 @@ defmodule WhiteBread.Runners.FeatureRunner do
   defp run_all_scenarios_for_context(scenarios, context, background_steps) do
     starting_state = apply(context, :feature_state, [])
     scenarios
-      |> Stream.map(&run_scenario(&1,context, background_steps, starting_state))
+      |> Enum.map(&run_scenario(&1,context, background_steps, starting_state))
   end
 
   defp run_scenario(scenario,context, background_steps, starting_state) do
@@ -31,15 +31,13 @@ defmodule WhiteBread.Runners.FeatureRunner do
       (single) ->
         [single]
     end
-    results |> Stream.flat_map(flatten)
+    results |> Enum.flat_map(flatten)
   end
 
   defp output_results(results, feature, output_pid) do
     send_results = fn({scenario, result}) ->
       send(output_pid, {:scenario_result, result, scenario, feature})
     end
-
-    results = Enum.to_list(results)
 
     results |> Enum.each(send_results)
 
