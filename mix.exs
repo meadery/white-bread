@@ -13,7 +13,7 @@ defmodule WhiteBread.Mixfile do
        licenses: ["MIT"],
        links: %{"GitHub" => "https://github.com/meadsteve/white-bread"},
        ],
-     version: "2.1.0",
+     version: "2.1.1",
      elixir: "~> 1.0",
      deps: deps]
   end

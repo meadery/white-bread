@@ -1,5 +1,16 @@
 # Changelog
 
+## V2.1.1 (2015-11-14)
+
+### Enhancements
+none
+
+### Bug fixes
+* Fix issue with steps executing multiple times. Thanks to @leiyangyou : https://github.com/meadsteve/white-bread/pull/24
+
+### Backwards incompatible changes
+none
+
 ## V2.1.0 (2015-11-08)
 
 ### Enhancements
