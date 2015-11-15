@@ -3,13 +3,11 @@ defimpl WhiteBread.Runners, for: List do
 
     starting_state = context |> update_starting_state(global_starting_state)
 
-    try do
-      background_steps
-        |> Enum.concat(steps)
-        |> Enum.reduce({:ok, starting_state}, step_executor(context))
-    after
-      context.finalize()
-    end
+    background_steps
+      |> Enum.concat(steps)
+      |> Enum.reduce({:ok, starting_state}, step_executor(context))
+      |> finalize(context)
+      
   end
 
   defp step_executor(context) do
@@ -19,6 +17,11 @@ defimpl WhiteBread.Runners, for: List do
       (_step, failure_state)
         -> failure_state
     end
+  end
+
+  defp finalize(result, context) do
+    context.finalize()
+    result
   end
 
   defp run_step(context, step, state) do
