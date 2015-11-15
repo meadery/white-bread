@@ -7,7 +7,7 @@ defimpl WhiteBread.Runners, for: List do
       |> Enum.concat(steps)
       |> Enum.reduce({:ok, starting_state}, step_executor(context))
       |> finalize(context)
-      
+
   end
 
   defp step_executor(context) do
@@ -19,13 +19,21 @@ defimpl WhiteBread.Runners, for: List do
     end
   end
 
-  defp finalize(result, context) do
+  defp finalize(result = {:ok, _state}, context) do
     context.finalize()
     result
   end
+  defp finalize({error_result, state}, context) do
+    context.finalize()
+    error_result
+  end
 
   defp run_step(context, step, state) do
-    apply(context, :execute_step, [step, state])
+    result = apply(context, :execute_step, [step, state])
+    case result do
+      {:ok, state} -> {:ok, state}
+      error        -> {error, state}
+    end
   end
 
   defp update_starting_state(context, global_starting_state) do
