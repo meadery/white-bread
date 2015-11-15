@@ -150,6 +150,19 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
     assert Process.get(:finalized) == true
   end
 
+  test "Contexts finalize function gets the last good state" do
+    steps = [
+      %Steps.When{text: "step one"},
+      %Steps.When{text: "step totally missing"},
+    ]
+
+    scenario = %Scenario{name: "test scenario", steps: steps}
+
+    {_, _error} = scenario |> WhiteBread.Runners.run(ExampleContext)
+    assert Process.get(:finalized) == true
+    assert Process.get(:finalized_after_step_one) == true
+  end
+
   test "Contexts can run finalization provided by scenario_finalize method for a step that raises exception" do
     steps = [
       %Steps.When{text: "I raise an exception"}
@@ -181,8 +194,12 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
     %{starting_state: :yes, starting_state_run_count: (global_state |> Dict.get(:starting_state_run_count, 0)) + 1}
   end
 
-  scenario_finalize fn(_ignored_state) ->
-    Process.put :finalized, true
+  scenario_finalize fn
+    (:step_one_complete) ->
+      Process.put :finalized, true
+      Process.put :finalized_after_step_one, true
+    (_ignored_state) ->
+      Process.put :finalized, true
   end
 
   when_ "step one", fn _state ->
