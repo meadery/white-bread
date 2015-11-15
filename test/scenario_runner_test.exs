@@ -181,7 +181,7 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
     %{starting_state: :yes, starting_state_run_count: (global_state |> Dict.get(:starting_state_run_count, 0)) + 1}
   end
 
-  scenario_finalize fn ->
+  scenario_finalize fn(_ignored_state) ->
     Process.put :finalized, true
   end
 

@@ -19,13 +19,8 @@ defimpl WhiteBread.Runners, for: List do
     end
   end
 
-  defp finalize(result = {:ok, _state}, context) do
-    context.finalize()
-    result
-  end
-  defp finalize({error_result, state}, context) do
-    context.finalize()
-    error_result
+  defp update_starting_state(context, global_starting_state) do
+    apply(context, :starting_state, [global_starting_state])
   end
 
   defp run_step(context, step, state) do
@@ -36,8 +31,13 @@ defimpl WhiteBread.Runners, for: List do
     end
   end
 
-  defp update_starting_state(context, global_starting_state) do
-    apply(context, :starting_state, [global_starting_state])
+  defp finalize(result = {:ok, state}, context) do
+    context.finalize(state)
+    result
+  end
+  defp finalize({error_result, state}, context) do
+    context.finalize(state)
+    error_result
   end
 
 end
