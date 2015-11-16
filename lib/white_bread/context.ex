@@ -58,7 +58,7 @@ defmodule WhiteBread.Context do
       end
 
       unless @scenario_finalize_defined do
-        def finalize(), do: nil
+        def finalize(_ignored_state), do: nil
       end
 
       defp apply_to_sub_modules(function) do
@@ -102,8 +102,11 @@ defmodule WhiteBread.Context do
   defmacro scenario_finalize(function) do
     quote do
       @scenario_finalize_defined true
-      def finalize() do
-        unquote(function).()
+      def finalize(state) do
+        case is_function(unquote(function), 1) do
+          true  -> unquote(function).(state)
+          false -> unquote(function).()
+        end
       end
     end
   end
