@@ -1,4 +1,4 @@
-defmodule WhiteBread.Gherkin.Parser.Tables do
+defmodule WhiteBread.Gherkin.Parser.Helpers.Tables do
 
   def add_table_row_to_last_step(scenario, line) do
     new_row = table_line_to_columns(line)

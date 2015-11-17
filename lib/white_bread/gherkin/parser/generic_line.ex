@@ -1,10 +1,10 @@
 defmodule WhiteBread.Gherkin.Parser.GenericLine do
   require Logger
-  alias WhiteBread.Gherkin.Parser.Steps, as: StepsParser
-  alias WhiteBread.Gherkin.Parser.Tables, as: TableParser
+  alias WhiteBread.Gherkin.Parser.Helpers.Steps, as: StepsParser
+  alias WhiteBread.Gherkin.Parser.Helpers.Tables, as: TableParser
+  alias WhiteBread.Gherkin.Parser.Helpers.DocString, as: DocStringParser
   alias WhiteBread.Gherkin.Elements.Scenario
   alias WhiteBread.Gherkin.Elements.ScenarioOutline
-  alias WhiteBread.Gherkin.Parser.GenericLine.Helpers.DocString
 
   import String, only: [rstrip: 1, rstrip: 2, lstrip: 1]
 
@@ -78,12 +78,12 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
 
   def process_line(line, {feature, {:doc_string, :background_steps} = state}) do
     log line
-    DocString.add_doc_string_to_background_steps(line, feature, state)
+    DocStringParser.add_doc_string_to_background_steps(line, feature, state)
   end
 
   def process_line(line, {feature, { :doc_string, _prev_state } = state}) do
     log line
-    DocString.add_doc_string_to_step(line, feature, state)
+    DocStringParser.add_doc_string_to_step(line, feature, state)
   end
 
   # Tables as part of a step

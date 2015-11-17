@@ -1,4 +1,4 @@
-defmodule WhiteBread.Gherkin.Parser.GenericLine.Helpers.DocString do
+defmodule WhiteBread.Gherkin.Parser.Helpers.DocString do
 
   def add_doc_string_to_background_steps(line, feature, parser_state) do
     %{background_steps: steps} = feature

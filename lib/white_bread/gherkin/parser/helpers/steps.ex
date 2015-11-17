@@ -1,4 +1,4 @@
-defmodule WhiteBread.Gherkin.Parser.Steps do
+defmodule WhiteBread.Gherkin.Parser.Helpers.Steps do
   alias WhiteBread.Gherkin.Elements.Steps, as: Steps
 
   @doc ~S"""
