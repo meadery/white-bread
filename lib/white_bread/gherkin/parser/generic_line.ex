@@ -2,8 +2,9 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
   require Logger
   alias WhiteBread.Gherkin.Parser.Steps, as: StepsParser
   alias WhiteBread.Gherkin.Parser.Tables, as: TableParser
-  alias WhiteBread.Gherkin.Elements.Scenario, as: Scenario
-  alias WhiteBread.Gherkin.Elements.ScenarioOutline, as: ScenarioOutline
+  alias WhiteBread.Gherkin.Elements.Scenario
+  alias WhiteBread.Gherkin.Elements.ScenarioOutline
+  alias WhiteBread.Gherkin.Parser.GenericLine.Helpers.DocString
 
   import String, only: [rstrip: 1, rstrip: 2, lstrip: 1]
 
@@ -62,46 +63,27 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
     }
   end
 
+  # Stop recoding doc string
   def process_line(~s(""") <> _ = line, {feature, {:doc_string, prev_state}}) do
     log line
     { feature, prev_state }
   end
 
+  # Start recoding doc string
   def process_line(~s(""") <> _ = line, {feature, prev_state}) do
     log line
     { feature, { :doc_string, prev_state } }
   end
 
+
   def process_line(line, {feature, {:doc_string, :background_steps} = state}) do
     log line
-    %{background_steps: current_steps} = feature
-    [%{doc_string: doc_string} = last_step | other_steps] = current_steps
-      |> Enum.reverse
-
-    updated_step = %{last_step | doc_string: doc_string <> line <> "\n"}
-    updated_steps = [updated_step | other_steps] |> Enum.reverse
-
-    {
-      %{feature | background_steps: updated_steps},
-      state
-    }
+    DocString.add_doc_string_to_background_steps(line, feature, state)
   end
 
   def process_line(line, {feature, { :doc_string, _prev_state } = state}) do
     log line
-    %{scenarios: [scenario | rest]} = feature
-    %{steps: current_steps} = scenario
-    [%{doc_string: doc_string} = last_step | other_steps] = current_steps
-      |> Enum.reverse
-
-    updated_step = %{last_step | doc_string: doc_string <> line <> "\n"}
-    updated_steps = [updated_step | other_steps] |> Enum.reverse
-    updated_scenario = %{scenario | steps: updated_steps}
-
-    {
-      %{feature | scenarios: [updated_scenario | rest]},
-      state
-    }
+    DocString.add_doc_string_to_step(line, feature, state)
   end
 
   # Tables as part of a step
