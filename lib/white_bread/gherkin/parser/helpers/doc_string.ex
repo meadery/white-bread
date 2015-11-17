@@ -1,6 +1,6 @@
 defmodule WhiteBread.Gherkin.Parser.Helpers.DocString do
 
-  def add_doc_string_to_background_steps(line, feature, parser_state) do
+  def process_background_step_doc_string(line, feature, parser_state) do
     %{background_steps: steps} = feature
 
     updated_steps = steps |> add_doc_string_to_last_step(line)
@@ -11,7 +11,7 @@ defmodule WhiteBread.Gherkin.Parser.Helpers.DocString do
     }
   end
 
-  def add_doc_string_to_step(line, feature, parser_state) do
+  def process_scenario_step_doc_string(line, feature, parser_state) do
     %{scenarios: [scenario | rest]} = feature
     %{steps: steps} = scenario
 

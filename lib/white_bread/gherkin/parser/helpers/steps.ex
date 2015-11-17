@@ -1,6 +1,24 @@
 defmodule WhiteBread.Gherkin.Parser.Helpers.Steps do
   alias WhiteBread.Gherkin.Elements.Steps, as: Steps
 
+  def process_background_step_line(line, feature) do
+    %{background_steps: current_background_steps} = feature
+    new_step = string_to_step(line)
+    {
+      %{feature | background_steps: current_background_steps ++ [new_step]},
+      :background_steps
+    }
+  end
+
+  def process_scenario_step_line(line, feature) do
+    %{scenarios: [scenario | rest]} = feature
+    updated_scenario = add_step_to_scenario(scenario, line)
+    {
+      %{feature | scenarios: [updated_scenario | rest]},
+      :scenario_steps
+    }
+  end
+
   @doc ~S"""
   Takes a string representing a step and adds it to the scenario as a struct
 
