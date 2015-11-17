@@ -66,13 +66,13 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
   # Stop recoding doc string
   def process_line(~s(""") <> _ = line, {feature, {:doc_string, prev_state}}) do
     log line
-    { feature, prev_state }
+    DocStringParser.stop_processing_doc_string(feature, prev_state)
   end
 
   # Start recoding doc string
-  def process_line(~s(""") <> _ = line, {feature, prev_state}) do
+  def process_line(~s(""") <> _ = line, {feature, state}) do
     log line
-    { feature, { :doc_string, prev_state } }
+    DocStringParser.start_processing_doc_string(feature, state)
   end
 
 

@@ -1,5 +1,13 @@
 defmodule WhiteBread.Gherkin.Parser.Helpers.DocString do
 
+  def stop_processing_doc_string(feature, prev_state)do
+     { feature, prev_state }
+  end
+
+  def start_processing_doc_string(feature, prev_state)do
+     { feature, { :doc_string, prev_state } }
+  end
+
   def process_background_step_doc_string(line, feature, parser_state) do
     %{background_steps: steps} = feature
 
