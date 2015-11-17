@@ -1,5 +1,6 @@
 defmodule WhiteBread.Gherkin.Parser.GenericLine do
   require Logger
+  alias WhiteBread.Gherkin.Parser.Helpers.Feature, as: FeatureParser
   alias WhiteBread.Gherkin.Parser.Helpers.Steps, as: StepsParser
   alias WhiteBread.Gherkin.Parser.Helpers.Tables, as: TableParser
   alias WhiteBread.Gherkin.Parser.Helpers.DocString, as: DocStringParser
@@ -26,9 +27,9 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
   end
 
   def process_line("Feature: " <> name = line, {feature, state}) do
-    feature_tags = tags_from_state(state)
     log line
-    {%{feature | name: rstrip(name), tags: feature_tags}, :feature_description}
+    feature_tags = tags_from_state(state)
+    FeatureParser.start_processing_feature(feature, name, feature_tags)
   end
 
   def process_line("Background:" <> _ = line, {feature, _} ) do
@@ -75,7 +76,6 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
     DocStringParser.start_processing_doc_string(feature, state)
   end
 
-
   def process_line(line, {feature, {:doc_string, :background_steps} = state}) do
     log line
     DocStringParser.process_background_step_doc_string(line, feature, state)
@@ -100,11 +100,7 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
 
   def process_line(line, {feature, :feature_description}) do
     log line
-    %{description: current_description} = feature
-    {
-      %{feature | description: current_description <> line <> "\n"},
-      :feature_description
-    }
+    FeatureParser.process_feature_desc_line(line, feature)
   end
 
   def process_line(line, {feature, :background_steps}) do
