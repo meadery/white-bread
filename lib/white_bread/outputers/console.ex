@@ -5,17 +5,21 @@ defmodule WhiteBread.Outputers.Console do
   end
 
   def stop(pid) do
-    send pid, {:stop}
+    send pid, {:stop, self}
+    receive do
+      :stop_complete -> :ok
+    end
   end
 
   defp work do
     continue = receive do
-      {:scenario_result, result, scenario, feature}
-        -> output_scenario_result(result, scenario, feature)
-      {:final_results, results}
-        -> output_final_results(results)
-      {:stop}
-        -> :stop
+      {:scenario_result, result, scenario, feature} ->
+        output_scenario_result(result, scenario, feature)
+      {:final_results, results} ->
+        output_final_results(results)
+      {:stop, caller} ->
+        send caller, :stop_complete
+        :stop
     end
     unless continue == :stop, do: work
   end
