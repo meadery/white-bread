@@ -8,6 +8,8 @@ defmodule WhiteBread.Outputers.Console do
     send pid, {:stop, self}
     receive do
       :stop_complete -> :ok
+    after
+      2_000 -> :ok
     end
   end
 
