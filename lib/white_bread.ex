@@ -12,17 +12,24 @@ defmodule WhiteBread do
 
     results = features
       |> run_all_features(context, output)
+      |> results_as_map
+      |> output_result(output)
 
+    output |> WhiteBread.Outputers.Console.stop
+
+    results
+  end
+
+  defp results_as_map(results) do
     results_map = %{
       successes: results |> Enum.filter(&feature_success?/1),
       failures:  results |> Enum.filter(&feature_failure?/1)
     }
+  end
 
-    send(output, {:final_results, results_map})
-
-    output |> WhiteBread.Outputers.Console.stop
-
-    results_map
+  defp output_result(result_map, output_pid) when is_pid(output_pid)  do
+     send(output_pid, {:final_results, result_map})
+     result_map
   end
 
   defp read_in_feature_files(file_paths) do
