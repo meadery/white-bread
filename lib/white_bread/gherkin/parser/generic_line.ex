@@ -6,11 +6,6 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
   alias WhiteBread.Gherkin.Parser.Helpers.Tables, as: TableParser
   alias WhiteBread.Gherkin.Parser.Helpers.DocString, as: DocStringParser
 
-  alias WhiteBread.Gherkin.Elements.Scenario
-  alias WhiteBread.Gherkin.Elements.ScenarioOutline
-
-  import String, only: [rstrip: 1, rstrip: 2, lstrip: 1]
-
   def process_line("", state) do
     Logger.debug("Parser skipping blank line")
     state
