@@ -13,14 +13,16 @@ defmodule WhiteBread do
     results = features
       |> run_all_features(context, output)
 
-    send(output, {:final_results, results})
-
-    output |> WhiteBread.Outputers.Console.stop
-
-    %{
+    results_map = %{
       successes: results |> Enum.filter(&feature_success?/1),
       failures:  results |> Enum.filter(&feature_failure?/1)
     }
+
+    send(output, {:final_results, results_map})
+
+    output |> WhiteBread.Outputers.Console.stop
+
+    results_map
   end
 
   defp read_in_feature_files(file_paths) do
