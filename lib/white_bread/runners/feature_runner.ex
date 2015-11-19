@@ -5,7 +5,7 @@ defmodule WhiteBread.Runners.FeatureRunner do
     results = scenarios
       |> run_all_scenarios_for_context(context, background_steps)
       |> flatten_any_result_lists
-      |> output_results(feature, output_pid)
+      |> output_results(output_pid)
 
     %{
       successes: results |> Enum.filter(&success?/1),
@@ -34,9 +34,9 @@ defmodule WhiteBread.Runners.FeatureRunner do
     results |> Enum.flat_map(flatten)
   end
 
-  defp output_results(results, feature, output_pid) do
+  defp output_results(results, output_pid) do
     send_results = fn({scenario, result}) ->
-      send(output_pid, {:scenario_result, result, scenario, feature})
+      send(output_pid, {:scenario_result, result, scenario})
     end
 
     results |> Enum.each(send_results)
