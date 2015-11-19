@@ -1,9 +1,11 @@
 defmodule WhiteBread.Gherkin.Parser.GenericLine do
   require Logger
   alias WhiteBread.Gherkin.Parser.Helpers.Feature, as: FeatureParser
+  alias WhiteBread.Gherkin.Parser.Helpers.Scenario, as: ScenarioParser
   alias WhiteBread.Gherkin.Parser.Helpers.Steps, as: StepsParser
   alias WhiteBread.Gherkin.Parser.Helpers.Tables, as: TableParser
   alias WhiteBread.Gherkin.Parser.Helpers.DocString, as: DocStringParser
+
   alias WhiteBread.Gherkin.Elements.Scenario
   alias WhiteBread.Gherkin.Elements.ScenarioOutline
 
@@ -44,24 +46,14 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
 
   def process_line("Scenario: " <> name = line, {feature, state}) do
     log line
-    previous_scenarios = feature.scenarios
-    scenario_tags = tags_from_state(state)
-    new_scenario = %Scenario{name: name, tags: scenario_tags}
-    {
-      %{feature | scenarios: [new_scenario | previous_scenarios]},
-      :scenario_steps
-    }
+    tags = tags_from_state(state)
+    ScenarioParser.start_processing_scenario(feature, name, tags)
   end
 
   def process_line("Scenario Outline: " <> name = line, {feature, state}) do
     log line
-    previous_scenarios = feature.scenarios
-    scenario_tags = tags_from_state(state)
-    new_scenario_outline = %ScenarioOutline{name: name, tags: scenario_tags}
-    {
-      %{feature | scenarios: [new_scenario_outline | previous_scenarios]},
-      :scenario_steps
-    }
+    tags = tags_from_state(state)
+    ScenarioParser.start_processing_scenario_outline(feature, name, tags)
   end
 
   # Stop recoding doc string
