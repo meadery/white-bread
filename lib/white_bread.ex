@@ -13,6 +13,8 @@ defmodule WhiteBread do
     results = features
       |> run_all_features(context, output)
 
+    send(output, {:final_results, results})
+
     output |> WhiteBread.Outputers.Console.stop
 
     %{

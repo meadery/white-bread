@@ -53,10 +53,6 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
     result = context |> WhiteBread.run(path, options)
 
-    result
-      |> WhiteBread.FinalResultPrinter.text
-      |> IO.puts
-
     %{failures: failures} = result
     System.at_exit fn _ ->
       if Enum.count(failures) > 0, do: exit({:shutdown, 1})

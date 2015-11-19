@@ -12,6 +12,8 @@ defmodule WhiteBread.Outputers.Console do
     continue = receive do
       {:scenario_result, result, scenario, feature}
         -> output_scenario_result(result, scenario, feature)
+      {:final_results, results}
+        -> output_final_results(results)
       {:stop}
         -> :stop
     end
@@ -20,6 +22,13 @@ defmodule WhiteBread.Outputers.Console do
 
   defp output_scenario_result({result, _result_info}, scenario, _feature) do
     IO.puts "#{scenario.name} ---> #{result}"
+    :ok
+  end
+
+  defp output_final_results(results) do
+    results
+      |> WhiteBread.FinalResultPrinter.text
+      |> IO.puts
     :ok
   end
 
