@@ -22,6 +22,9 @@ defmodule WhiteBread.Outputers.Console do
       {:stop, caller} ->
         send caller, :stop_complete
         :stop
+      _ ->
+        IO.puts "UNKOWN MESSAGE RECIEVED"
+        :ok
     end
     unless continue == :stop, do: work
   end
