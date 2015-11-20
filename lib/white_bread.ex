@@ -1,4 +1,6 @@
 defmodule WhiteBread do
+  alias WhiteBread.Outputers.ProgressReporter
+
   def run(context, path, options \\ []) do
     tags = options |> Keyword.get(:tags)
 
@@ -27,9 +29,9 @@ defmodule WhiteBread do
     }
   end
 
-  defp output_result(result_map, output_pid) when is_pid(output_pid)  do
-     send(output_pid, {:final_results, result_map})
-     result_map
+  defp output_result(result_map, output) do
+    output |> ProgressReporter.report({:final_results, result_map})
+    result_map
   end
 
   defp read_in_feature_files(file_paths) do

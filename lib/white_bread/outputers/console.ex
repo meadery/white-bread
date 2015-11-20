@@ -1,10 +1,12 @@
 defmodule WhiteBread.Outputers.Console do
+  defstruct pid: nil
 
   def start do
-    spawn fn -> work end
+    pid = spawn fn -> work end
+    %__MODULE__{pid: pid}
   end
 
-  def stop(pid) do
+  def stop(%__MODULE__{pid: pid}) do
     send pid, {:stop, self}
     receive do
       :stop_complete -> :ok

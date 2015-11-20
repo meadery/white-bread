@@ -1,5 +1,7 @@
 defmodule WhiteBread.Runners.Setup do
-  defstruct background_steps: [], starting_state: %{}
+  defstruct background_steps: [],
+    starting_state: %{},
+    progress_reporter: nil
 
   def new, do: %__MODULE__{}
 

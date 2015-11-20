@@ -1,13 +1,14 @@
 defmodule WhiteBread.Runners.FeatureRunner do
   alias WhiteBread.Runners.Setup
   alias WhiteBread.Runners
+  alias WhiteBread.Outputers.ProgressReporter
 
-  def run(feature, context, output_pid) do
+  def run(feature, context, progress_reporter) do
     %{scenarios: scenarios, background_steps: background_steps} = feature
     results = scenarios
       |> run_all_scenarios_for_context(context, background_steps)
       |> flatten_any_result_lists
-      |> output_results(output_pid)
+      |> output_results(progress_reporter)
 
     %{
       successes: results |> Enum.filter(&success?/1),
@@ -36,9 +37,9 @@ defmodule WhiteBread.Runners.FeatureRunner do
     results |> Enum.flat_map(flatten)
   end
 
-  defp output_results(results, output_pid) do
+  defp output_results(results, reporter) do
     send_results = fn({scenario, result}) ->
-      send(output_pid, {:scenario_result, result, scenario})
+      reporter |> ProgressReporter.report({:scenario_result, result, scenario})
     end
 
     results |> Enum.each(send_results)
