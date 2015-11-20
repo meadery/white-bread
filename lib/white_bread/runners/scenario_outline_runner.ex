@@ -1,9 +1,12 @@
 defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.ScenarioOutline do
+  alias WhiteBread.Outputers.ProgressReporter
+
   def run(scenario_outline, context, setup) do
     scenario_outline
       |> build_each_example
       |> Enum.map(&WhiteBread.Runners.run(&1, context, setup))
       |> Enum.map(&process_result(&1, scenario_outline))
+      |> report_progress(setup, scenario_outline)
   end
 
   defp process_result({:ok, _last_state}, scenario), do: {:ok, scenario.name}
@@ -30,6 +33,15 @@ defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.ScenarioOutline do
     updated_text = initial
       |> String.replace("<#{to_string(replace)}>", with)
     %{step | text: updated_text}
+  end
+
+  defp report_progress(results, setup, scenario_outline) do
+    failures? = results |> Enum.any?(fn {success, _} -> success != true end)
+    success_status = if failures?, do: :failed, else: :ok
+    scenario_report ={:scenario_result, {success_status, nil}, scenario_outline}
+    setup.progress_reporter
+      |> ProgressReporter.report(scenario_report)
+    results
   end
 
 end
