@@ -5,8 +5,13 @@ defmodule WhiteBread.Runners.FeatureRunner do
 
   def run(feature, context, progress_reporter) do
     %{scenarios: scenarios, background_steps: background_steps} = feature
+
+    setup = Setup.new
+      |> Map.put(:progress_reporter, progress_reporter)
+      |> Map.put(:background_steps, background_steps)
+
     results = scenarios
-      |> run_all_scenarios_for_context(context, background_steps)
+      |> run_all_scenarios_for_context(context, setup)
       |> flatten_any_result_lists
       |> output_results(progress_reporter)
 
@@ -16,14 +21,16 @@ defmodule WhiteBread.Runners.FeatureRunner do
     }
   end
 
-  defp run_all_scenarios_for_context(scenarios, context, background_steps) do
+  defp run_all_scenarios_for_context(scenarios, context, setup) do
     starting_state = apply(context, :feature_state, [])
+    setup_with_state = setup
+      |> Map.put(:starting_state, starting_state)
     scenarios
-      |> Enum.map(&run_scenario(&1,context, background_steps, starting_state))
+      |> Enum.map(&run_scenario(&1,context, setup_with_state))
   end
 
-  defp run_scenario(scenario,context, background_steps, starting_state) do
-    result = run(scenario, context, background_steps, starting_state)
+  defp run_scenario(scenario, context, setup) do
+    result = Runners.run(scenario, context, setup)
     {scenario, result}
   end
 
@@ -49,10 +56,5 @@ defmodule WhiteBread.Runners.FeatureRunner do
 
   defp success?({_scenario, {success, _}}), do: success == :ok
   defp failure?({_scenario, {success, _}}), do: success == :failed
-
-  defp run(scenario, context, background_steps, starting_state) do
-    setup = Setup.new(background_steps: background_steps, state: starting_state)
-    scenario |> Runners.run(context, setup)
-  end
 
 end
