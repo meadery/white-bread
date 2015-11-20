@@ -36,7 +36,7 @@ defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.ScenarioOutline do
   end
 
   defp report_progress(results, setup, scenario_outline) do
-    failures? = results |> Enum.any?(fn {success, _} -> success != true end)
+    failures? = results |> Enum.any?(fn {success, _} -> success != :ok end)
     success_status = if failures?, do: :failed, else: :ok
     scenario_report ={:scenario_result, {success_status, nil}, scenario_outline}
     setup.progress_reporter
