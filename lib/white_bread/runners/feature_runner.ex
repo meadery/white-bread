@@ -13,7 +13,6 @@ defmodule WhiteBread.Runners.FeatureRunner do
     results = scenarios
       |> run_all_scenarios_for_context(context, setup)
       |> flatten_any_result_lists
-      |> output_results(progress_reporter)
 
     %{
       successes: results |> Enum.filter(&success?/1),
@@ -42,16 +41,6 @@ defmodule WhiteBread.Runners.FeatureRunner do
         [single]
     end
     results |> Enum.flat_map(flatten)
-  end
-
-  defp output_results(results, reporter) do
-    send_results = fn({scenario, result}) ->
-      reporter |> ProgressReporter.report({:scenario_result, result, scenario})
-    end
-
-    results |> Enum.each(send_results)
-
-    results
   end
 
   defp success?({_scenario, {success, _}}), do: success == :ok
