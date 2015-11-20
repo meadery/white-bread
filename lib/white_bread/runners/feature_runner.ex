@@ -1,7 +1,6 @@
 defmodule WhiteBread.Runners.FeatureRunner do
   alias WhiteBread.Runners.Setup
   alias WhiteBread.Runners
-  alias WhiteBread.Outputers.ProgressReporter
 
   def run(feature, context, progress_reporter) do
     %{scenarios: scenarios, background_steps: background_steps} = feature
