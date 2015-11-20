@@ -3,6 +3,7 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
   alias WhiteBread.Gherkin.Elements.Steps, as: Steps
   alias WhiteBread.Gherkin.Elements.Scenario, as: Scenario
   alias WhiteBread.ScenarioRunnerTest.ExampleContext, as: ExampleContext
+  alias WhiteBread.Runners.Setup
 
   test "Returns okay if all the steps pass" do
     steps = [
@@ -29,8 +30,8 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
       %Steps.When{text: "step two"}
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
-
-    assert {:ok, "test scenario"} == scenario |> WhiteBread.Runners.run(ExampleContext, background_steps)
+    setup = Setup.new(background_steps: background_steps)
+    assert {:ok, "test scenario"} == scenario |> WhiteBread.Runners.run(ExampleContext, setup)
   end
 
   test "Fails if the last step is missing" do

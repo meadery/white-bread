@@ -1,10 +1,9 @@
 defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.Scenario do
-  def run(scenario, context, background_steps, starting_state) do
+  def run(scenario, context, setup) do
     result = WhiteBread.Runners.run(
       scenario.steps,
       context,
-      background_steps,
-      starting_state
+      setup
     )
     case result do
       {:ok, _}   -> {:ok, scenario.name}

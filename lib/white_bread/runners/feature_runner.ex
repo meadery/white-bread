@@ -1,4 +1,6 @@
 defmodule WhiteBread.Runners.FeatureRunner do
+  alias WhiteBread.Runners.Setup
+  alias WhiteBread.Runners
 
   def run(feature, context, output_pid) do
     %{scenarios: scenarios, background_steps: background_steps} = feature
@@ -48,8 +50,8 @@ defmodule WhiteBread.Runners.FeatureRunner do
   defp failure?({_scenario, {success, _}}), do: success == :failed
 
   defp run(scenario, context, background_steps, starting_state) do
-    scenario
-      |> WhiteBread.Runners.run(context, background_steps, starting_state)
+    setup = Setup.new(background_steps: background_steps, state: starting_state)
+    scenario |> Runners.run(context, setup)
   end
 
 end

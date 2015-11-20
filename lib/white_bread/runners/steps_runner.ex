@@ -1,9 +1,10 @@
 defimpl WhiteBread.Runners, for: List do
-  def run(steps, context, background_steps, global_starting_state) do
+  def run(steps, context, setup) do
 
-    starting_state = context |> update_starting_state(global_starting_state)
+    starting_state = context
+      |> update_starting_state(setup.starting_state)
 
-    background_steps
+    setup.background_steps
       |> Enum.concat(steps)
       |> Enum.reduce({:ok, starting_state}, step_executor(context))
       |> finalize(context)
