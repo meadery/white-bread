@@ -21,7 +21,7 @@ defmodule WhiteBread do
   end
 
   defp results_as_map(results) do
-    results_map = %{
+    %{
       successes: results |> Enum.filter(&feature_success?/1),
       failures:  results |> Enum.filter(&feature_failure?/1)
     }
