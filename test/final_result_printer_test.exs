@@ -2,7 +2,7 @@ defmodule WhiteBread.FinalResultPrinterTest do
   use ExUnit.Case
 
   defmodule MockStepFailure do
-    def text(_), do: "STEP_FAILURE_TEXT"
+    def text(_,_,_), do: "STEP_FAILURE_TEXT"
   end
 
   test "Knows if nothing was run" do

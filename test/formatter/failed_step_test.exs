@@ -7,27 +7,24 @@ defmodule WhiteBread.Formatter.FailedStepTest do
   test "Prints out failure with a trace when no matching clause is found" do
     trace = System.stacktrace
     step = %{text: "failing step"}
-    failure = {:no_clause_match, step, {%{}, trace}}
 
-    output = FailedStep.text(failure)
+    output = FailedStep.text(:no_clause_match, step, {%{}, trace})
     assert output == "unable to match clauses: failing step:\ntrace:\n#{Exception.format_stacktrace trace}"
   end
 
   test "Prints out regex for a missing step" do
     step = %Steps.When{text: "missing step"}
-    failure = {:missing_step, step, :unused}
     code_to_implement = CodeGenerator.Step.regex_code_for_step(step)
 
-    output = FailedStep.text(failure)
+    output = FailedStep.text(:missing_step, step, :unused)
     assert output == "undefined step: missing step implement with\n\n" <> code_to_implement
   end
 
   test "Prints out assestion failing steps" do
     step = %{text: "failing step"}
     assertion_failure = %{message: "this is my assestion message"}
-    failure = {:assertion_failure, step, assertion_failure}
 
-    output = FailedStep.text(failure)
+    output = FailedStep.text(:assertion_failure, step, assertion_failure)
     assert output == "failing step: this is my assestion message"
   end
 
@@ -37,9 +34,7 @@ defmodule WhiteBread.Formatter.FailedStepTest do
 
     stacktrace = [{Module, :failure, 0, [{:file, "somefile"}, {:line, 10}]}]
 
-    failure = {:other_failure, step, {exception, stacktrace}}
-
-    output = FailedStep.text(failure)
+    output = FailedStep.text(:other_failure, step, {exception, stacktrace})
     assert output == "execution failure: #{step.text}:\nException: #{Exception.message exception}: \n#{Exception.format_stacktrace stacktrace}"
   end
 end
