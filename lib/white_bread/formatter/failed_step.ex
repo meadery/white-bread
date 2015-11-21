@@ -18,17 +18,20 @@ defimpl WhiteBread.Formatter.FailedStep, for: Atom do
     "unable to match clauses: #{step_text}:\ntrace:\n#{trace_message}"
   end
 
-  def text(:assertion_failure, step, assertion_failure) do
-    %{text: step_text} = step
-    %{message: assestion_message} = assertion_failure
-    "#{step_text}: #{assestion_message}"
-  end
-
   def text(:other_failure, step, {other_failure, stacktrace}) do
     %{text: step_text} = step
     trace_message = Exception.format_stacktrace(stacktrace)
     "execution failure: #{step_text}:\n" <>
     "Exception: #{Exception.message other_failure}: \n" <>
     trace_message
+  end
+end
+
+defimpl WhiteBread.Formatter.FailedStep,
+for: [ESpec.AssertionError, ExUnit.AssertionError] do
+  def text(_, step, assertion_failure) do
+    %{text: step_text} = step
+    %{message: assestion_message} = assertion_failure
+    "#{step_text}: #{assestion_message}"
   end
 end

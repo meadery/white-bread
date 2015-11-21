@@ -79,7 +79,7 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
       %Steps.When{text: "step two"}
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
-    {result, {:assertion_failure, _, _failure}} = scenario |> WhiteBread.Runners.run(ExampleContext)
+    {result, {_assertion_type, _, _failure}} = scenario |> WhiteBread.Runners.run(ExampleContext)
     assert result == :failed
   end
 
