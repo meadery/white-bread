@@ -1,5 +1,18 @@
 # Changelog
 
+## V2.1.2 (2015-11-21)
+
+### Enhancements
+none
+
+### Bug fixes
+* Scenario results now reported live as they are run. Issue #26
+* Fixed bug that meant final result sometimes printed before scenario results. Issue #27
+
+### Backwards incompatible changes
+none
+
+
 ## V2.1.1 (2015-11-14)
 
 ### Enhancements
