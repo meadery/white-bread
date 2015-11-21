@@ -14,6 +14,10 @@ defmodule WhiteBread.Example.DefaultContext do
     feature_state |> Dict.put(:starting_state_loaded, :yes)
   end
 
+  scenario_finalize fn _state ->
+    # Do some finalization actions
+  end
+
 end
 
 defmodule WhiteBread.Example.CoffeeContext do

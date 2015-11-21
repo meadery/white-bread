@@ -38,6 +38,20 @@ This matches each of the steps in a scenario to some code.
 defmodule SunDoe.CoffeeShopContext do
   use WhiteBread.Context
 
+  feature_starting_state fn  ->
+    coffee_storage = setup_coffee_storage
+    %{in_memory_coffee_db: coffee_storage}
+  end
+
+  scenario_starting_state fn state ->
+    state.in_memory_coffee_db |> clear_db
+    state
+  end
+
+  scenario_finalize fn state ->
+    state.in_memory_coffee_db |> shutdown_db
+  end
+
   given_ "there are 1 coffees left in the machine", fn state ->
     {:ok, state |> Dict.put(:coffees, 1)}
   end
@@ -54,11 +68,11 @@ defmodule SunDoe.CoffeeShopContext do
 
   then_ "I should be served a coffee", fn state ->
     served_coffees = state |> Dict.get(:coffees_served)
-    
+
     # The context automatically imports ExUnit.Assertions
     # so any usual assertions can be made
     assert served_coffees == 1
-    
+
     {:ok, :whatever}
   end
 end
