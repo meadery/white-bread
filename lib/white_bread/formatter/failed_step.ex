@@ -1,4 +1,8 @@
-defmodule WhiteBread.Formatter.FailedStep do
+defprotocol WhiteBread.Formatter.FailedStep do
+  def text(failure_type, failing_step, failure_data)
+end
+
+defimpl WhiteBread.Formatter.FailedStep, for: Atom do
   alias WhiteBread.CodeGenerator
 
   def text(:missing_step, step, _error) do
