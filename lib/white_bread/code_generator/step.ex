@@ -48,16 +48,17 @@ defmodule WhiteBread.CodeGenerator.Step do
   end
 
   def named_groups_for_string(string) when is_binary(string) do
-    struct = %{template: "", groups: [], unproccessed_string: string}
-    named_groups_for_string(struct)
+    string_data = %{template: "", groups: [], unproccessed_string: string}
+    named_groups_for_string(string_data)
   end
 
-  def named_groups_for_string(%{unproccessed_string: ""} = struct) do
-    %{template: struct.template, groups: struct.groups}
+  def named_groups_for_string(%{unproccessed_string: ""} = string_data) do
+    %{template: string_data.template, groups: string_data.groups}
   end
 
-  def named_groups_for_string(struct) do
-    %{template: template, groups: groups, unproccessed_string: string} = struct
+  def named_groups_for_string(string_data) do
+    %{template: template, groups: groups, unproccessed_string: string}
+      = string_data
 
     next_number = Enum.count(groups) + 1
     argument = string_for_number(next_number)
