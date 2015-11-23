@@ -16,7 +16,7 @@ script:
   - mix whiteBread.run
   - mix whiteBread.run --tags songs
   - mix dogma lib
-  - mix credo suggest --verbose
+  - mix credo suggest --verbose lib/
 
 notifications:
   webhooks:
