@@ -16,10 +16,10 @@ defmodule WhiteBread.FinalResultPrinter do
   end
 
   def text(%{failures: failures}, step_helper) do
-    text = failures
+    failures
       |> Enum.map(&failing_feature_text(&1, step_helper))
       |> Enum.join("\n")
-    text <> "\n"
+      |> add_newline
   end
 
   defp failing_feature_text(failing_feature, step_helper) do
@@ -39,4 +39,5 @@ defmodule WhiteBread.FinalResultPrinter do
     "  - #{failing_scenario.name} --> #{reason}"
   end
 
+  defp add_newline(string), do: string <> "\n"
 end
