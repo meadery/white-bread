@@ -34,10 +34,15 @@ defmodule WhiteBread.FinalResultPrinter do
 
   defp failing_scenerio_text(scenario_faliure, step_helper) do
     {failing_scenario, {:failed, failure}} = scenario_faliure
-    {failure_type, failing_step, fail_data} = failure
-    reason = step_helper.text(failure_type, failing_step, fail_data)
+    reason = failure |> get_fail_reason(step_helper)
     "  - #{failing_scenario.name} --> #{reason}"
   end
+
+  defp get_fail_reason({failure_type, failing_step, fail_data}, step_helper) do
+    step_helper.text(failure_type, failing_step, fail_data)
+  end
+
+  defp get_fail_reason(_, _), do: "Ended in a not okay state"
 
   defp add_newline(string), do: string <> "\n"
 end
