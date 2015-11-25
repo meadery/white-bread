@@ -15,6 +15,7 @@ script:
   - mix test
   - mix whiteBread.run
   - mix whiteBread.run --tags songs
+  - mix white_bread.run --context "features\alternate_context.exs"
   - mix dogma lib
   - mix credo suggest --verbose lib/
 

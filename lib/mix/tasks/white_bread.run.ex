@@ -7,12 +7,10 @@ defmodule Mix.Tasks.WhiteBread.Run do
   def run(argv) do
     {options, arguments, _} = OptionParser.parse(argv)
     start_app(argv)
-    context = case arguments do
-      [context_name | _ ] -> context_name |> context_from_string
-      [] -> load_default_context
-    end
-
-    context |> run("features/", options)
+    options
+      |> as_map
+      |> get_context(arguments)
+      |> run("features/", options)
   end
 
   def start_app(argv) do
@@ -21,12 +19,17 @@ defmodule Mix.Tasks.WhiteBread.Run do
     end
   end
 
+  def get_context(%{context: path}, _), do: load_context_file(path)
+  def get_context(_, [context | _ ]), do: context_from_string(context)
+  def get_context(_, _), do: load_default_context
+
   def load_default_context do
     unless File.exists?(@default_context), do: create_default_context
     load_context_file(@default_context)
   end
 
   def load_context_file(path) do
+    IO.puts "loading #{path}"
     [{context_module, _} | _] = Code.load_file(path)
     context_module
   end
@@ -64,6 +67,10 @@ defmodule Mix.Tasks.WhiteBread.Run do
     tag_string
     |> String.split(",", trim: true)
     |> Enum.map(&String.strip/1)
+  end
+
+  defp as_map(keywordlist) do
+    Enum.into(keywordlist, %{})
   end
 
 end
