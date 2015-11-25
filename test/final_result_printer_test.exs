@@ -45,4 +45,24 @@ defmodule WhiteBread.FinalResultPrinterTest do
     """
   end
 
+  test "Prints out failures when scenario ended in not okay state" do
+    step_failure = {:not_okay, %{last_state_stuff: true}}
+    result = %{
+      failures: [
+        {
+          %{name: "feature name"},
+          %{failures: [
+            {%{name: "failing scenario"}, {:failed, step_failure}}
+          ]}
+        }
+      ]
+    }
+
+    output = WhiteBread.FinalResultPrinter.text(result, MockStepFailure)
+    assert output == """
+    1 scenario failed for feature name
+      - failing scenario --> Ended in a not okay state
+    """
+  end
+
 end
