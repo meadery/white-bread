@@ -5,7 +5,7 @@ defmodule WhiteBread.Mixfile do
     [app: :white_bread,
      name: "WhiteBread",
      description: """
-     Story BDD tool written in and for Elixir.
+     Story BDD tool based on cucumber.
      Parses Gherkin formatted feature files and executes them as tests.
      """,
      package: [
