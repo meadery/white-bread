@@ -4,14 +4,22 @@ defmodule WhiteBread.Outputers.StyleTests do
 
 	test "check failed message is in `red` colour encoding" do
 		styled_binary = Style.failed("Exception was thrown")
-		assert String.contains? styled_binary, "\e[31m"
-		assert String.contains? styled_binary, "Exception"
+		assert styled_binary == "\e[31mException was thrown\e[0m"
 	end
 
 	test "check success message is in `green` colour encoding" do
 		styled_binary = Style.success("Success message")
-		assert String.contains? styled_binary, "\e[32m"
-		assert String.contains? styled_binary, "Success"
+		assert styled_binary == "\e[32mSuccess message\e[0m"
+	end
+
+	test "decide how to colour a failed message with red" do
+		styled_binary = Style.decide_color(:failed, "Exception was thrown");
+		assert String.contains? styled_binary, "\e[31m"
+	end
+
+	test "no colour style atom then return plain message" do
+		styled_binary = Style.decide_color(:no_color, "I'm just a message");
+		assert styled_binary == "I'm just a message"
 	end
 
 end
