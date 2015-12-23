@@ -1,6 +1,6 @@
 defmodule WhiteBread.Outputers.Console do
   defstruct pid: nil
-  alias WhiteBread.Outputers.Style, as: Style
+  alias WhiteBread.Outputers.Style
 
   def start do
     pid = spawn fn -> work end

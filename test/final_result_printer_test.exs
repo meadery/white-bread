@@ -40,8 +40,8 @@ defmodule WhiteBread.FinalResultPrinterTest do
 
     output = WhiteBread.FinalResultPrinter.text(result, MockStepFailure)
     assert output == """
-    1 scenario failed for feature name
-      - failing scenario --> STEP_FAILURE_TEXT
+    \e[31m1 scenario failed for feature name
+      - failing scenario --> STEP_FAILURE_TEXT\e[0m
     """
   end
 
@@ -60,8 +60,8 @@ defmodule WhiteBread.FinalResultPrinterTest do
 
     output = WhiteBread.FinalResultPrinter.text(result, MockStepFailure)
     assert output == """
-    1 scenario failed for feature name
-      - failing scenario --> Ended in a not okay state
+    \e[31m1 scenario failed for feature name
+      - failing scenario --> Ended in a not okay state\e[0m
     """
   end
 
