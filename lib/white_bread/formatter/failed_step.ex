@@ -9,8 +9,8 @@ defimpl WhiteBread.Formatter.FailedStep, for: Atom do
   def text(:missing_step, step, _error) do
     %{text: step_text} = step
     code_to_implement = CodeGenerator.Step.regex_code_for_step(step)
-    Style.info "undefined step: #{step_text}" <>
-    " implement with\n\n" <> code_to_implement
+    Style.info "undefined step: #{step_text}"
+    <> " implement with\n\n" <> code_to_implement
   end
 
   def text(:no_clause_match, step, error) do
