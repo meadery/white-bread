@@ -1,5 +1,6 @@
 defmodule WhiteBread.Outputers.Console do
   defstruct pid: nil
+  alias WhiteBread.Outputers.Style, as: Style
 
   def start do
     pid = spawn fn -> work end
@@ -32,7 +33,7 @@ defmodule WhiteBread.Outputers.Console do
   end
 
   defp output_scenario_result({result, _result_info}, scenario) do
-    IO.puts "#{scenario.name} ---> #{result}"
+    IO.puts Style.decide_color result, "#{scenario.name} ---> #{result}"
     :ok
   end
 
