@@ -1,6 +1,6 @@
 defmodule WhiteBread.Outputers.StyleTests do
 	use ExUnit.Case
-	alias WhiteBread.Outputers.Style, as: Style
+	alias WhiteBread.Outputers.Style
 
 	test "check failed message is in `red` colour encoding" do
 		styled_binary = Style.failed("Exception was thrown")
