@@ -9,14 +9,16 @@ defimpl WhiteBread.Formatter.FailedStep, for: Atom do
   def text(:missing_step, step, _error) do
     %{text: step_text} = step
     code_to_implement = CodeGenerator.Step.regex_code_for_step(step)
-    Style.info "undefined step: #{step_text} implement with\n\n" <> code_to_implement
+    Style.info "undefined step: #{step_text}" <>
+    " implement with\n\n" <> code_to_implement
   end
 
   def text(:no_clause_match, step, error) do
     %{text: step_text} = step
     {_clause_match_error, stacktrace} = error
     trace_message = Exception.format_stacktrace(stacktrace)
-    Style.failed "unable to match clauses: #{step_text}:\ntrace:\n#{trace_message}"
+    Style.failed "unable to match clauses: #{step_text}:\n" <>
+    "trace:\n#{trace_message}"
   end
 
   def text(:other_failure, step, {other_failure, stacktrace}) do
