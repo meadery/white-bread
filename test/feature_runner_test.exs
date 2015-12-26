@@ -80,7 +80,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     scenario = %Scenario{name: "test scenario", steps: steps}
     feature = %Feature{name: "test feature", scenarios: [scenario]}
     output = WhiteBread.Outputers.Console.start
-    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output)
+    WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output)
     output |> WhiteBread.Outputers.Console.stop
 
     assert Process.get(:run_count) == 1

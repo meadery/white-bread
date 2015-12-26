@@ -30,8 +30,9 @@ defmodule WhiteBread.FinalResultPrinter do
       |> Enum.join("\n")
 
     failing_count = Enum.count(failing_scenarios)
-    Style.failed "#{failing_count} scenario failed for" <>
-    " #{feature.name}\n" <> scenerios_text
+    Style.failed "#{failing_count} scenario failed for"
+    <> " #{feature.name}\n"
+    <> scenerios_text
 
   end
 
