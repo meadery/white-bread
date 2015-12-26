@@ -1,5 +1,17 @@
 # Changelog
 
+## V2.2.0 (2015-12-26)
+
+### Enhancements
+* Colour output thanks to @rkotze see #29
+* Define the WhiteBread.Formatter.FailedStep protocol. Using this allows users to customise how uncaught exceptions are formatted as text by whitebread.
+
+### Bug fixes
+none
+
+### Backwards incompatible changes
+none
+
 ## V2.1.2 (2015-11-21)
 
 ### Enhancements
