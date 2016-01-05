@@ -94,7 +94,18 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
     assert result == :failed
   end
 
-  test "Fails if a step returns anything but {:ok, state}" do
+
+  test "Steps can simply return :ok and the initial state is passed through" do
+    steps = [
+      %Steps.When{text: "I only return :okay"},
+      %Steps.Then{text: "the state is not just :ok"}
+    ]
+    scenario = %Scenario{name: "test scenario", steps: steps}
+
+    assert {:ok, "test scenario"} == scenario |> WhiteBread.Runners.run(ExampleContext)
+  end
+
+  test "Fails if a step returns with not okay in the tuple {:ok, state}" do
     failure_step = %Steps.When{text: "I return not okay"}
     expected_step_result = {:no_way, :impossible}
 
@@ -219,7 +230,6 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
     {:ok, state}
   end
 
-
   when_ "make a failing asserstion", fn _state ->
     assert 1 == 0
     {:ok, :impossible}
@@ -229,11 +239,19 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
     {:no_way, :impossible}
   end
 
+  when_ "I only return :okay", fn _state ->
+    :ok
+  end
+
   when_ "I raise an exception", fn _state ->
     raise "Runtime Exception"
   end
 
   then_ "starting state was correct", fn %{starting_state: :yes} = state ->
+    {:ok, state}
+  end
+
+  then_ "the state is not just :ok", fn state when state != :ok ->
     {:ok, state}
   end
 

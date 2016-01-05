@@ -28,6 +28,7 @@ defimpl WhiteBread.Runners, for: List do
     result = apply(context, :execute_step, [step, state])
     case result do
       {:ok, state} -> {:ok, state}
+      :ok          -> {:ok, state}
       error        -> {error, state}
     end
   end
