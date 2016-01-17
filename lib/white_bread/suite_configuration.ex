@@ -1,4 +1,5 @@
 defmodule WhiteBread.SuiteConfiguration do
+  alias WhiteBread.Suite.DuplicateSuiteError
 
   defmacro __using__(_opts) do
     quote do
@@ -11,7 +12,25 @@ defmodule WhiteBread.SuiteConfiguration do
 
   defmacro __before_compile__(_env) do
     quote do
-      def suites, do: @suites
+      def suites do
+        @suites
+          |> throw_if_not_unique
+      end
+
+      defp throw_if_not_unique(suites) do
+        unique? = suites
+          |> Stream.map(fn suite -> suite.name end)
+          |> Enum.uniq
+          |> same_size?(suites)
+        unless unique? do
+          raise DuplicateSuiteError
+        end
+        suites
+      end
+
+      defp same_size?(a, b) do
+        Enum.count(a) == Enum.count(b)
+      end
     end
   end
 
