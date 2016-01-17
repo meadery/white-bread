@@ -3,14 +3,25 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
   @shortdoc "Runs all the feature files with WhiteBread"
   @default_context "features/default_context.exs"
+  @default_suite_config "features/config.exs"
 
   def run(argv) do
     {options, arguments, _} = OptionParser.parse(argv)
     start_app(argv)
-    options
+    run_single_context(options, arguments)
+  end
+
+  def run_single_context(options, arguments) do
+    context = options
       |> as_map
       |> get_context(arguments)
-      |> run("features/", options)
+
+    result = context |> WhiteBread.run("features/", clean_options(options))
+
+    %{failures: failures} = result
+    System.at_exit fn _ ->
+      if Enum.count(failures) > 0, do: exit({:shutdown, 1})
+    end
   end
 
   def start_app(argv) do
@@ -50,17 +61,9 @@ defmodule Mix.Tasks.WhiteBread.Run do
     context
   end
 
-  def run(context, path, raw_options \\ []) do
-
-    options = raw_options
+  def clean_options(raw_options) do
+    raw_options
       |> Keyword.update(:tags, nil, &breakup_tag_string/1)
-
-    result = context |> WhiteBread.run(path, options)
-
-    %{failures: failures} = result
-    System.at_exit fn _ ->
-      if Enum.count(failures) > 0, do: exit({:shutdown, 1})
-    end
   end
 
   defp breakup_tag_string(tag_string) do
