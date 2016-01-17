@@ -1,6 +1,11 @@
 defmodule WhiteBread.Feature.Finder do
   import String, only: [ends_with?: 2]
 
+  def find_in_path(dir_paths) when is_list(dir_paths) do
+    dir_paths
+      |> Enum.flat_map(&find_in_path/1)
+  end
+
   def find_in_path(dir_path) do
     path_pattern = dir_path <> "**"
     path_pattern
