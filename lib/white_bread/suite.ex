@@ -1,6 +1,6 @@
 defmodule WhiteBread.Suite do
   defstruct name: "",
             context: nil,
-            tags: [],
+            tags: nil,
             feature_paths: []
 end

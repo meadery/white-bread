@@ -15,6 +15,7 @@ defmodule WhiteBread.SuiteConfiguration do
       def suites do
         @suites
           |> throw_if_not_unique
+          |> Enum.reverse
       end
 
       defp throw_if_not_unique(suites) do
@@ -44,7 +45,7 @@ defmodule WhiteBread.SuiteConfiguration do
   end
 
   defmacro suite(name: name, context: context, feature_paths: paths) do
-    add_suite(name: name, context: context, feature_paths: paths, tags: [])
+    add_suite(name: name, context: context, feature_paths: paths, tags: nil)
   end
 
   defp add_suite(

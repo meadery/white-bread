@@ -1,14 +1,49 @@
 defmodule Mix.Tasks.WhiteBread.Run do
   use Mix.Task
 
+  alias WhiteBread.Suite
+
   @shortdoc "Runs all the feature files with WhiteBread"
   @default_context "features/default_context.exs"
   @default_suite_config "features/config.exs"
+  @context_path "features/contexts/"
 
   def run(argv) do
     {options, arguments, _} = OptionParser.parse(argv)
     start_app(argv)
-    run_single_context(options, arguments)
+    if suite_config_present? do
+      run_suites(options, arguments)
+    else
+      run_single_context(options, arguments)
+    end
+  end
+
+  def suite_config_present?, do: File.exists?(@default_suite_config)
+
+  def run_suites(_options, _arguments) do
+    load_context_files
+
+    failures = @default_suite_config
+      |> get_suites_from_config
+      |> Enum.map(&run_suite/1)
+      |> Enum.flat_map(fn results -> results.failures end)
+
+    System.at_exit fn _ ->
+      if Enum.count(failures) > 0, do: exit({:shutdown, 1})
+    end
+  end
+
+  def run_suite(%Suite{} = suite) do
+    IO.puts "\n\nSuite: #{suite.name}"
+    suite.context
+      |> WhiteBread.run(suite.feature_paths, tags: suite.tags)
+  end
+
+  def load_context_files() do
+    @context_path <> "**"
+      |> Path.wildcard()
+      |> Enum.filter(fn(file_path) -> file_path |> String.ends_with?(".exs") end)
+      |> Enum.map(&Code.require_file/1)
   end
 
   def run_single_context(options, arguments) do
@@ -43,6 +78,12 @@ defmodule Mix.Tasks.WhiteBread.Run do
     IO.puts "loading #{path}"
     [{context_module, _} | _] = Code.load_file(path)
     context_module
+  end
+
+  def get_suites_from_config(path) do
+    IO.puts "loading config from #{path}"
+    [{suite_config_module, _} | _] = Code.load_file(path)
+    suite_config_module.suites
   end
 
   def create_default_context do

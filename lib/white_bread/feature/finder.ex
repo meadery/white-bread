@@ -16,7 +16,7 @@ defmodule WhiteBread.Feature.Finder do
 
   defp get_only_feature_files(file_paths) do
     file_paths
-      |> Enum.filter(fn(file_path) -> file_path |> ends_with? ".feature" end)
+      |> Enum.filter(fn(file_path) -> file_path |> ends_with?(".feature") end)
   end
 
   defp sort_alphabetically(file_paths) do
