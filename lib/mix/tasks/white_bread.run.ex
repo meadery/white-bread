@@ -40,9 +40,10 @@ defmodule Mix.Tasks.WhiteBread.Run do
   end
 
   def load_context_files() do
-    @context_path <> "**"
+    path_pattern = @context_path <> "**"
+    path_pattern
       |> Path.wildcard()
-      |> Enum.filter(fn(file_path) -> file_path |> String.ends_with?(".exs") end)
+      |> Enum.filter(&is_script?/1)
       |> Enum.map(&Code.require_file/1)
   end
 
@@ -115,6 +116,10 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
   defp as_map(keywordlist) do
     Enum.into(keywordlist, %{})
+  end
+
+  defp is_script?(file_path) do
+    fn(file_path) -> file_path |> String.ends_with?(".exs") end
   end
 
 end
