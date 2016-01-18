@@ -11,14 +11,24 @@ defmodule Mix.Tasks.WhiteBread.Run do
   def run(argv) do
     {options, arguments, _} = OptionParser.parse(argv)
     start_app(argv)
-    if suite_config_present? do
+    if run_as_suite?(options, arguments) do
       run_suites(options, arguments)
     else
       run_single_context(options, arguments)
     end
   end
 
+  def run_as_suite?(options, arguments) do
+    suite_config_present?
+    && !single_context_config?(options, arguments)
+  end
+
   def suite_config_present?, do: File.exists?(@default_suite_config)
+
+  def single_context_config?(options, arguments) do
+    Dict.has_key?(options, :tags)
+    || Dict.has_key?(options, :context)
+  end
 
   def run_suites(_options, _arguments) do
     load_context_files
