@@ -2,8 +2,13 @@ defmodule WhiteBread.CommandLine.SuiteRun do
   alias WhiteBread.CommandLine.ContextLoader
   alias WhiteBread.Suite
 
-  def run_suites(_options, _arguments, config_path: config_path) do
-    ContextLoader.load_context_files
+  def run_suites(
+    _options,
+    _arguments,
+    config_path: config_path,
+    contexts: context_path)
+  do
+    ContextLoader.load_context_files(context_path)
 
     config_path
       |> get_suites_from_config
