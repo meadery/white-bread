@@ -7,14 +7,10 @@ defmodule WhiteBread.CommandLine.SuiteRun do
   def run_suites(_options, _arguments) do
     ContextLoader.load_context_files
 
-    failures = @default_suite_config
+    @default_suite_config
       |> get_suites_from_config
       |> Enum.map(&run_suite/1)
       |> Enum.flat_map(fn results -> results.failures end)
-
-    System.at_exit fn _ ->
-      if Enum.count(failures) > 0, do: exit({:shutdown, 1})
-    end
   end
 
   def suite_config_present?, do: File.exists?(@default_suite_config)
