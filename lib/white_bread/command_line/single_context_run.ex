@@ -1,12 +1,10 @@
 defmodule WhiteBread.CommandLine.SingleContextRun do
   alias WhiteBread.CommandLine.ContextLoader
 
-  @default_context "features/default_context.exs"
-
-  def run_single_context(options, arguments) do
+  def run_single_context(options, arguments, default_context: default) do
     context = options
       |> as_map
-      |> get_context(arguments)
+      |> get_context(arguments, default_context: default)
 
     result = context |> WhiteBread.run("features/", clean_options(options))
 
@@ -14,23 +12,29 @@ defmodule WhiteBread.CommandLine.SingleContextRun do
     failures
   end
 
-  defp get_context(%{context: src}, _), do: ContextLoader.load_context_file(src)
-  defp get_context(_, [context | _ ]), do: context_from_string(context)
-  defp get_context(_, _), do: load_default_context
-
-  defp load_default_context do
-    unless File.exists?(@default_context), do: create_default_context
-    ContextLoader.load_context_file(@default_context)
+  defp get_context(%{context: src}, _args, _defaults) do
+    ContextLoader.load_context_file(src)
+  end
+  defp get_context(_opts, [context | _ ], _defaults) do
+    context_from_string(context)
+  end
+  defp get_context(_opts, _args, default_context: context) do
+    load_create_context(context)
   end
 
-  defp create_default_context do
+  defp load_create_context(context) do
+    unless File.exists?(context), do: create_context(context)
+    ContextLoader.load_context_file(context)
+  end
+
+  defp create_context(context) do
     context_text = WhiteBread.CodeGenerator.Context.empty_context
-    IO.puts "Default context module not found in #{@default_context}. "
+    IO.puts "Default context module not found in #{context}. "
     IO.puts "Create one [Y/n]? "
     acceptance = IO.read(:stdio, :line)
 
     unless acceptance == "n" <> "\n" do
-      File.write(@default_context, context_text)
+      File.write(context, context_text)
     end
   end
 

@@ -2,18 +2,14 @@ defmodule WhiteBread.CommandLine.SuiteRun do
   alias WhiteBread.CommandLine.ContextLoader
   alias WhiteBread.Suite
 
-  @default_suite_config "features/config.exs"
-
-  def run_suites(_options, _arguments) do
+  def run_suites(_options, _arguments, config_path: config_path) do
     ContextLoader.load_context_files
 
-    @default_suite_config
+    config_path
       |> get_suites_from_config
       |> Enum.map(&run_suite/1)
       |> Enum.flat_map(fn results -> results.failures end)
   end
-
-  def suite_config_present?, do: File.exists?(@default_suite_config)
 
   defp run_suite(%Suite{} = suite) do
     IO.puts "\n\nSuite: #{suite.name}"
