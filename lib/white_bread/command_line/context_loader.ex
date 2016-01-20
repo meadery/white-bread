@@ -45,7 +45,7 @@ defmodule WhiteBread.CommandLine.ContextLoader do
   end
 
   defp script?(file_path) do
-    fn(file_path) -> file_path |> String.ends_with?(".exs") end
+    file_path |> String.ends_with?(".exs")
   end
 
 end
