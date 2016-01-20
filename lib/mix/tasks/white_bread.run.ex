@@ -6,9 +6,12 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
   @shortdoc "Runs all the feature files with WhiteBread"
 
-  @default_context "features/default_context.exs"
   @default_suite_config "features/config.exs"
   @context_path "features/contexts/"
+  @default_contexts [
+    "features/contexts/default_context.exs",
+    "features/default_context.exs"
+  ]
 
   def run(argv) do
     {options, arguments, _} = OptionParser.parse(argv)
@@ -26,7 +29,7 @@ defmodule Mix.Tasks.WhiteBread.Run do
       )
     else
       SingleContextRun.run_single_context(
-        options, arguments, default_context: @default_context
+        options, arguments, default_contexts: @default_contexts
       )
     end
   end

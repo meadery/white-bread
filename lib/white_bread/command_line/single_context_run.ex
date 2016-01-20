@@ -1,10 +1,12 @@
 defmodule WhiteBread.CommandLine.SingleContextRun do
   alias WhiteBread.CommandLine.ContextLoader
 
-  def run_single_context(options, arguments, default_context: default) do
+  def run_single_context(options, arguments, default_contexts: defaults)
+  when is_list(defaults)
+  do
     context = options
       |> as_map
-      |> get_context(arguments, default_context: default)
+      |> get_context(arguments, default_contexts: defaults)
 
     result = context |> WhiteBread.run("features/", clean_options(options))
 
@@ -18,13 +20,20 @@ defmodule WhiteBread.CommandLine.SingleContextRun do
   defp get_context(_opts, [context | _ ], _defaults) do
     context_from_string(context)
   end
-  defp get_context(_opts, _args, default_context: context) do
-    load_create_context(context)
+  defp get_context(_opts, _args, default_contexts: contexts) do
+    load_create_context(contexts)
   end
 
-  defp load_create_context(context) do
-    unless File.exists?(context), do: create_context(context)
-    ContextLoader.load_context_file(context)
+  defp load_create_context([first | _] = context_options)
+  when is_list(context_options)
+  do
+    existing_context = context_options
+      |> Stream.filter(&File.exists?/1)
+      |> Enum.take(1)
+    case existing_context do
+      [context] -> ContextLoader.load_context_file(context)
+      []        -> create_context(first)
+    end
   end
 
   defp create_context(context) do
