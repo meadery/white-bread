@@ -21,6 +21,13 @@ defmodule WhiteBread.CommandLine.ContextLoader do
     end
   end
 
+
+  def load_context_file(path) do
+    IO.puts "loading #{path}"
+    [{context_module, _} | _] = Code.load_file(path)
+    context_module
+  end
+
   def context_from_string(context_name) do
     {context, []} = Code.eval_string(context_name)
     context
@@ -35,12 +42,6 @@ defmodule WhiteBread.CommandLine.ContextLoader do
     unless acceptance == "n" <> "\n" do
       File.write(context, context_text)
     end
-  end
-
-  defp load_context_file(path) do
-    IO.puts "loading #{path}"
-    [{context_module, _} | _] = Code.load_file(path)
-    context_module
   end
 
   defp script?(file_path) do
