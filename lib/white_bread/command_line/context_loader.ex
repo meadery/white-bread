@@ -5,7 +5,7 @@ defmodule WhiteBread.CommandLine.ContextLoader do
     IO.puts "loading all contexts from #{path_pattern}"
     path_pattern
       |> Path.wildcard()
-      |> Enum.filter(&is_script?/1)
+      |> Enum.filter(&script?/1)
       |> Enum.map(&Code.require_file/1)
   end
 
@@ -43,7 +43,7 @@ defmodule WhiteBread.CommandLine.ContextLoader do
     context_module
   end
 
-  defp is_script?(file_path) do
+  defp script?(file_path) do
     fn(file_path) -> file_path |> String.ends_with?(".exs") end
   end
 
