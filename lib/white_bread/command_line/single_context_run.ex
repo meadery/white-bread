@@ -18,38 +18,10 @@ defmodule WhiteBread.CommandLine.SingleContextRun do
     ContextLoader.load_context_file(src)
   end
   defp get_context(_opts, [context | _ ], _defaults) do
-    context_from_string(context)
+    ContextLoader.context_from_string(context)
   end
   defp get_context(_opts, _args, default_contexts: contexts) do
-    load_create_context(contexts)
-  end
-
-  defp load_create_context([first | _] = context_options)
-  when is_list(context_options)
-  do
-    existing_context = context_options
-      |> Stream.filter(&File.exists?/1)
-      |> Enum.take(1)
-    case existing_context do
-      [context] -> ContextLoader.load_context_file(context)
-      []        -> create_context(first)
-    end
-  end
-
-  defp create_context(context) do
-    context_text = WhiteBread.CodeGenerator.Context.empty_context
-    IO.puts "Default context module not found in #{context}. "
-    IO.puts "Create one [Y/n]? "
-    acceptance = IO.read(:stdio, :line)
-
-    unless acceptance == "n" <> "\n" do
-      File.write(context, context_text)
-    end
-  end
-
-  defp context_from_string(context_name) do
-    {context, []} = Code.eval_string(context_name)
-    context
+    ContextLoader.load_create_context(contexts)
   end
 
   defp clean_options(raw_options) do
