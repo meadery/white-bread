@@ -1,5 +1,16 @@
 # Changelog
 
+## V2.3.0 (2016-01-21)
+
+### Enhancements
+* Added suites configuration for defining which features are run under which context. See PR #34. Thanks goes to @rkotze for design input.
+
+### Bug fixes
+none
+
+### Backwards incompatible changes
+none
+
 ## V2.2.0 (2015-12-26)
 
 ### Enhancements
