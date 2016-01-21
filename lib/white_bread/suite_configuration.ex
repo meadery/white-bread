@@ -14,11 +14,11 @@ defmodule WhiteBread.SuiteConfiguration do
     quote do
       def suites do
         @suites
-          |> throw_if_not_unique
+          |> unique!
           |> Enum.reverse
       end
 
-      defp throw_if_not_unique(suites) do
+      defp unique!(suites) do
         unique? = suites
           |> Stream.map(fn suite -> suite.name end)
           |> Enum.uniq
