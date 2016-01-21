@@ -1,6 +1,11 @@
 defmodule WhiteBread.Feature.Finder do
   import String, only: [ends_with?: 2]
 
+  def find_in_path(dir_paths) when is_list(dir_paths) do
+    dir_paths
+      |> Enum.flat_map(&find_in_path/1)
+  end
+
   def find_in_path(dir_path) do
     path_pattern = dir_path <> "**"
     path_pattern
@@ -11,7 +16,7 @@ defmodule WhiteBread.Feature.Finder do
 
   defp get_only_feature_files(file_paths) do
     file_paths
-      |> Enum.filter(fn(file_path) -> file_path |> ends_with? ".feature" end)
+      |> Enum.filter(fn(file_path) -> file_path |> ends_with?(".feature") end)
   end
 
   defp sort_alphabetically(file_paths) do
