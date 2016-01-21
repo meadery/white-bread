@@ -12,10 +12,9 @@ defmodule WhiteBread.SuiteConfiguration do
 
   defmacro __before_compile__(_env) do
     quote do
+
       def suites do
-        @suites
-          |> unique!
-          |> Enum.reverse
+        unique!(@suites)
       end
 
       defp unique!(suites) do
@@ -61,7 +60,7 @@ defmodule WhiteBread.SuiteConfiguration do
         feature_paths: unquote(paths),
         tags: unquote(tags)
       }
-      @suites [new_suite | @suites]
+      @suites @suites ++ [new_suite]
     end
   end
 
