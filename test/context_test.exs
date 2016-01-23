@@ -58,16 +58,10 @@ defmodule WhiteBread.ContextTest do
     assert table_data == returned_table_data
   end
 
-  test "ExampleContext has 4 string steps" do
-     count = WhiteBread.ContextTest.ExampleContext.get_string_steps
+  test "ExampleContext has 8 steps" do
+     count = WhiteBread.ContextTest.ExampleContext.get_steps
       |> Enum.count
-      assert count == 4
-  end
-
-  test "ExampleContext has 4 regex steps" do
-     count = WhiteBread.ContextTest.ExampleContext.get_regex_steps
-      |> Enum.count
-      assert count == 4
+      assert count == 8
   end
 
 end

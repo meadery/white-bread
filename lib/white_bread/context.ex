@@ -1,7 +1,9 @@
 defmodule WhiteBread.Context do
-  alias WhiteBread.Context.StepMacroHelpers
 
-  @steps_to_macro [:given_, :when_, :then_, :and_, :but_]
+  alias WhiteBread.Context.StepMacroHelpers
+  alias WhiteBread.Context.StepExecutor
+
+  @step_keywords [:given_, :when_, :then_, :and_, :but_]
 
   @doc false
   defmacro __using__(_opts) do
@@ -9,10 +11,7 @@ defmodule WhiteBread.Context do
       import WhiteBread.Context
       import ExUnit.Assertions
 
-      @string_steps HashDict.new
-
-      # List of tuples {regex, function}
-      @regex_steps []
+      @steps []
 
       @sub_context_modules []
 
@@ -29,20 +28,15 @@ defmodule WhiteBread.Context do
 
     quote do
       def execute_step(step, state) do
-        {get_string_steps, get_regex_steps}
-        |> WhiteBread.Context.StepExecutor.execute_step(step, state)
+        get_steps
+          |> StepExecutor.execute_step(step, state)
       end
 
-      def get_string_steps do
-        :get_string_steps
-          |> apply_to_sub_modules
-          |> Enum.into(@string_steps)
-      end
-
-      def get_regex_steps do
-        :get_regex_steps
-          |> apply_to_sub_modules
-          |> Enum.into(@regex_steps)
+      def get_steps do
+        @sub_context_modules
+         |> Enum.map(fn(sub_module) -> apply(sub_module, :get_steps, []) end)
+         |> Enum.flat_map(fn(x) -> x end)
+         |> Enum.into(@steps)
       end
 
       unless @feature_state_definied do
@@ -62,24 +56,19 @@ defmodule WhiteBread.Context do
         def finalize(_ignored_state), do: nil
       end
 
-      defp apply_to_sub_modules(function) do
-        @sub_context_modules
-        |> Enum.map(fn(sub_module) -> apply(sub_module, function, []) end)
-        |> Enum.flat_map(fn(x) -> x end)
-      end
-
     end
   end
 
-  for step <- @steps_to_macro do
+  for word <- @step_keywords do
 
-    defmacro unquote(step)(step_text, do: block) do
-      StepMacroHelpers.define_block_step(step_text, block)
+    defmacro unquote(word)(step_text, do: block) do
+      StepMacroHelpers.add_block_to_steps(step_text, block)
     end
 
-    defmacro unquote(step)(step_text, step_function) do
-      StepMacroHelpers.define_function_step(step_text, step_function)
+    defmacro unquote(word)(step_text, func_def) do
+      StepMacroHelpers.add_func_to_steps(step_text, func_def)
     end
+
   end
 
   defmacro feature_starting_state(function) do
@@ -104,9 +93,11 @@ defmodule WhiteBread.Context do
     quote do
       @scenario_finalize_defined true
       def finalize(state) do
-        case is_function(unquote(function), 1) do
-          true  -> unquote(function).(state)
-          false -> unquote(function).()
+        cond do
+          is_function(unquote(function), 1)
+            -> unquote(function).(state)
+          is_function(unquote(function), 0)
+            -> unquote(function).()
         end
       end
     end
