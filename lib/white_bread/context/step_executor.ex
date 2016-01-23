@@ -1,15 +1,14 @@
 defmodule WhiteBread.Context.StepExecutor do
   alias WhiteBread.RegexExtension
   alias WhiteBread.Context.StepExecutor.ErrorHandler
+  alias WhiteBread.Context.ContextFunction
 
-  def execute_step({string_steps, regex_steps}, step, state) do
-    %{text: step_text} = step
+  def execute_step(steps, step, state) when is_list(steps) do
     try do
-      if (Dict.has_key?(string_steps, step_text)) do
-        function = Dict.fetch!(string_steps, step_text)
-        apply(function, [state, {:table_data, step.table_data}])
-      else
-        regex_steps |> apply_regex_function(step, state)
+      step_func = find_match(steps, step.text)
+      case step_func.type do
+        :string -> apply(step_func.function, [state, {:table_data, step.table_data}])
+        :regex -> apply_regex_function(step_func, step, state)
       end
     rescue
       missing_step in WhiteBread.Context.MissingStep
@@ -21,26 +20,28 @@ defmodule WhiteBread.Context.StepExecutor do
     end
   end
 
-  defp apply_regex_function(regex_steps, step, state) do
-    %{text: step_text, table_data: table_data, doc_string: doc_string} = step
-    {regex, function} = regex_steps |> find_regex_and_function(step_text)
-    key_matches = RegexExtension.atom_keyed_named_captures(regex, step_text)
-
-    extra = Map.new |> Dict.merge(key_matches)
-    |> Dict.put(:table_data, table_data)
-    |> Dict.put(:doc_string, doc_string)
-    apply(function, [state, extra])
+  defp find_match(steps, step_text) do
+    matches = steps
+      |> Stream.filter(&ContextFunction.match?(&1, step_text))
+      |> Enum.take(1)
+    case matches do
+      [match] -> match
+      _       -> raise WhiteBread.Context.MissingStep
+    end
   end
 
-  defp find_regex_and_function(regex_steps, string) do
-    matches = regex_steps
-    |> Stream.filter(fn {regex, _} -> Regex.run(regex, string) end)
-    |> Enum.take(1)
+  defp apply_regex_function(regex_def, step, state) do
+    %{text: step_text, table_data: table_data, doc_string: doc_string} = step
 
-    case matches do
-      [{regex, function}] -> {regex, function}
-      []                  -> raise WhiteBread.Context.MissingStep
-    end
+    key_matches = RegexExtension.atom_keyed_named_captures(
+      regex_def.regex,
+      step_text
+    )
+    extra = Map.new
+      |> Dict.merge(key_matches)
+      |> Dict.put(:table_data, table_data)
+      |> Dict.put(:doc_string, doc_string)
+    apply(regex_def.function, [state, extra])
   end
 
 end
