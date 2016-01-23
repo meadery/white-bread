@@ -1,5 +1,5 @@
 defmodule WhiteBread.Context do
-  alias WhiteBread.Context.ContextFunction
+  
   alias WhiteBread.Context.StepMacroHelpers
   alias WhiteBread.Context.StepExecutor
 
@@ -68,30 +68,11 @@ defmodule WhiteBread.Context do
   for word <- @step_keywords do
 
     defmacro unquote(word)(step_text, do: block) do
-      fn_name = StepMacroHelpers.step_name(step_text)
-      quote do
-        def unquote(fn_name)(state, extra \\ []) do
-          unquote(block)
-          {:ok, state}
-        end
-        new = ContextFunction.new(unquote(step_text), &__MODULE__.unquote(fn_name)/2)
-        @steps @steps ++ [new]
-      end
+      StepMacroHelpers.add_block_to_steps(step_text, block)
     end
 
     defmacro unquote(word)(step_text, func_def) do
-      fn_name = StepMacroHelpers.step_name(step_text)
-      quote do
-        def unquote(fn_name)(state, extra \\ []) do
-          func = unquote(func_def)
-          cond do
-            is_function(func, 1) -> func.(state)
-            is_function(func, 2) -> func.(state, extra)
-          end
-        end
-        new = ContextFunction.new(unquote(step_text), &__MODULE__.unquote(fn_name)/2)
-        @steps @steps ++ [new]
-      end
+      StepMacroHelpers.add_func_to_steps(step_text, func_def)
     end
 
   end
