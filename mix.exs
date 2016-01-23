@@ -36,7 +36,7 @@ defmodule WhiteBread.Mixfile do
   defp deps do
     [
       {:dogma, "0.0.11", only: [:dev, :test]},
-      {:credo, "0.1.9", only: [:dev, :test]},
+      {:credo, "0.2.5", only: [:dev, :test]},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.8", only: :dev}
     ]
