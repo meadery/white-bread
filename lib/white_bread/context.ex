@@ -1,7 +1,7 @@
 defmodule WhiteBread.Context do
 
   alias WhiteBread.Context.StepMacroHelpers
-  alias WhiteBread.Context.StepExecutor
+  alias WhiteBread.Context.Setup
 
   @step_keywords [:given_, :when_, :then_, :and_, :but_]
 
@@ -25,38 +25,7 @@ defmodule WhiteBread.Context do
 
   @doc false
   defmacro __before_compile__(_env) do
-
-    quote do
-      def execute_step(step, state) do
-        get_steps
-          |> StepExecutor.execute_step(step, state)
-      end
-
-      def get_steps do
-        @sub_context_modules
-         |> Enum.map(fn(sub_module) -> apply(sub_module, :get_steps, []) end)
-         |> Enum.flat_map(fn(x) -> x end)
-         |> Enum.into(@steps)
-      end
-
-      unless @feature_state_definied do
-        def feature_state() do
-          # Always default to an empty map
-          %{}
-        end
-      end
-
-      unless @scenario_state_definied do
-        def starting_state(state) do
-          state
-        end
-      end
-
-      unless @scenario_finalize_defined do
-        def finalize(_ignored_state), do: nil
-      end
-
-    end
+    Setup.before
   end
 
   for word <- @step_keywords do
