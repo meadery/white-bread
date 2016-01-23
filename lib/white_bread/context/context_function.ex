@@ -20,6 +20,10 @@ defmodule WhiteBread.Context.ContextFunction do
     }
   end
 
+  def type(%__MODULE__{type: type}) do
+    type
+  end
+
   def match?(%__MODULE__{type: :string} = data, string) do
     string == data.string
   end

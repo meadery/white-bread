@@ -6,8 +6,8 @@ defmodule WhiteBread.Context.StepExecutor do
   def execute_step(steps, step, state) when is_list(steps) do
     try do
       step_func = find_match(steps, step.text)
-      case step_func.type do
-        :string -> apply(step_func.function, [state, {:table_data, step.table_data}])
+      case ContextFunction.type(step_func) do
+        :string -> apply_string_function(step_func, step, state)
         :regex -> apply_regex_function(step_func, step, state)
       end
     rescue
@@ -31,17 +31,20 @@ defmodule WhiteBread.Context.StepExecutor do
   end
 
   defp apply_regex_function(regex_def, step, state) do
-    %{text: step_text, table_data: table_data, doc_string: doc_string} = step
-
     key_matches = RegexExtension.atom_keyed_named_captures(
       regex_def.regex,
-      step_text
+      step.text
     )
     extra = Map.new
       |> Dict.merge(key_matches)
-      |> Dict.put(:table_data, table_data)
-      |> Dict.put(:doc_string, doc_string)
+      |> Dict.put(:table_data, step.table_data)
+      |> Dict.put(:doc_string, step.doc_string)
     apply(regex_def.function, [state, extra])
+  end
+
+  defp apply_string_function(string_def, step, state) do
+    args = [state, {:table_data, step.table_data}]
+    apply(string_def.function, args)
   end
 
 end
