@@ -1,5 +1,5 @@
 defmodule WhiteBread.Context do
-  
+
   alias WhiteBread.Context.StepMacroHelpers
   alias WhiteBread.Context.StepExecutor
 
@@ -56,12 +56,6 @@ defmodule WhiteBread.Context do
         def finalize(_ignored_state), do: nil
       end
 
-      defp apply_to_sub_modules(function) do
-        @sub_context_modules
-        |> Enum.map(fn(sub_module) -> apply(sub_module, function, []) end)
-        |> Enum.flat_map(fn(x) -> x end)
-      end
-
     end
   end
 
@@ -99,9 +93,11 @@ defmodule WhiteBread.Context do
     quote do
       @scenario_finalize_defined true
       def finalize(state) do
-        case is_function(unquote(function), 1) do
-          true  -> unquote(function).(state)
-          false -> unquote(function).()
+        cond do
+          is_function(unquote(function), 1)
+            -> unquote(function).(state)
+          is_function(unquote(function), 0)
+            -> unquote(function).()
         end
       end
     end
