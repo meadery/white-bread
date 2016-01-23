@@ -11,7 +11,10 @@ defmodule WhiteBread.Context.StepMacroHelpers do
           is_function(func, 2) -> func.(state, extra)
         end
       end
-      new = ContextFunction.new(unquote(step_text), &__MODULE__.unquote(fn_name)/2)
+      new = ContextFunction.new(
+        unquote(step_text),
+        &__MODULE__.unquote(fn_name)/2
+      )
       @steps @steps ++ [new]
     end
   end
@@ -23,7 +26,10 @@ defmodule WhiteBread.Context.StepMacroHelpers do
         unquote(block)
         {:ok, state}
       end
-      new = ContextFunction.new(unquote(step_text), &__MODULE__.unquote(fn_name)/2)
+      new = ContextFunction.new(
+        unquote(step_text),
+        &__MODULE__.unquote(fn_name)/2
+      )
       @steps @steps ++ [new]
     end
   end

@@ -28,7 +28,7 @@ defmodule WhiteBread.Context do
 
     quote do
       def execute_step(step, state) do
-        get_steps()
+        get_steps
           |> StepExecutor.execute_step(step, state)
       end
 
