@@ -16,8 +16,9 @@ The short answer is no. The medium answer is it's a development tool that should
 Gherkin and cucumber made me think of [cucumber sandwiches](http://en.wikipedia.org/wiki/Cucumber_sandwich).
 Which are traditionally made with very thin white bread.
 
-# Basic usage
-Create *.feature files in a features directory. They should be gherkin syntax like:
+# Getting started - Basic usage
+Create a features directory. In here add some *.feature files describing your software. They should be gherkin syntax like:
+
 ```gherkin
 Feature: Serve coffee
   Coffee should not be served until paid for
@@ -30,9 +31,18 @@ Feature: Serve coffee
     When I press the coffee button
     Then I should be served a coffee
 ```
-
-Create ```features/default_context.exs``` and create a module using ```WhiteBread.Context```
-This matches each of the steps in a scenario to some code.
+Run the command:
+```bash
+mix whitebread.run
+```
+This will prompt you with a message like:
+```
+Default context module not found in features/contexts/default_context.exs.
+Create one [Y/n]?
+```
+Selecting yes will create a basic context file in ```features/contexts/default_context.exs```. 
+The context file tells WhiteBread how to understand the gherkin in your feature files. 
+These will need to be implemented like:
 
 ```elixir
 defmodule SunDoe.CoffeeShopContext do
@@ -78,9 +88,11 @@ defmodule SunDoe.CoffeeShopContext do
 end
 ```
 
-Then run:
+After doing this rerun
 
-```mix white_bread.run```
+```
+mix white_bread.run
+```
 
 # Gherkin Syntax covered
 - [x] Features
