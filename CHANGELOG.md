@@ -1,5 +1,16 @@
 # Changelog
 
+## V2.3.1 (2016-01-25)
+
+### Enhancements
+none
+
+### Bug fixes
+* Fix bug that caused creating a default context automatically to error weirdly.
+
+### Backwards incompatible changes
+none
+
 ## V2.3.0 (2016-01-21)
 
 ### Enhancements
