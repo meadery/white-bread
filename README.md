@@ -138,9 +138,11 @@ The public interface of this library covers:
 * The exported mix command: ```mix white_bread.run```
 * The ```WhiteBread``` and ```WhiteBread.Helpers``` modules.
 * The macros exported by the ```WhiteBread.Context``` module.
+* The config.exs structure and the macros exported by the ```WhiteBread.SuiteConfiguration``` module.
 * The structures defined in ```WhiteBread.Gherkin```.
+* The location of feature and context files loaded automatically.
 
-Any changes outside of this will not be considered a BC break.
+Any changes outside of the above will not be considered a BC break. Although every effort will be made to not introduce unnecessary change in any other area.
 
 # Contribute
 Contributions more than welcome but please raise an issue first to discuss any large changes.
