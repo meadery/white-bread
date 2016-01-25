@@ -94,13 +94,43 @@ After doing this rerun
 mix white_bread.run
 ```
 
-# Gherkin Syntax covered
-- [x] Features
-- [x] Step definitions: '''given''', '''when''', '''then''', '''and''' and '''but'''
-- [x] Feature backgound steps
-- [x] Scenerios
-- [x] Scenario outlines
-- [x] Tags
+# Next steps - Suites and subcontexts
+
+After following the getting started steps you may find your default context starts to get a bit large. Defining suites allows you to break your your contexts apart and assign them to specific features. You can even run one feature multiple times under different contexts. This is especially useful if you have a few different ways of accessing your software (web, rest api, command line etc.). 
+
+Suite configuration is loaded from ```features/config.exs```. Create this file then add something like:
+
+```elixir
+defmodule WhiteBread.Example.Config do
+  use WhiteBread.SuiteConfiguration
+
+  suite name:          "Default",
+        context:       WhiteBread.Example.DefaultContext,
+        feature_paths: ["features/sub_dir_one"]
+
+  suite name:          "Alternate",
+        context:       WhiteBread.Example.AlternateContext,
+        feature_paths: ["features/sub_dir_two"]
+
+  suite name:          "Alternate - Songs",
+        context:       WhiteBread.Example.AlternateContext,
+        feature_paths: ["features/sub_dir_one"],
+        tags:          ["songs"]
+end
+```
+Each suite gets run loading all the features in the given paths and running them using the specified context. Additionally the scenarios can be filtered to specific tags.
+
+It's quite likely that there will be some common steps in your contexts. These steps can be stored in a shared context then imported as a subcontext:
+```elixir
+defmodule WhiteBread.Example.DefaultContext do
+  use WhiteBread.Context
+
+  subcontext WhiteBread.Example.SharedContext
+  
+  # Rest of the context here as usual
+  #...
+end
+```
 
 # Public interface and BC breaks
 The public interface of this library covers:
