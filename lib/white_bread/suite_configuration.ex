@@ -5,6 +5,7 @@ defmodule WhiteBread.SuiteConfiguration do
     quote do
       import WhiteBread.SuiteConfiguration
 
+      @config_context_per_feature %{}
       @suites []
       @before_compile WhiteBread.SuiteConfiguration
     end
@@ -12,6 +13,10 @@ defmodule WhiteBread.SuiteConfiguration do
 
   defmacro __before_compile__(_env) do
     quote do
+
+      def context_per_feature do
+        @config_context_per_feature
+      end
 
       def suites do
         unique!(@suites)
@@ -61,6 +66,15 @@ defmodule WhiteBread.SuiteConfiguration do
         tags: unquote(tags)
       }
       @suites @suites ++ [new_suite]
+    end
+  end
+
+  defmacro context_per_feature(namespace_prefix: namespace_prefix, entry_path: entry_path) do
+    quote do
+      @config_context_per_feature %{
+        namespace_prefix: unquote(namespace_prefix),
+        entry_path: unquote(entry_path)
+      }
     end
   end
 

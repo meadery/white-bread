@@ -3,10 +3,17 @@ defmodule WhiteBread.SuiteConfigurationTest do
   alias WhiteBread.Suite
   alias WhiteBread.Suite.DuplicateSuiteError
 
+  alias WhiteBread.SuiteConfigurationTest.ContextPerFeature
   alias WhiteBread.SuiteConfigurationTest.SingleSuite
   alias WhiteBread.SuiteConfigurationTest.DoubleSuite
   alias WhiteBread.SuiteConfigurationTest.DuplicateSuiteNames
 
+  test "load in context per feature file set to true" do
+    assert ContextPerFeature.context_per_feature == %{ 
+      entry_path: "features/context_per_feature", 
+      namespace_prefix: WhiteBread.Example 
+    }
+  end
 
   test "define a single suite" do
     assert Enum.count(SingleSuite.suites) == 1
@@ -18,6 +25,7 @@ defmodule WhiteBread.SuiteConfigurationTest do
             tags: ["good"]
       }
     )
+    assert SingleSuite.context_per_feature == %{}
   end
 
   test "defining multiple suites" do
@@ -43,6 +51,14 @@ defmodule WhiteBread.SuiteConfigurationTest do
       DuplicateSuiteNames.suites
     end
   end
+
+end
+
+defmodule WhiteBread.SuiteConfigurationTest.ContextPerFeature do
+  use WhiteBread.SuiteConfiguration
+
+  context_per_feature namespace_prefix: WhiteBread.Example,
+                      entry_path: "features/context_per_feature"
 
 end
 
