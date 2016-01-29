@@ -3,11 +3,6 @@ defmodule WhiteBread.Context.Setup do
 
   def before do
     quote do
-      def execute_step(step, state) do
-        get_steps
-          |> StepExecutor.execute_step(step, state)
-      end
-
       def get_steps do
         @sub_context_modules
          |> Enum.map(fn(sub_module) -> apply(sub_module, :get_steps, []) end)
