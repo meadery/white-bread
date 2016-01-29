@@ -4,7 +4,7 @@ defmodule WhiteBread.Context.ContextFunction do
             function: nil,
             type: nil
 
-  def new(%Regex{} = regex, func) do
+  def new(%Regex{} = regex, func) when is_function(func, 2) do
     %__MODULE__{
       regex: regex,
       function: func,
@@ -12,7 +12,7 @@ defmodule WhiteBread.Context.ContextFunction do
     }
   end
 
-  def new(string, func) do
+  def new(string, func) when is_function(func, 2) do
     %__MODULE__{
       string: string,
       function: func,

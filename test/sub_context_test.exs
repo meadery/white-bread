@@ -1,6 +1,5 @@
 defmodule WhiteBread.SubContextTest do
   use ExUnit.Case
-  alias WhiteBread.Gherkin.Elements.Steps, as: Steps
   alias WhiteBread.SubContextTest.ExampleContext, as: ExampleContext
 
   test "All 3 steps in the sub contexts are returned" do

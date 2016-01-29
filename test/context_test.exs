@@ -1,7 +1,5 @@
 defmodule WhiteBread.ContextTest do
   use ExUnit.Case
-  alias WhiteBread.Gherkin.Elements.Steps, as: Steps
-  alias WhiteBread.ContextTest.ExampleContext, as: ExampleContext
 
   test "ExampleContext has 8 steps" do
      count = WhiteBread.ContextTest.ExampleContext.get_steps

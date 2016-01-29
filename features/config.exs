@@ -10,7 +10,7 @@ defmodule WhiteBread.Example.Config do
         feature_paths: ["features/"]
 
   suite name:          "Alternate - Songs",
-        context:       WhiteBread.Example.AlternateContext,
+        context:       WhiteBread.Example.PlainContext,
         feature_paths: ["features/"],
         tags:          ["songs"]
 end
