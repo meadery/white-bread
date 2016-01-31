@@ -20,6 +20,23 @@ defmodule WhiteBread.Context.ContextFunction do
     }
   end
 
+  # All stored funcs must be arity two
+  def new(match, func) when is_function(func, 1) do
+    wrapped_func = fn(state, _extra) ->
+      func.(state)
+    end
+    new(match, wrapped_func)
+  end
+
+  # All stored funcs must be arity two
+  def new(match, func) when is_function(func, 0) do
+    wrapped_func = fn(state, _extra) ->
+      func.()
+      {:ok, state}
+    end
+    new(match, wrapped_func)
+  end
+
   def type(%__MODULE__{type: type}) do
     type
   end
