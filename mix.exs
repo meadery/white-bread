@@ -14,6 +14,7 @@ defmodule WhiteBread.Mixfile do
        links: %{"GitHub" => "https://github.com/meadsteve/white-bread"},
        ],
      version: "2.4.0",
+     aliases: aliases,
      deps: deps]
   end
 
@@ -22,6 +23,22 @@ defmodule WhiteBread.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [applications: [:logger]]
+  end
+
+  defp aliases do
+    [ci_tests: ci_mix_tests]
+  end
+
+  defp ci_mix_tests do
+    [
+      &set_test_env/1,
+      "compile --warnings-as-errors",
+      "test",
+      "whiteBread.run",
+      "whiteBread.run --tags songs",
+      "white_bread.run --context \"features/contexts/alternate_context.exs\"",
+      "dogma lib"
+    ]
   end
 
   # Dependencies can be Hex packages:
@@ -40,5 +57,9 @@ defmodule WhiteBread.Mixfile do
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.8", only: :dev}
     ]
+  end
+
+  defp set_test_env(_) do
+    Mix.env(:test)
   end
 end
