@@ -63,7 +63,7 @@ defmodule WhiteBread.Context.ContextExecutorTest do
   def get_steps do
     [
       StepFunction.new("I'm running a simple test", fn ->
-        # Nothing happening here
+        nil # Nothing happening here
       end),
 
       StepFunction.new("I pass in some state", fn state ->
@@ -71,7 +71,7 @@ defmodule WhiteBread.Context.ContextExecutorTest do
       end),
 
       StepFunction.new(~r/I'm running a simple [A-Za-z]+/, fn ->
-        # nothing happening here
+        nil # nothing happening here
       end),
 
       StepFunction.new(~r/I pass in some [A-Za-z]+/, fn state ->
