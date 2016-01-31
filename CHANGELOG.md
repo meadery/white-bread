@@ -1,5 +1,17 @@
 # Changelog
 
+## V2.4.0 (2016-01-31)
+
+### Enhancements
+* Added '''ContextBehaviour''' behaviour that context modules can implement as
+an alternative to using the DSL provided by '''Context'''.
+
+### Bug fixes
+none
+
+### Backwards incompatible changes
+none
+
 ## V2.3.1 (2016-01-25)
 
 ### Enhancements
