@@ -1,4 +1,6 @@
 defimpl WhiteBread.Runners, for: List do
+  alias WhiteBread.Context.StepExecutor
+
   def run(steps, context, setup) do
 
     starting_state = context
@@ -25,7 +27,8 @@ defimpl WhiteBread.Runners, for: List do
   end
 
   defp run_step(context, step, state) do
-    result = apply(context, :execute_step, [step, state])
+    possible_steps = apply(context, :get_steps, [])
+    result = StepExecutor.execute_step(possible_steps, step, state)
     case result do
       {:ok, state} -> {:ok, state}
       :ok          -> {:ok, state}
