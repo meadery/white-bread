@@ -2,9 +2,9 @@ defmodule WhiteBread.ContextTest do
   use ExUnit.Case
 
   test "ExampleContext has 8 steps" do
-     count = WhiteBread.ContextTest.ExampleContext.get_steps
+    count = WhiteBread.ContextTest.ExampleContext.get_steps
       |> Enum.count
-      assert count == 8
+    assert count == 8
   end
 
 end

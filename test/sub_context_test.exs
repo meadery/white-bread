@@ -1,6 +1,6 @@
 defmodule WhiteBread.SubContextTest do
   use ExUnit.Case
-  alias WhiteBread.SubContextTest.ExampleContext, as: ExampleContext
+  alias WhiteBread.SubContextTest.ExampleContext
 
   test "All 3 steps in the sub contexts are returned" do
     assert Enum.count(ExampleContext.get_steps) == 3
