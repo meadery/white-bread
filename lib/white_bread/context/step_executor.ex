@@ -1,12 +1,12 @@
 defmodule WhiteBread.Context.StepExecutor do
   alias WhiteBread.RegexExtension
   alias WhiteBread.Context.StepExecutor.ErrorHandler
-  alias WhiteBread.Context.ContextFunction
+  alias WhiteBread.Context.StepFunction
 
   def execute_step(steps, step, state) when is_list(steps) do
     try do
       step_func = find_match(steps, step.text)
-      case ContextFunction.type(step_func) do
+      case StepFunction.type(step_func) do
         :string -> apply_string_function(step_func, step, state)
         :regex -> apply_regex_function(step_func, step, state)
       end
@@ -22,7 +22,7 @@ defmodule WhiteBread.Context.StepExecutor do
 
   defp find_match(steps, step_text) do
     matches = steps
-      |> Stream.filter(&ContextFunction.match?(&1, step_text))
+      |> Stream.filter(&StepFunction.match?(&1, step_text))
       |> Enum.take(1)
     case matches do
       [match] -> match

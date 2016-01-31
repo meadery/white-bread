@@ -1,25 +1,25 @@
 defmodule WhiteBread.Example.PlainContext do
-  alias WhiteBread.Context.ContextFunction
+  alias WhiteBread.Context.StepFunction
 
   def get_steps do
     [
-      ContextFunction.new("I want more", fn _state ->
+      StepFunction.new("I want more", fn _state ->
          {:ok, :want_more}
       end),
 
-      ContextFunction.new("I had a heart", fn :want_more ->
+      StepFunction.new("I had a heart", fn :want_more ->
          {:ok, "have a heart"}
       end),
 
-      ContextFunction.new("I had a voice", fn ->
+      StepFunction.new("I had a voice", fn ->
         # Arity zero funcs don't have to return anything
       end),
 
-      ContextFunction.new("I could love you", fn "have a heart" ->
+      StepFunction.new("I could love you", fn "have a heart" ->
         {:ok, :love}
       end),
 
-      ContextFunction.new(~r/^I would (?<action>[a-z]+)$/, fn _state, %{action: "sing"} ->
+      StepFunction.new(~r/^I would (?<action>[a-z]+)$/, fn _state, %{action: "sing"} ->
          {:ok, :singing}
       end)
     ]

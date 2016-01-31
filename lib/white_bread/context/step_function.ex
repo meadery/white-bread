@@ -1,4 +1,4 @@
-defmodule WhiteBread.Context.ContextFunction do
+defmodule WhiteBread.Context.StepFunction do
   defstruct string: nil,
             regex: nil,
             function: nil,
