@@ -5,7 +5,7 @@ defmodule WhiteBread.SuiteConfiguration do
     quote do
       import WhiteBread.SuiteConfiguration
 
-      @config_context_per_feature %{}
+      @config_context_per_feature %WhiteBread.ContextPerFeature{}
       @suites []
       @before_compile WhiteBread.SuiteConfiguration
     end
@@ -69,11 +69,15 @@ defmodule WhiteBread.SuiteConfiguration do
     end
   end
 
-  defmacro context_per_feature(namespace_prefix: namespace_prefix, entry_path: entry_path) do
+  defmacro context_per_feature(
+    on:                 on,
+    namespace_prefix:   namespace_prefix,
+    entry_feature_path: entry_feature_path) do
     quote do
-      @config_context_per_feature %{
+      @config_context_per_feature %WhiteBread.ContextPerFeature{
+        on: unquote(on),
         namespace_prefix: unquote(namespace_prefix),
-        entry_path: unquote(entry_path)
+        entry_feature_path: unquote(entry_feature_path)
       }
     end
   end
