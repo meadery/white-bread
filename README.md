@@ -138,6 +138,7 @@ The public interface of this library covers:
 * The exported mix command: ```mix white_bread.run```
 * The ```WhiteBread``` and ```WhiteBread.Helpers``` modules.
 * The macros exported by the ```WhiteBread.Context``` module.
+* The ContextBehaviour defined in ```WhiteBread.ContextBehaviour```.
 * The config.exs structure and the macros exported by the ```WhiteBread.SuiteConfiguration``` module.
 * The structures defined in ```WhiteBread.Gherkin```.
 * The location of feature and context files loaded automatically.
