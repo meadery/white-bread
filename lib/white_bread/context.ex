@@ -11,6 +11,8 @@ defmodule WhiteBread.Context do
       import WhiteBread.Context
       import ExUnit.Assertions
 
+      @behaviour WhiteBread.ContextBehaviour
+
       @steps []
 
       @sub_context_modules []

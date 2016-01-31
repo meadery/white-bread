@@ -1,4 +1,5 @@
 defmodule WhiteBread.Example.PlainContext do
+  @behaviour WhiteBread.ContextBehaviour
   alias WhiteBread.Step
 
   def get_steps do
