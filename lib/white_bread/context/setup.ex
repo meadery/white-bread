@@ -1,6 +1,4 @@
 defmodule WhiteBread.Context.Setup do
-  alias WhiteBread.Context.StepExecutor
-
   def before do
     quote do
       def get_steps do
