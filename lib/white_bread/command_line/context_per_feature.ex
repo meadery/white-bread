@@ -18,7 +18,7 @@ defmodule WhiteBread.CommandLine.ContextPerFeature do
     end
   end
 
-  def build_suites(invalid), do: {:error, "Not a valid context per feature"}
+  def build_suites(_invalid), do: {:error, "Not a valid context per feature"}
 
   def build_suite(%ContextPerFeature{} = context_per_feature, file_name) when is_binary(file_name) do
     module = make_module_name(file_name)

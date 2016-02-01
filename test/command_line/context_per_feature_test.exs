@@ -20,13 +20,13 @@ defmodule WhiteBread.CommandLine.ContextPerFeatureTest do
   end
 
   test "Context per feature is turned off" do
-    {status, message} = CommandLine.ContextPerFeature.build_suites(%ContextPerFeature{
+    {status, _message} = CommandLine.ContextPerFeature.build_suites(%ContextPerFeature{
         on: false,
         namespace_prefix: WhiteBread,
         entry_feature_path: "features/"
       })
 
-    assert status = :error
+    assert status == :error
   end
 
   test "Build a suite struct" do
