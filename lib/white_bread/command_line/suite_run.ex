@@ -10,7 +10,7 @@ defmodule WhiteBread.CommandLine.SuiteRun do
     contexts: context_path)
   do
     handle_suites = fn
-      {:ok, context_feature_suites}, suites -> [context_feature_suites | suites]
+      {:ok, context_feature_suites}, suites -> Enum.concat(context_feature_suites, suites)
       {:error, _}, suites -> suites
     end
 
