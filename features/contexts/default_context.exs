@@ -5,6 +5,7 @@ defmodule WhiteBread.Example.DefaultContext do
   subcontext WhiteBread.Example.CoffeeContext
   subcontext WhiteBread.Example.SongContext
   subcontext WhiteBread.Example.TableContext
+  subcontext WhiteBread.Example.MyFeatureAContext
 
   feature_starting_state fn  ->
     %{feature_state_loaded: :yes}
@@ -129,4 +130,13 @@ defmodule WhiteBread.Example.DefaultContext.TableStuff do
   def all_okay_with_table({"Odin", "Thor"} = state) do
     {:ok, state}
   end
+end
+
+defmodule WhiteBread.Example.MyFeatureAContext do
+  use WhiteBread.Context
+
+  given_ ~r/^(?<anything>.+)$/, fn state, %{anything: _anything} ->
+    {:ok, state}
+  end
+  
 end
