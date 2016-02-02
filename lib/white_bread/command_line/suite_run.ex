@@ -10,15 +10,18 @@ defmodule WhiteBread.CommandLine.SuiteRun do
     contexts: context_path)
   do
     handle_suites = fn
-      {:ok, context_feature_suites}, suites -> Enum.concat(context_feature_suites, suites)
+      {:ok, context_feature_suites}, suites ->
+        Enum.concat(context_feature_suites, suites)
       {:error, _}, suites -> suites
     end
 
     ContextLoader.load_context_files(context_path)
 
     {context_features, suites} = get_suites_from_config(config_path)
-    
-    handle_suites.(ContextPerFeature.build_suites(context_features), suites) |>
+
+    context_features |>
+    ContextPerFeature.build_suites |>
+    handle_suites.(suites) |>
     suite_results
   end
 
