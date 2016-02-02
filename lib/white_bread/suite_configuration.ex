@@ -28,7 +28,7 @@ defmodule WhiteBread.SuiteConfiguration do
           |> Enum.uniq
           |> same_size?(suites)
         unless unique? do
-          raise DuplicateSuiteError
+          raise_dupe_suite_error(suites)
         end
         suites
       end
@@ -80,6 +80,16 @@ defmodule WhiteBread.SuiteConfiguration do
         entry_feature_path: unquote(entry_feature_path)
       }
     end
+  end
+
+  def raise_dupe_suite_error(suites) do
+    dupes = suites
+      |> Enum.group_by(fn suite -> suite.name end)
+      |> Enum.map(fn {name, suites} -> {name, Enum.count(suites)} end)
+      |> Enum.filter(fn {_, suites} -> suites > 1 end)
+      |> Enum.map(fn {name, _} -> name end)
+      |> Enum.join(", ")
+    raise DuplicateSuiteError, message: "Duplicate suite names found: #{dupes}"
   end
 
 end

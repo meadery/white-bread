@@ -1,22 +1,18 @@
 language: elixir
+
 otp_release:
   - 17.5
   - 18.0
+
 elixir:
   - 1.0.5
   - 1.1.0
   - 1.2.1
-env:
-  - MIX_ENV=test
+
 script:
   - mix local.hex --force
   - mix deps.get
-  - mix compile --warnings-as-errors
-  - mix test
-  - mix whiteBread.run
-  - mix whiteBread.run --tags songs
-  - mix white_bread.run --context "features/contexts/alternate_context.exs"
-  - mix dogma lib
+  - mix ci_tests
 
 notifications:
   webhooks:

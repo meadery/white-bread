@@ -5,16 +5,16 @@ defmodule WhiteBread.Example.Config do
                       namespace_prefix: WhiteBread.TestContextPerFeature,
                       entry_feature_path: "features/test_context_per_feature/"
 
-  suite name:          "Default",
+  suite name:          "Default context",
         context:       WhiteBread.Example.DefaultContext,
         feature_paths: ["features/"]
 
-  suite name:          "Alternate",
+  suite name:          "Alternate context",
         context:       WhiteBread.Example.AlternateContext,
         feature_paths: ["features/"]
 
-  suite name:          "Alternate - Songs",
-        context:       WhiteBread.Example.AlternateContext,
+  suite name:          "Plain context - Songs",
+        context:       WhiteBread.Example.PlainContext,
         feature_paths: ["features/"],
         tags:          ["songs"]
 end

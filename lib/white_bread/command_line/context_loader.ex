@@ -42,6 +42,7 @@ defmodule WhiteBread.CommandLine.ContextLoader do
     unless acceptance == "n" <> "\n" do
       File.write(context, context_text)
     end
+    load_context_file(context)
   end
 
   defp script?(file_path) do

@@ -8,6 +8,7 @@ defmodule WhiteBread.SuiteConfigurationTest do
   alias WhiteBread.SuiteConfigurationTest.SingleSuite
   alias WhiteBread.SuiteConfigurationTest.DoubleSuite
   alias WhiteBread.SuiteConfigurationTest.DuplicateSuiteNames
+  alias WhiteBread.SuiteConfigurationTest.DoubleDuplicateSuiteNames
 
   test "load in context per feature file set to true" do
     assert ContextPerFeatureConfig.context_per_feature == %ContextPerFeature{ 
@@ -53,8 +54,14 @@ defmodule WhiteBread.SuiteConfigurationTest do
   end
 
   test "suite names are unique" do
-    assert_raise DuplicateSuiteError, "All suites must have unique names", fn ->
+    assert_raise DuplicateSuiteError, "Duplicate suite names found: Core Domain", fn ->
       DuplicateSuiteNames.suites
+    end
+  end
+
+  test "suite names not being unique lists all the problems in the error" do
+    assert_raise DuplicateSuiteError, "Duplicate suite names found: Another Domain, Core Domain", fn ->
+      DoubleDuplicateSuiteNames.suites
     end
   end
 
@@ -98,6 +105,26 @@ defmodule WhiteBread.SuiteConfigurationTest.DuplicateSuiteNames do
         feature_paths: ["features/core"]
 
   suite name:          "Core Domain",
+        context:       ApiContext,
+        feature_paths: ["features/api"]
+end
+
+defmodule WhiteBread.SuiteConfigurationTest.DoubleDuplicateSuiteNames do
+  use WhiteBread.SuiteConfiguration
+
+  suite name:          "Core Domain",
+        context:       ExampleContext,
+        feature_paths: ["features/core"]
+
+  suite name:          "Core Domain",
+        context:       ApiContext,
+        feature_paths: ["features/api"]
+
+  suite name:          "Another Domain",
+        context:       ExampleContext,
+        feature_paths: ["features/core"]
+
+  suite name:          "Another Domain",
         context:       ApiContext,
         feature_paths: ["features/api"]
 end

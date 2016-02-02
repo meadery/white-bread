@@ -16,8 +16,9 @@ The short answer is no. The medium answer is it's a development tool that should
 Gherkin and cucumber made me think of [cucumber sandwiches](http://en.wikipedia.org/wiki/Cucumber_sandwich).
 Which are traditionally made with very thin white bread.
 
-# Basic usage
-Create *.feature files in a features directory. They should be gherkin syntax like:
+# Getting started - Basic usage
+Create a features directory. In here add some *.feature files describing your software. They should be gherkin syntax like:
+
 ```gherkin
 Feature: Serve coffee
   Coffee should not be served until paid for
@@ -30,9 +31,18 @@ Feature: Serve coffee
     When I press the coffee button
     Then I should be served a coffee
 ```
-
-Create ```features/default_context.exs``` and create a module using ```WhiteBread.Context```
-This matches each of the steps in a scenario to some code.
+Run the command:
+```bash
+mix whitebread.run
+```
+This will prompt you with a message like:
+```
+Default context module not found in features/contexts/default_context.exs.
+Create one [Y/n]?
+```
+Selecting yes will create a basic context file in ```features/contexts/default_context.exs```. 
+The context file tells WhiteBread how to understand the gherkin in your feature files. 
+These will need to be implemented like:
 
 ```elixir
 defmodule SunDoe.CoffeeShopContext do
@@ -78,17 +88,49 @@ defmodule SunDoe.CoffeeShopContext do
 end
 ```
 
-Then run:
+After doing this rerun
 
-```mix white_bread.run```
+```
+mix white_bread.run
+```
 
-# Gherkin Syntax covered
-- [x] Features
-- [x] Step definitions: '''given''', '''when''', '''then''', '''and''' and '''but'''
-- [x] Feature backgound steps
-- [x] Scenerios
-- [x] Scenario outlines
-- [x] Tags
+# Next steps - Suites and subcontexts
+
+After following the getting started steps you may find your default context starts to get a bit large. Defining suites allows you to break your your contexts apart and assign them to specific features. You can even run one feature multiple times under different contexts. This is especially useful if you have a few different ways of accessing your software (web, rest api, command line etc.). 
+
+Suite configuration is loaded from ```features/config.exs```. Create this file then add something like:
+
+```elixir
+defmodule WhiteBread.Example.Config do
+  use WhiteBread.SuiteConfiguration
+
+  suite name:          "Default",
+        context:       WhiteBread.Example.DefaultContext,
+        feature_paths: ["features/sub_dir_one"]
+
+  suite name:          "Alternate",
+        context:       WhiteBread.Example.AlternateContext,
+        feature_paths: ["features/sub_dir_two"]
+
+  suite name:          "Alternate - Songs",
+        context:       WhiteBread.Example.AlternateContext,
+        feature_paths: ["features/sub_dir_one"],
+        tags:          ["songs"]
+end
+```
+Each suite gets run loading all the features in the given paths and running them using the specified context. Additionally the scenarios can be filtered to specific tags.
+
+It's quite likely that there will be some common steps in your contexts. These steps can be stored in a shared context then imported as a subcontext:
+```elixir
+defmodule WhiteBread.Example.DefaultContext do
+  use WhiteBread.Context
+
+  subcontext WhiteBread.Example.SharedContext
+  
+  # Rest of the context here as usual
+  #...
+end
+```
 
 # Public interface and BC breaks
 The public interface of this library covers:
@@ -96,9 +138,12 @@ The public interface of this library covers:
 * The exported mix command: ```mix white_bread.run```
 * The ```WhiteBread``` and ```WhiteBread.Helpers``` modules.
 * The macros exported by the ```WhiteBread.Context``` module.
+* The ContextBehaviour defined in ```WhiteBread.ContextBehaviour```.
+* The config.exs structure and the macros exported by the ```WhiteBread.SuiteConfiguration``` module.
 * The structures defined in ```WhiteBread.Gherkin```.
+* The location of feature and context files loaded automatically.
 
-Any changes outside of this will not be considered a BC break.
+Any changes outside of the above will not be considered a BC break. Although every effort will be made to not introduce unnecessary change in any other area.
 
 # Contribute
 Contributions more than welcome but please raise an issue first to discuss any large changes.
