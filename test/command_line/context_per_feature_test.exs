@@ -15,7 +15,7 @@ defmodule WhiteBread.CommandLine.ContextPerFeatureTest do
     assert Enum.member?(actual, %Suite{
             name: "Example1",
             context: WhiteBread.Example1Context,
-            feature_paths: ["features/"]
+            feature_paths: ["features/example1.feature"]
           })
   end
 
@@ -34,12 +34,12 @@ defmodule WhiteBread.CommandLine.ContextPerFeatureTest do
         on: true,
         namespace_prefix: WhiteBread,
         entry_feature_path: "features/"
-      }, "something_special")
+      }, "features/something_special.feature")
     
     assert actual == %Suite{
             name: "SomethingSpecial",
             context: WhiteBread.SomethingSpecialContext,
-            feature_paths: ["features/"]
+            feature_paths: ["features/something_special.feature"]
           }
   end
 

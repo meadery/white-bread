@@ -10,7 +10,7 @@ defmodule WhiteBread.CommandLine.ContextPerFeature do
       context_per_feature.on == true ->
         {:ok, Finder.find_in_path(context_per_feature.entry_feature_path) |>
           Enum.map(fn path -> 
-            build_suite(context_per_feature, Path.basename(path, @feature_ext))
+            build_suite(context_per_feature, path)
           end)
         }
       context_per_feature.on == false ->
@@ -20,12 +20,13 @@ defmodule WhiteBread.CommandLine.ContextPerFeature do
 
   def build_suites(_invalid), do: {:error, "Not a valid context per feature"}
 
-  def build_suite(%ContextPerFeature{} = context_per_feature, file_name) when is_binary(file_name) do
+  def build_suite(%ContextPerFeature{} = context_per_feature, file_path) when is_binary(file_path) do
+    file_name = Path.basename(file_path, @feature_ext)
     module = make_module_name(file_name)
     %Suite{
       name: module,
       context: Module.concat([context_per_feature.namespace_prefix, module <> @context_suffix]),
-      feature_paths: [context_per_feature.entry_feature_path]
+      feature_paths: [file_path]
     }
   end
 
