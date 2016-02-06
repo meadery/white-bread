@@ -8,7 +8,6 @@ defmodule WhiteBread.SuiteConfigurationTest do
   alias WhiteBread.SuiteConfigurationTest.DuplicateSuiteNames
   alias WhiteBread.SuiteConfigurationTest.DoubleDuplicateSuiteNames
 
-
   test "define a single suite" do
     assert Enum.count(SingleSuite.suites) == 1
     assert Enum.member?(

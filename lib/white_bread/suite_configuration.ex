@@ -64,6 +64,15 @@ defmodule WhiteBread.SuiteConfiguration do
     end
   end
 
+  defmacro context_per_feature(namespace_prefix: prefix, entry_path: path) do
+    quote do
+      new_suites = WhiteBread.Suite.ContextPerFeature.build_suites(
+        namespace_prefix: unquote(prefix), entry_path: unquote(path)
+      )
+      @suites @suites ++ new_suites
+    end
+  end
+
   def raise_dupe_suite_error(suites) do
     dupes = suites
       |> Enum.group_by(fn suite -> suite.name end)

@@ -4,7 +4,7 @@ defmodule WhiteBread.Feature.FinderTest do
 
   test "finds only the five feature files" do
     result = Finder.find_in_path("features/")
-    assert Enum.count(result) == 5
+    assert Enum.count(result) == 7
   end
 
   test "accepts a list of paths" do
