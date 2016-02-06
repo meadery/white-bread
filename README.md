@@ -40,8 +40,8 @@ This will prompt you with a message like:
 Default context module not found in features/contexts/default_context.exs.
 Create one [Y/n]?
 ```
-Selecting yes will create a basic context file in ```features/contexts/default_context.exs```. 
-The context file tells WhiteBread how to understand the gherkin in your feature files. 
+Selecting yes will create a basic context file in ```features/contexts/default_context.exs```.
+The context file tells WhiteBread how to understand the gherkin in your feature files.
 These will need to be implemented like:
 
 ```elixir
@@ -96,7 +96,7 @@ mix white_bread.run
 
 # Next steps - Suites and subcontexts
 
-After following the getting started steps you may find your default context starts to get a bit large. Defining suites allows you to break your your contexts apart and assign them to specific features. You can even run one feature multiple times under different contexts. This is especially useful if you have a few different ways of accessing your software (web, rest api, command line etc.). 
+After following the getting started steps you may find your default context starts to get a bit large. Defining suites allows you to break your your contexts apart and assign them to specific features. You can even run one feature multiple times under different contexts. This is especially useful if you have a few different ways of accessing your software (web, rest api, command line etc.).
 
 Suite configuration is loaded from ```features/config.exs```. Create this file then add something like:
 
@@ -122,21 +122,16 @@ Each suite gets run loading all the features in the given paths and running them
 
 ## Suites: Context per feature
 
-This is part of the Suite Configuration and it maps a `.feature` with a `context.exs` file automatically.
+This is part of the Suite Configuration and it automatically maps a `.feature` with a `context` module file automatically.
 
-It is mapped into suites where a feature runs as a suite.
-
-It is also possible to run this with suites
-
-Important that file names match e.g. `my_new_sandwich.feature` maps to `my_new_sandwich_context.exs`.
+It is also possible to run this with additional manually defined suites.
 
 Example:
 ```elixir
 defmodule WhiteBread.Example.Config do
   use WhiteBread.SuiteConfiguration
-  
-  context_per_feature on: true,
-                      namespace_prefix: WhiteBread.Example,
+
+  context_per_feature namespace_prefix: WhiteBread.Example,
                       entry_feature_path: "features/context_per_feature"
 
   suite name:          "Alternate",
@@ -147,9 +142,8 @@ end
 
 About the `context_per_feature` configuration:
 
-- `on:` default is false, set to true to active context per feature
 - `namespace_prefix:` the namespace your modules will start with. The file name of the feature will be converted into a module name and appended to the end of the `namespace_prefix` e.g. `my_new_sandwich.feature` to `WhiteBread.Example.MyNewSandwichContext`
-- `entry_feature_path:` the location of your feature files.
+- `entry_path:` the location of your feature files.
 
 **note:** context files need to be added to your `features/contexts` folder still.
 
@@ -161,7 +155,7 @@ defmodule WhiteBread.Example.DefaultContext do
   use WhiteBread.Context
 
   subcontext WhiteBread.Example.SharedContext
-  
+
   # Rest of the context here as usual
   #...
 end

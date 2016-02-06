@@ -5,14 +5,15 @@ defmodule WhiteBread.Suite.ContextPerFeature do
   @feature_ext ".feature"
   @context_suffix "Context"
 
-  def build_suites(%{namespace_prefix: _, entry_feature_path: path} = setup)
-  do
-    path
+  def build_suites(namespace_prefix: prefix, entry_path: entry_path) do
+    entry_path
       |> Finder.find_in_path
-      |> Enum.map(fn path -> build_suite(setup, path) end)
+      |> Enum.map(fn path ->
+          build_suite(namespace_prefix: prefix, file: path)
+      end)
   end
 
-  def build_suite(%{namespace_prefix: prefix, entry_feature_path: _}, file_path)
+  def build_suite(namespace_prefix: prefix, file: file_path)
   when is_binary(file_path)
   do
     file_name = Path.basename(file_path, @feature_ext)
