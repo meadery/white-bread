@@ -1,7 +1,6 @@
 defmodule WhiteBread.SuiteConfigurationTest do
   use ExUnit.Case
   alias WhiteBread.Suite
-  alias WhiteBread.ContextPerFeature
   alias WhiteBread.Suite.DuplicateSuiteError
 
   alias WhiteBread.SuiteConfigurationTest.SingleSuite
