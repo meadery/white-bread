@@ -1,6 +1,5 @@
 defmodule WhiteBread.CommandLine.SuiteRun do
   alias WhiteBread.CommandLine.ContextLoader
-  alias WhiteBread.CommandLine.ContextPerFeature
   alias WhiteBread.Suite
 
   def run_suites(
@@ -9,24 +8,10 @@ defmodule WhiteBread.CommandLine.SuiteRun do
     config_path: config_path,
     contexts: context_path)
   do
-    handle_suites = fn
-      {:ok, context_feature_suites}, suites ->
-        Enum.concat(context_feature_suites, suites)
-      {:error, _}, suites -> suites
-    end
-
     ContextLoader.load_context_files(context_path)
 
-    {context_features, suites} = get_suites_from_config(config_path)
-
-    context_features |>
-    ContextPerFeature.build_suites |>
-    handle_suites.(suites) |>
-    suite_results
-  end
-
-  defp suite_results(suites) do
-    suites
+    config_path
+      |> get_suites_from_config
       |> Enum.map(&run_suite/1)
       |> Enum.flat_map(fn results -> results.failures end)
   end
@@ -40,7 +25,7 @@ defmodule WhiteBread.CommandLine.SuiteRun do
   defp get_suites_from_config(path) do
     IO.puts "loading config from #{path}"
     [{suite_config_module, _} | _] = Code.load_file(path)
-    {suite_config_module.context_per_feature, suite_config_module.suites}
+    suite_config_module.suites
   end
 
 end
