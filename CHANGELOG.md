@@ -1,5 +1,18 @@
 # Changelog
 
+## V2.5.0 (2016-02-11)
+
+### Enhancements
+* Add ```context_per_feature``` setting to suite config. This creates a suite
+per feature file and loads a context based on a naming convention.
+Credit goes to @rkotze for implementing this feature. See #39 
+
+### Bug fixes
+none
+
+### Backwards incompatible changes
+none
+
 ## V2.4.0 (2016-01-31)
 
 ### Enhancements
