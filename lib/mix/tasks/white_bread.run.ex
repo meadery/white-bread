@@ -6,7 +6,9 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
   @shortdoc "Runs all the feature files with WhiteBread"
 
+  @suite_config_option :config
   @default_suite_config "features/config.exs"
+
   @context_path "features/contexts/"
   @default_contexts [
     "features/contexts/default_context.exs",
@@ -24,15 +26,24 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
   defp run_based_on_setup(options, arguments) do
     if run_as_suite?(options, arguments) do
-      SuiteRun.run_suites(
-        config_path: @default_suite_config,
-        contexts: @context_path
-      )
+      run_suite(options, arguments)
     else
-      SingleContextRun.run_single_context(
-        options, arguments, default_contexts: @default_contexts
-      )
+      run_single_context(options, arguments)
     end
+  end
+
+  defp run_suite(options, _arguments) do
+
+    SuiteRun.run_suites(
+      config_path: config_path(options),
+      contexts: @context_path
+    )
+  end
+
+  defp run_single_context(options, arguments) do
+    SingleContextRun.run_single_context(
+      options, arguments, default_contexts: @default_contexts
+    )
   end
 
   defp run_as_suite?(options, arguments) do
@@ -50,6 +61,14 @@ defmodule Mix.Tasks.WhiteBread.Run do
   defp start_app(argv) do
     unless "--no-start" in argv do
       Mix.Task.run "app.start", argv
+    end
+  end
+
+  defp config_path(options) do
+    if Dict.has_key?(options, @suite_config_option) do
+      Dict.get(options, @suite_config_option)
+    else
+      @default_suite_config
     end
   end
 
