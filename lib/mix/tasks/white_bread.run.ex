@@ -9,7 +9,9 @@ defmodule Mix.Tasks.WhiteBread.Run do
   @suite_config_option :config
   @default_suite_config "features/config.exs"
 
+  @context_path_option :contexts
   @context_path "features/contexts/"
+
   @default_contexts [
     "features/contexts/default_context.exs",
     "features/default_context.exs"
@@ -36,7 +38,7 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
     SuiteRun.run_suites(
       config_path: config_path(options),
-      contexts: @context_path
+      contexts: contexts_path(options)
     )
   end
 
@@ -69,6 +71,14 @@ defmodule Mix.Tasks.WhiteBread.Run do
       Dict.get(options, @suite_config_option)
     else
       @default_suite_config
+    end
+  end
+
+  defp contexts_path(options) do
+    if Dict.has_key?(options, @context_path_option) do
+      Dict.get(options, @context_path_option)
+    else
+      @context_path
     end
   end
 
