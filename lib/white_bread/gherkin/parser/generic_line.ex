@@ -99,11 +99,7 @@ defmodule WhiteBread.Gherkin.Parser.GenericLine do
     line
   end
 
-  defp tags_from_state(state) do
-    case state do
-      %{tags: tags} -> tags
-      _             -> []
-    end
-  end
+  defp tags_from_state(%{tags: tags}), do: tags
+  defp tags_from_state(_), do: []
 
 end

@@ -9,13 +9,13 @@ defmodule WhiteBread.Tables do
 
     table
     |> Stream.drop(1)
-    |> Enum.map(fn(row) -> index_row_with_headings(row, headers) end)
+    |> Enum.map(&index_row_with_headings(&1, headers))
   end
 
   def index_row_with_headings(row, header_row) do
     row
       |> Stream.with_index
-      |> Stream.map(fn(row) -> get_header(row, header_row) end)
+      |> Stream.map(&get_header(&1, header_row))
       |> Stream.map(&header_atom_to_string/1)
       |> Enum.reduce(%{}, &build_indexed_row/2)
   end
