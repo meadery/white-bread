@@ -24,8 +24,9 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
   defp run_based_on_setup(options, arguments) do
     if run_as_suite?(options, arguments) do
-      SuiteRun.run_suites(options, arguments,
-        config_path: @default_suite_config, contexts: @context_path
+      SuiteRun.run_suites(
+        config_path: @default_suite_config,
+        contexts: @context_path
       )
     else
       SingleContextRun.run_single_context(

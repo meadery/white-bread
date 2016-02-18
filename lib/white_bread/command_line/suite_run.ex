@@ -3,8 +3,6 @@ defmodule WhiteBread.CommandLine.SuiteRun do
   alias WhiteBread.Suite
 
   def run_suites(
-    _options,
-    _arguments,
     config_path: config_path,
     contexts: context_path)
   do
