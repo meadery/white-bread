@@ -33,7 +33,7 @@ Feature: Serve coffee
 ```
 Run the command:
 ```bash
-mix whitebread.run
+mix white_bread.run
 ```
 This will prompt you with a message like:
 ```
