@@ -132,7 +132,7 @@ defmodule WhiteBread.Example.Config do
   use WhiteBread.SuiteConfiguration
 
   context_per_feature namespace_prefix: WhiteBread.Example,
-                      entry_feature_path: "features/context_per_feature"
+                      entry_path: "features/context_per_feature"
 
   suite name:          "Alternate",
         context:       WhiteBread.Example.AlternateContext,
