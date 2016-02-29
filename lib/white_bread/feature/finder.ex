@@ -26,5 +26,4 @@ defmodule WhiteBread.Feature.Finder do
   defp feature_file?(path) do
     path |> ends_with?(".feature")
   end
-  
 end
