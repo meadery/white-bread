@@ -2,10 +2,12 @@ defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.Scenario do
   alias WhiteBread.Outputers.ProgressReporter
 
   def run(scenario, context, setup) do
+    trap_exits
     setup_with_state = setup
       |> update_setup_starting_state(context)
     scenario.steps
       |> WhiteBread.Runners.run(context, setup_with_state)
+      |> update_result_with_exits
       |> make_tuple(scenario)
       |> output_result(setup.progress_reporter, scenario)
   end
@@ -28,4 +30,19 @@ defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.Scenario do
       |> ProgressReporter.report({:scenario_result, result_tuple, scenario})
     result_tuple
   end
+
+  defp trap_exits, do: Process.flag(:trap_exit, true)
+
+  defp update_result_with_exits(result) do
+    Process.flag(:trap_exit, false)
+    receive do
+      {'DOWN', _ref, _pid, _pid, _reason} = exit_message ->
+        {:exit_recieved, exit_message}
+      {:EXIT, _pid, reason} = exit_message when reason != :normal ->
+        {:exit_recieved, exit_message}
+    after 0 ->
+      result
+    end
+  end
+
 end

@@ -197,6 +197,19 @@ defmodule WhiteBread.Runners.ScenarioRunnerTest do
     {result, _error} = scenario |> WhiteBread.Runners.run(ExampleContext)
     assert result == :ok
   end
+
+  test "exits are trapped to give more understandable errors" do
+    steps = [
+      %Steps.When{text: "I start a linked process that will exit"},
+      %Steps.When{text: "I wait a bit"}
+    ]
+    scenario = %Scenario{name: "test scenario", steps: steps}
+
+    {result, {error_type, _}} = scenario |> WhiteBread.Runners.run(ExampleContext)
+    assert result != :ok
+    assert error_type == :exit_recieved
+  end
+
 end
 
 defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
@@ -245,6 +258,18 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
 
   when_ "I raise an exception", fn _state ->
     raise "Runtime Exception"
+  end
+
+  when_ "I start a linked process that will exit", fn state ->
+    spawn_link fn ->
+      exit :bad
+    end
+    {:ok, state}
+  end
+
+  when_ "I wait a bit", fn state ->
+    :timer.sleep(100)
+    {:ok, state}
   end
 
   then_ "starting state was correct", fn %{starting_state: :yes} = state ->
