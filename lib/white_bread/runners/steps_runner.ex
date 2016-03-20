@@ -2,13 +2,9 @@ defimpl WhiteBread.Runners, for: List do
   alias WhiteBread.Context.StepExecutor
 
   def run(steps, context, setup) do
-
-    starting_state = context
-      |> update_starting_state(setup.starting_state)
-
     setup.background_steps
       |> Enum.concat(steps)
-      |> Enum.reduce({:ok, starting_state}, step_executor(context))
+      |> Enum.reduce({:ok, setup.starting_state}, step_executor(context))
       |> finalize(context)
 
   end
@@ -20,10 +16,6 @@ defimpl WhiteBread.Runners, for: List do
       (_step, failure_state)
         -> failure_state
     end
-  end
-
-  defp update_starting_state(context, global_starting_state) do
-    apply(context, :starting_state, [global_starting_state])
   end
 
   defp run_step(context, step, state) do
