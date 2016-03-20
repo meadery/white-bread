@@ -36,7 +36,7 @@ defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.Scenario do
   defp update_result_with_exits(result) do
     Process.flag(:trap_exit, false)
     receive do
-      {'DOWN', _ref, _pid, _pid, _reason} = exit_message ->
+      {'DOWN', _ref, process, _pid2, _reason} = exit_message ->
         {:exit_recieved, exit_message}
       {:EXIT, _pid, reason} = exit_message when reason != :normal ->
         {:exit_recieved, exit_message}
