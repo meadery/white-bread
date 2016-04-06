@@ -1,4 +1,16 @@
 # Changelog
+## V2.6.0 (2016-04-06)
+
+### Enhancements
+* Add --contexts option to overide default
+* Add --config option to overide default
+* Exits are now trapped during runs. see 4067990e06b21bb0cb13010c6bb7eb54e184f28c
+
+### Bug fixes
+* Fails faster if default context can not be created.
+
+### Backwards incompatible changes
+none
 
 ## V2.5.0 (2016-02-11)
 
