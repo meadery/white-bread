@@ -16,6 +16,19 @@ The short answer is no. The medium answer is it's a development tool that should
 Gherkin and cucumber made me think of [cucumber sandwiches](http://en.wikipedia.org/wiki/Cucumber_sandwich).
 Which are traditionally made with very thin white bread.
 
+# Getting started - installing
+Add "white_bread" to your `mix.exs` file with the version you wish to use:
+
+```
+defp deps do
+    [
+        ...
+        { :white_bread, "~> 2.5", only: [:dev, :test] }
+        ...
+    ]
+end
+```
+
 # Getting started - Basic usage
 Create a features directory. In here add some *.feature files describing your software. They should be gherkin syntax like:
 
