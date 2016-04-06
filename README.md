@@ -23,7 +23,7 @@ Add "white_bread" to your `mix.exs` file with the version you wish to use:
 defp deps do
     [
         ...
-        { :white_bread, "~> 2.5" }
+        { :white_bread, "~> 2.5", only: [:dev, :test] }
         ...
     ]
 end
