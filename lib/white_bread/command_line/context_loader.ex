@@ -40,7 +40,7 @@ defmodule WhiteBread.CommandLine.ContextLoader do
     acceptance = IO.read(:stdio, :line)
 
     unless acceptance == "n" <> "\n" do
-      File.write(context, context_text)
+      File.write!(context, context_text)
     end
     load_context_file(context)
   end
