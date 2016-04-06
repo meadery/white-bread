@@ -1,4 +1,16 @@
 # Changelog
+
+## V2.6.1 (2016-04-06)
+
+### Enhancements
+none
+
+### Bug fixes
+* Directory will be created for new default context.
+
+### Backwards incompatible changes
+none
+
 ## V2.6.0 (2016-04-06)
 
 ### Enhancements
@@ -17,7 +29,7 @@ none
 ### Enhancements
 * Add ```context_per_feature``` setting to suite config. This creates a suite
 per feature file and loads a context based on a naming convention.
-Credit goes to @rkotze for implementing this feature. See #39 
+Credit goes to @rkotze for implementing this feature. See #39
 
 ### Bug fixes
 none
