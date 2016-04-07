@@ -19,7 +19,7 @@ Which are traditionally made with very thin white bread.
 # Getting started - installing
 Add "white_bread" to your `mix.exs` file with the version you wish to use:
 
-```
+```elixir
 defp deps do
     [
         ...
