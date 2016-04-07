@@ -6,7 +6,7 @@ defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.Scenario do
 
     setup_with_state = setup
       |> update_setup_starting_state(context)
-      
+
     scenario.steps
       |> WhiteBread.Runners.run(context, setup_with_state)
       |> update_result_with_exits
@@ -36,7 +36,7 @@ defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.Scenario do
 
   defp start_trapping_exits, do: Process.flag(:trap_exit, true)
 
-  defp stop_trapping_exits(pass_through \\ nil) do
+  defp stop_trapping_exits(pass_through) do
     Process.flag(:trap_exit, false)
     pass_through
   end
