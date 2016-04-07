@@ -8,6 +8,7 @@ defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.Scenario do
     scenario.steps
       |> WhiteBread.Runners.run(context, setup_with_state)
       |> update_result_with_exits
+      |> stop_trapping_exits
       |> make_tuple(scenario)
       |> output_result(setup.progress_reporter, scenario)
   end
@@ -31,10 +32,17 @@ defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.Scenario do
     result_tuple
   end
 
-  defp trap_exits, do: Process.flag(:trap_exit, true)
+  defp trap_exits(pass_through \\ nil) do
+    Process.flag(:trap_exit, true)
+    pass_through
+  end
+
+  defp stop_trapping_exits(pass_through \\ nil) do
+    Process.flag(:trap_exit, false)
+    pass_through
+  end
 
   defp update_result_with_exits(result) do
-    Process.flag(:trap_exit, false)
     receive do
       {'DOWN', _ref, _process, _pid2, _reason} = exit_message ->
         {:exit_recieved, exit_message}
