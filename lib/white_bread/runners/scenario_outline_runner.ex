@@ -1,8 +1,10 @@
 defmodule WhiteBread.Runners.ScenarioOutlineRunner do
+  alias WhiteBread.Runners.Setup
+
   alias WhiteBread.Outputers.ProgressReporter
   alias WhiteBread.Runners.StepsRunner
 
-  def run(scenario_outline, context, setup \\ WhiteBread.Runners.Setup.new) do
+  def run(scenario_outline, context, %Setup{} = setup \\ WhiteBread.Runners.Setup.new) do
     scenario_outline
       |> build_each_example
       |> Enum.map(&StepsRunner.run(&1, context, setup))

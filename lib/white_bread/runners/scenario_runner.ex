@@ -1,8 +1,10 @@
 defmodule WhiteBread.Runners.ScenarioRunner do
+  alias WhiteBread.Runners.Setup
+
   alias WhiteBread.Outputers.ProgressReporter
   alias WhiteBread.Runners.StepsRunner
 
-  def run(scenario, context, setup \\ WhiteBread.Runners.Setup.new) do
+  def run(scenario, context, %Setup{} = setup \\ WhiteBread.Runners.Setup.new) do
     start_trapping_exits
 
     setup_with_state = setup
