@@ -1,14 +1,15 @@
-defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.Scenario do
+defmodule WhiteBread.Runners.ScenarioRunner do
   alias WhiteBread.Outputers.ProgressReporter
+  alias WhiteBread.Runners.StepsRunner
 
-  def run(scenario, context, setup) do
+  def run(scenario, context, setup \\ WhiteBread.Runners.Setup.new) do
     start_trapping_exits
 
     setup_with_state = setup
       |> update_setup_starting_state(context)
 
     scenario.steps
-      |> WhiteBread.Runners.run(context, setup_with_state)
+      |> StepsRunner.run(context, setup_with_state)
       |> update_result_with_exits
       |> stop_trapping_exits
       |> build_result_tuple(scenario)

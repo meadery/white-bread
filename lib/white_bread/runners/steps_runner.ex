@@ -1,4 +1,4 @@
-defimpl WhiteBread.Runners, for: List do
+defmodule WhiteBread.Runners.StepsRunner do
   alias WhiteBread.Context.StepExecutor
 
   def run(steps, context, setup) do

@@ -4,12 +4,14 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunnerTest do
   alias WhiteBread.Gherkin.Elements.ScenarioOutline, as: ScenarioOutline
   alias WhiteBread.ScenarioOutlineRunnerTest.ExampleContext, as: ExampleContext
 
+  alias WhiteBread.Runners.ScenarioOutlineRunner
+
   test "Returns no results when there are no examples" do
     steps = [
       %Steps.When{text: "step one"}
     ]
     scenario_outline = %ScenarioOutline{name: "test scenario", steps: steps, examples: []}
-    assert [] == scenario_outline |> WhiteBread.Runners.run(ExampleContext)
+    assert [] == scenario_outline |> ScenarioOutlineRunner.run(ExampleContext)
   end
 
   test "Inserts the expexted text and runs" do
@@ -28,7 +30,7 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunnerTest do
       {:ok, "test scenario"},
       {:ok, "test scenario"}
     ]
-    assert expected_two_successes == scenario_outline |> WhiteBread.Runners.run(ExampleContext)
+    assert expected_two_successes == scenario_outline |> ScenarioOutlineRunner.run(ExampleContext)
   end
 
   test "Returns failures for any example" do
@@ -44,7 +46,7 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunnerTest do
     scenario_outline = %ScenarioOutline{name: "test scenario", steps: steps, examples: examples}
 
     [{:ok, "test scenario"}, {expected_result, _failure_data}
-    ] = scenario_outline |> WhiteBread.Runners.run(ExampleContext)
+    ] = scenario_outline |> ScenarioOutlineRunner.run(ExampleContext)
 
 
     assert expected_result == :failed

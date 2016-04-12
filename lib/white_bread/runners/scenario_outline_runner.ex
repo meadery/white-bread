@@ -1,10 +1,11 @@
-defimpl WhiteBread.Runners, for: WhiteBread.Gherkin.Elements.ScenarioOutline do
+defmodule WhiteBread.Runners.ScenarioOutlineRunner do
   alias WhiteBread.Outputers.ProgressReporter
+  alias WhiteBread.Runners.StepsRunner
 
-  def run(scenario_outline, context, setup) do
+  def run(scenario_outline, context, setup \\ WhiteBread.Runners.Setup.new) do
     scenario_outline
       |> build_each_example
-      |> Enum.map(&WhiteBread.Runners.run(&1, context, setup))
+      |> Enum.map(&StepsRunner.run(&1, context, setup))
       |> Enum.map(&process_result(&1, scenario_outline))
       |> report_progress(setup, scenario_outline)
   end
