@@ -2,12 +2,13 @@ defmodule WhiteBread.Runners.StepsRunner do
   alias WhiteBread.Context.StepExecutor
   alias WhiteBread.Runners.Setup
 
-  def run(steps, context, %Setup{} = setup) do
+  def run(steps, context, %Setup{} = setup)
+  when is_list(steps)
+  do
     setup.background_steps
       |> Enum.concat(steps)
       |> Enum.reduce({:ok, setup.starting_state}, step_executor(context))
       |> finalize(context)
-
   end
 
   defp step_executor(context) do
