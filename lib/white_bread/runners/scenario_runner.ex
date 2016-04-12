@@ -7,21 +7,19 @@ defmodule WhiteBread.Runners.ScenarioRunner do
   def run(scenario, context, %Setup{} = setup \\ WhiteBread.Runners.Setup.new) do
     start_trapping_exits
 
-    setup_with_state = setup
-      |> update_setup_starting_state(context)
+    starting_state = setup.starting_state
+      |> apply_scenario_starting_state(context)
 
     scenario.steps
-      |> StepsRunner.run(context, setup_with_state)
+      |> StepsRunner.run(context, setup.background_steps, starting_state)
       |> update_result_with_exits
       |> stop_trapping_exits
       |> build_result_tuple(scenario)
       |> output_result(setup.progress_reporter, scenario)
   end
 
-  defp update_setup_starting_state(setup, context) do
-    Map.update!(setup, :starting_state, fn feature_state ->
-      apply(context, :starting_state, [feature_state])
-    end)
+  defp apply_scenario_starting_state(feature_state, context) do
+    apply(context, :starting_state, [feature_state])
   end
 
   defp build_result_tuple(result, scenario) do

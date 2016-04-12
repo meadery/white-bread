@@ -7,7 +7,7 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
   def run(scenario_outline, context, %Setup{} = setup \\ WhiteBread.Runners.Setup.new) do
     scenario_outline
       |> build_each_example
-      |> Enum.map(&StepsRunner.run(&1, context, setup))
+      |> Enum.map(&StepsRunner.run(&1, context, setup.background_steps, setup.starting_state))
       |> Enum.map(&process_result(&1, scenario_outline))
       |> report_progress(setup, scenario_outline)
   end
