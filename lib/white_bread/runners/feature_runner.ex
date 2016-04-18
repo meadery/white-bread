@@ -1,6 +1,11 @@
 defmodule WhiteBread.Runners.FeatureRunner do
+
   alias WhiteBread.Runners.Setup
-  alias WhiteBread.Runners
+  alias WhiteBread.Runners.ScenarioRunner
+  alias WhiteBread.Runners.ScenarioOutlineRunner
+
+  alias WhiteBread.Gherkin.Elements.Scenario
+  alias WhiteBread.Gherkin.Elements.ScenarioOutline
 
   def run(feature, context, progress_reporter) do
     %{scenarios: scenarios, background_steps: background_steps} = feature
@@ -27,9 +32,14 @@ defmodule WhiteBread.Runners.FeatureRunner do
       |> Enum.map(&run_scenario(&1,context, setup_with_state))
   end
 
-  defp run_scenario(scenario, context, setup) do
-    result = Runners.run(scenario, context, setup)
+  defp run_scenario(%Scenario{} = scenario, context, setup) do
+    result = ScenarioRunner.run(scenario, context, setup)
     {scenario, result}
+  end
+
+  defp run_scenario(%ScenarioOutline{} = outline, context, setup) do
+    result = ScenarioOutlineRunner.run(outline, context, setup)
+    {outline, result}
   end
 
   defp flatten_any_result_lists(results) do
