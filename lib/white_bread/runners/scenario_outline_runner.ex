@@ -4,10 +4,10 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
   alias WhiteBread.Outputers.ProgressReporter
   alias WhiteBread.Runners.StepsRunner
 
-  def run(scenario_outline, context, %Setup{} = setup \\ WhiteBread.Runners.Setup.new) do
+  def run(scenario_outline, context, %Setup{} = setup \\ Setup.new) do
     scenario_outline
       |> build_each_example
-      |> Enum.map(&StepsRunner.run(&1, context, setup.background_steps, setup.starting_state))
+      |> Enum.map(&run_steps(&1, context, setup))
       |> Enum.map(&process_result(&1, scenario_outline))
       |> report_progress(setup, scenario_outline)
   end
@@ -29,6 +29,12 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
   defp update_step_using_example(starting_step, example) do
     example
       |> Enum.reduce(starting_step, &replace_in_step/2)
+  end
+
+  defp run_steps(steps, context, %Setup{} = setup)
+  when is_list(steps)
+  do
+     StepsRunner.run(&1, context, setup.background_steps, setup.starting_state)
   end
 
   defp replace_in_step({replace, with}, step) do
