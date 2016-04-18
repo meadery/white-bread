@@ -58,11 +58,16 @@ defmodule WhiteBread do
 
   defp run_all_features(features, context, output) do
     features
-      |> Enum.map(&run_feature(&1, context, output))
+      |> Enum.map(&run_feature_async(&1, context, output))
+      |> Enum.map(&Task.await/1)
   end
 
   defp run_feature(feature, context, output) do
     {feature, FeatureRunner.run(feature, context, output)}
+  end
+
+  defp run_feature_async(feature, context, output) do
+    Task.async fn -> run_feature(feature, context, output) end
   end
 
   defp feature_success?({_feature, %{failures: failures}}) do
