@@ -31,10 +31,10 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
       |> Enum.reduce(starting_step, &replace_in_step/2)
   end
 
-  defp run_steps(steps, context, %Setup{} = setup)
-  when is_list(steps)
-  do
-     StepsRunner.run(&1, context, setup.background_steps, setup.starting_state)
+  defp run_steps(steps, context, %Setup{} = setup) when is_list(steps) do
+     StepsRunner.run(
+      steps, context, setup.background_steps, setup.starting_state
+     )
   end
 
   defp replace_in_step({replace, with}, step) do
