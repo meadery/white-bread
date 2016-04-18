@@ -1,5 +1,6 @@
 defmodule WhiteBread do
   alias WhiteBread.Outputers.ProgressReporter
+  alias WhiteBread.Runners.FeatureRunner
 
   def run(context, path, options \\ []) do
     tags = options |> Keyword.get(:tags)
@@ -56,13 +57,12 @@ defmodule WhiteBread do
   end
 
   defp run_all_features(features, context, output) do
-    features |> Enum.map(get_feature_runner(context, output))
+    features
+      |> Enum.map(&run_feature(&1, context, output))
   end
 
-  defp get_feature_runner(context, output) do
-    fn(feature) ->
-      {feature, WhiteBread.Runners.FeatureRunner.run(feature, context, output)}
-    end
+  defp run_feature(feature, context, output) do
+    {feature, FeatureRunner.run(feature, context, output)}
   end
 
   defp feature_success?({_feature, %{failures: failures}}) do
