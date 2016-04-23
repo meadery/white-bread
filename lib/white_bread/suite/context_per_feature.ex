@@ -6,11 +6,24 @@ defmodule WhiteBread.Suite.ContextPerFeature do
   @context_suffix "Context"
 
   def build_suites(namespace_prefix: prefix, entry_path: entry_path) do
+    build_suites(
+      namespace_prefix: prefix,
+      entry_path: entry_path,
+      extra_config: []
+    )
+  end
+
+  def build_suites(
+    namespace_prefix: prefix,
+    entry_path: entry_path,
+    extra_config: extra_config
+  ) do
     entry_path
       |> Finder.find_in_path
       |> Enum.map(fn path ->
           build_suite(namespace_prefix: prefix, file: path)
       end)
+      |> Enum.map(&WhiteBread.Suite.set_properties(&1, extra_config))
   end
 
   def build_suite(namespace_prefix: prefix, file: file_path)
