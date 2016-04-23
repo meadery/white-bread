@@ -4,6 +4,7 @@ defmodule WhiteBread do
 
   def run(context, path, options \\ []) do
     tags = options |> Keyword.get(:tags)
+    async = options |> Keyword.get(:async, false)
 
     output = WhiteBread.Outputers.Console.start
 
@@ -14,7 +15,7 @@ defmodule WhiteBread do
       |> filter_features(tags)
 
     results = features
-      |> run_all_features(context, output)
+      |> run_all_features(context, output, async: async)
       |> results_as_map
       |> output_result(output)
 
@@ -56,18 +57,25 @@ defmodule WhiteBread do
     features |> WhiteBread.Tags.FeatureFilterer.get_for_tags(tags)
   end
 
-  defp run_all_features(features, context, output) do
+  defp run_all_features(features, context, output, async: true) do
     features
       |> Enum.map(&run_feature_async(&1, context, output))
       |> Enum.map(&Task.await/1)
   end
 
+  defp run_all_features(features, context, output, async: false) do
+    features
+      |> Enum.map(&run_feature(&1, context, output))
+  end
+
   defp run_feature(feature, context, output) do
-    {feature, FeatureRunner.run(feature, context, output)}
+    {feature, FeatureRunner.run(feature, context, output, async: false)}
   end
 
   defp run_feature_async(feature, context, output) do
-    Task.async fn -> run_feature(feature, context, output) end
+    Task.async fn ->
+      {feature, FeatureRunner.run(feature, context, output, async: true)}
+    end
   end
 
   defp feature_success?({_feature, %{failures: failures}}) do

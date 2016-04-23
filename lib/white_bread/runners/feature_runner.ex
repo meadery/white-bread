@@ -7,7 +7,8 @@ defmodule WhiteBread.Runners.FeatureRunner do
   alias WhiteBread.Gherkin.Elements.Scenario
   alias WhiteBread.Gherkin.Elements.ScenarioOutline
 
-  def run(feature, context, progress_reporter) do
+  def run(feature, context, progress_reporter, async: async)
+  do
     %{scenarios: scenarios, background_steps: background_steps} = feature
 
     setup = Setup.new
@@ -15,7 +16,7 @@ defmodule WhiteBread.Runners.FeatureRunner do
       |> Map.put(:background_steps, background_steps)
 
     results = scenarios
-      |> run_all_scenarios_for_context(context, setup)
+      |> run_all_scenarios_for_context(context, setup, async: async)
       |> flatten_any_result_lists
 
     %{
@@ -24,14 +25,19 @@ defmodule WhiteBread.Runners.FeatureRunner do
     }
   end
 
-  defp run_all_scenarios_for_context(scenarios, context, setup) do
+  defp run_all_scenarios_for_context(scenarios, context, setup, async: async) do
     starting_state = apply(context, :feature_state, [])
     setup_with_state = setup
       |> Map.put(:starting_state, starting_state)
 
-    scenarios
-      |> Enum.map(&run_scenario_async(&1, context, setup_with_state))
-      |> Enum.map(&Task.await/1)
+    if async do
+      scenarios
+        |> Enum.map(&run_scenario_async(&1, context, setup_with_state))
+        |> Enum.map(&Task.await/1)
+    else
+      scenarios
+        |> Enum.map(&run_scenario(&1, context, setup_with_state))
+    end
   end
 
   defp run_scenario_async(scenario, context, setup) do
