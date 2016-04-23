@@ -40,18 +40,42 @@ defmodule WhiteBread.SuiteConfiguration do
 
   defp add_suite(properties) do
     quote do
-      new_suite = unquote(properties)
-        |> Enum.reduce(%WhiteBread.Suite{}, fn {key, value}, suite ->
-          suite |> Map.update!(key, fn _ -> value end)
-        end)
+      new_suite = %WhiteBread.Suite{}
+        |> WhiteBread.Suite.set_properties(unquote(properties))
       @suites @suites ++ [new_suite]
     end
   end
 
   defmacro context_per_feature(namespace_prefix: prefix, entry_path: path) do
+    create_context_per_feature(
+      namespace_prefix: prefix,
+      entry_path: path,
+      extra: []
+    )
+  end
+
+  defmacro context_per_feature(
+    namespace_prefix: prefix,
+    entry_path: path,
+    extra: extra)
+  do
+    create_context_per_feature(
+      namespace_prefix: prefix,
+      entry_path: path,
+      extra: extra
+    )
+  end
+
+  defp create_context_per_feature(
+    namespace_prefix: prefix,
+    entry_path: path,
+    extra: extra)
+  do
     quote do
       new_suites = WhiteBread.Suite.ContextPerFeature.build_suites(
-        namespace_prefix: unquote(prefix), entry_path: unquote(path)
+        namespace_prefix: unquote(prefix),
+        entry_path: unquote(path),
+        extra_config: unquote(extra)
       )
       @suites @suites ++ new_suites
     end
