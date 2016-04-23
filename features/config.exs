@@ -6,7 +6,8 @@ defmodule WhiteBread.Example.Config do
 
   suite name:          "Default context",
         context:       WhiteBread.Example.DefaultContext,
-        feature_paths: ["features/"]
+        feature_paths: ["features/"],
+        run_async:     true
 
   suite name:          "Alternate context",
         context:       WhiteBread.Example.AlternateContext,

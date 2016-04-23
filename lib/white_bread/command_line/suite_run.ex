@@ -16,8 +16,12 @@ defmodule WhiteBread.CommandLine.SuiteRun do
 
   defp run_suite(%Suite{} = suite) do
     IO.puts "\n\nSuite: #{suite.name}"
-    suite.context
-      |> WhiteBread.run(suite.feature_paths, tags: suite.tags)
+    WhiteBread.run(
+      suite.context,
+      suite.feature_paths,
+      tags: suite.tags,
+      async: suite.run_async
+    )
   end
 
   defp get_suites_from_config(path) do

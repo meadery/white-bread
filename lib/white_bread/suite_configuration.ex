@@ -34,32 +34,16 @@ defmodule WhiteBread.SuiteConfiguration do
     end
   end
 
-  defmacro suite(
-    name:          name,
-    context:       context,
-    feature_paths: paths,
-    tags:          tags)
-  do
-    add_suite(name: name, context: context, feature_paths: paths, tags: tags)
+  defmacro suite(properties) when is_list(properties) do
+    add_suite(properties)
   end
 
-  defmacro suite(name: name, context: context, feature_paths: paths) do
-    add_suite(name: name, context: context, feature_paths: paths, tags: nil)
-  end
-
-  defp add_suite(
-    name:          name,
-    context:       context,
-    feature_paths: paths,
-    tags:          tags)
-  do
+  defp add_suite(properties) do
     quote do
-      new_suite = %WhiteBread.Suite{
-        name: unquote(name),
-        context: unquote(context),
-        feature_paths: unquote(paths),
-        tags: unquote(tags)
-      }
+      new_suite = unquote(properties)
+        |> Enum.reduce(%WhiteBread.Suite{}, fn {key, value}, suite ->
+          suite |> Map.update!(key, fn _ -> value end)
+        end)
       @suites @suites ++ [new_suite]
     end
   end

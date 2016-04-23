@@ -5,7 +5,7 @@ defmodule WhiteBread.Example.DefaultContext do
   subcontext WhiteBread.Example.CoffeeContext
   subcontext WhiteBread.Example.SongContext
   subcontext WhiteBread.Example.TableContext
-  subcontext WhiteBread.Example.MyFeatureAContext
+  subcontext WhiteBread.Example.DefaultContext.LoafContext
 
   feature_starting_state fn  ->
     %{feature_state_loaded: :yes}
@@ -117,6 +117,24 @@ defmodule WhiteBread.Example.TableContext do
 
 end
 
+defmodule WhiteBread.Example.DefaultContext.LoafContext do
+  use WhiteBread.Context
+
+  given_ ~r/^I have bread$/, fn _state ->
+    {:ok, :breadful_state}
+  end
+
+  when_ ~r/^I place in the toaster$/, fn :breadful_state ->
+    {:ok, :loaded_toaster}
+  end
+
+  then_ ~r/^I should get toast$/, fn :loaded_toaster ->
+    {:ok, :nomnomnom}
+  end
+
+
+end
+
 defmodule WhiteBread.Example.DefaultContext.TableStuff do
   import WhiteBread.Helpers
 
@@ -130,13 +148,4 @@ defmodule WhiteBread.Example.DefaultContext.TableStuff do
   def all_okay_with_table({"Odin", "Thor"} = state) do
     {:ok, state}
   end
-end
-
-defmodule WhiteBread.Example.MyFeatureAContext do
-  use WhiteBread.Context
-
-  given_ ~r/^(?<anything>.+)$/, fn state, %{anything: _anything} ->
-    {:ok, state}
-  end
-  
 end

@@ -15,7 +15,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     feature = %Feature{name: "test feature", scenarios: [scenario]}
 
     output = WhiteBread.Outputers.Console.start
-    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output)
+    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output, async: false)
     output |> WhiteBread.Outputers.Console.stop
 
     assert result == %{
@@ -41,7 +41,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     feature = %Feature{name: "test feature", scenarios: [scenario, failing_scenario]}
 
     output = WhiteBread.Outputers.Console.start
-    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output)
+    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output, async: false)
     output |> WhiteBread.Outputers.Console.stop
 
     %{
@@ -63,7 +63,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     feature = %Feature{name: "test feature", scenarios: [scenario], background_steps: background_steps}
 
     output = WhiteBread.Outputers.Console.start
-    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output)
+    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output, async: false)
     output |> WhiteBread.Outputers.Console.stop
 
     assert result == %{
@@ -73,22 +73,28 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
   end
 
   test "feature runner should run given scenarios only once" do
+
+    WhiteBread.FeatureRunnerTest.GlobalCounter.start_link
+
     steps = [
-      %Steps.When{text: "increment process dictionary"}
+      %Steps.When{text: "increment global counter"}
     ]
 
     scenario = %Scenario{name: "test scenario", steps: steps}
     feature = %Feature{name: "test feature", scenarios: [scenario]}
     output = WhiteBread.Outputers.Console.start
-    WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output)
+    WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output, async: false)
     output |> WhiteBread.Outputers.Console.stop
 
-    assert Process.get(:run_count) == 1
+    count_at_end = WhiteBread.FeatureRunnerTest.GlobalCounter.get
+
+    assert count_at_end == 1
   end
 end
 
 defmodule WhiteBread.FeatureRunnerTest.ExampleContext do
   use WhiteBread.Context
+  alias WhiteBread.FeatureRunnerTest.GlobalCounter
 
   when_ "step one", fn _state ->
     {:ok, :step_one_complete}
@@ -107,8 +113,22 @@ defmodule WhiteBread.FeatureRunnerTest.ExampleContext do
     {:ok, :impossible}
   end
 
-  when_ "increment process dictionary", fn _state->
-    value = (Process.get(:run_count, 0) + 1)
-    Process.put(:run_count, value)
+  when_ "increment global counter", fn _state->
+    GlobalCounter.increment
+  end
+end
+
+defmodule WhiteBread.FeatureRunnerTest.GlobalCounter do
+
+  def start_link do
+    Agent.start_link(fn -> 0 end, name: __MODULE__)
+  end
+
+  def get() do
+    Agent.get(__MODULE__, fn x -> x end)
+  end
+
+  def increment() do
+    Agent.update(__MODULE__, fn x -> x + 1 end)
   end
 end
