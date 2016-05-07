@@ -20,18 +20,10 @@ Which are traditionally made with very thin white bread.
 Add "white_bread" to your `mix.exs` file with the version you wish to use:
 
 ```elixir
-def project do
-    [
-        ...
-        preferred_cli_env: ["white_bread.run": :test],
-        ...
-    ]
-end
-...
 defp deps do
     [
         ...
-        { :white_bread, "~> 2.5", only: :test }
+        { :white_bread, "~> 2.5", only: [:dev, :test] }
         ...
     ]
 end
@@ -113,6 +105,23 @@ After doing this rerun
 
 ```
 mix white_bread.run
+```
+
+If you want to run WhiteBread in test environment run this
+```
+MIX_ENV=test mix white_bread.run
+```
+
+To execute on each time WhiteBread in test environment without prefixing the command with `MIX_ENV=test`, you can also add this line in `mix.exs` 
+
+```
+def project do
+    [
+        ...
+        preferred_cli_env: ["white_bread.run": :test],
+        ...
+    ]
+end
 ```
 
 # Next steps - Suites and subcontexts
