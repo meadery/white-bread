@@ -107,6 +107,23 @@ After doing this rerun
 mix white_bread.run
 ```
 
+If you want to run WhiteBread in test environment run this
+```
+MIX_ENV=test mix white_bread.run
+```
+
+To execute on each time WhiteBread in test environment without prefixing the command with `MIX_ENV=test`, you can also add this line in `mix.exs` 
+
+```
+def project do
+    [
+        ...
+        preferred_cli_env: ["white_bread.run": :test],
+        ...
+    ]
+end
+```
+
 # Next steps - Suites and subcontexts
 
 After following the getting started steps you may find your default context starts to get a bit large. Defining suites allows you to break your your contexts apart and assign them to specific features. You can even run one feature multiple times under different contexts. This is especially useful if you have a few different ways of accessing your software (web, rest api, command line etc.).
