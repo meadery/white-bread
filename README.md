@@ -164,6 +164,13 @@ defmodule WhiteBread.Example.Config do
   context_per_feature namespace_prefix: WhiteBread.Example,
                       entry_path: "features/context_per_feature"
 
+  # Extra config can also be provided to apply to each generated suite                      
+  context_per_feature namespace_prefix: WhiteBread.Example,
+                      entry_path: "features/context_per_feature",
+                      extra: [
+                        tags: ['special']
+                      ]
+
   suite name:          "Alternate",
         context:       WhiteBread.Example.AlternateContext,
         feature_paths: ["features/sub_dir_two"]
