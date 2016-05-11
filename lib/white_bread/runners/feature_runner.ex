@@ -1,5 +1,8 @@
 defmodule WhiteBread.Runners.FeatureRunner do
 
+  #1 minute
+  @default_scenario_run_time 1000 * 60
+
   alias WhiteBread.Runners.Setup
   alias WhiteBread.Runners.ScenarioRunner
   alias WhiteBread.Runners.ScenarioOutlineRunner
@@ -33,7 +36,7 @@ defmodule WhiteBread.Runners.FeatureRunner do
     if async do
       scenarios
         |> Enum.map(&run_scenario_async(&1, context, setup_with_state))
-        |> Enum.map(&Task.await/1)
+        |> Enum.map(&scenario_await/1)
     else
       scenarios
         |> Enum.map(&run_scenario(&1, context, setup_with_state))
@@ -42,6 +45,10 @@ defmodule WhiteBread.Runners.FeatureRunner do
 
   defp run_scenario_async(scenario, context, setup) do
     Task.async fn -> run_scenario(scenario, context, setup) end
+  end
+
+  defp scenario_await(task) do
+    Task.await(task, @default_scenario_run_time)
   end
 
   defp run_scenario(%Scenario{} = scenario, context, setup) do
