@@ -6,6 +6,7 @@ defmodule WhiteBread.Gherkin do
       defstruct name: "",
                 description: "",
                 tags: [],
+                role: nil,
                 background_steps: [],
                 scenarios: []
     end
