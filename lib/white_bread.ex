@@ -2,6 +2,10 @@ defmodule WhiteBread do
   alias WhiteBread.Outputers.ProgressReporter
   alias WhiteBread.Runners.FeatureRunner
 
+  # Features are capped to one hour. In practise the scenario's should be
+  # controlling the time out
+  @max_feature_run_time 1000 * 60 * 60
+
   def run(context, path, options \\ []) do
     tags = options |> Keyword.get(:tags)
     async = options |> Keyword.get(:async, false)
@@ -72,7 +76,7 @@ defmodule WhiteBread do
   defp run_all_features(features, context, output, async: true) do
     features
       |> Enum.map(&run_feature_async(&1, context, output))
-      |> Enum.map(&Task.await/1)
+      |> Enum.map(&Task.await(&1, @max_feature_run_time))
   end
 
   defp run_all_features(features, context, output, async: false) do
