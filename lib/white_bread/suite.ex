@@ -2,6 +2,7 @@ defmodule WhiteBread.Suite do
   defstruct name: "",
             context: nil,
             tags: nil,
+            roles: nil,
             feature_paths: [],
             run_async: false
 

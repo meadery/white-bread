@@ -20,4 +20,9 @@ defmodule WhiteBread.Example.Config do
         context:       WhiteBread.Example.PlainContext,
         feature_paths: ["features/"],
         tags:          ["songs"]
+
+  suite name:          "Singer role",
+        context:       WhiteBread.Example.PlainContext,
+        feature_paths: ["features/"],
+        roles:         ["singer"]
 end

@@ -20,6 +20,7 @@ defmodule WhiteBread.CommandLine.SuiteRun do
       suite.context,
       suite.feature_paths,
       tags: suite.tags,
+      roles: suite.roles,
       async: suite.run_async
     )
   end
