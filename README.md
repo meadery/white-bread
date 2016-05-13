@@ -112,7 +112,7 @@ If you want to run WhiteBread in test environment run this
 MIX_ENV=test mix white_bread.run
 ```
 
-To execute on each time WhiteBread in test environment without prefixing the command with `MIX_ENV=test`, you can also add this line in `mix.exs` 
+To execute on each time WhiteBread in test environment without prefixing the command with `MIX_ENV=test`, you can also add this line in `mix.exs`
 
 ```
 def project do
@@ -197,6 +197,48 @@ defmodule WhiteBread.Example.DefaultContext do
   #...
 end
 ```
+
+## Speeding things up - async running
+
+More than likely you have a multicore machine. To get things going a little
+faster each suite can be configured to run all features and scenarios in a
+separate process.
+
+This can be done by setting async to true on any suite:
+```elixir
+defmodule WhiteBread.Example.Config do
+  use WhiteBread.SuiteConfiguration
+
+  suite name:          "Speedy run",
+        context:       WhiteBread.Example.DefaultContext,
+        feature_paths: ["features/sub_dir_one"],
+        async: true
+end
+```
+note: At the moment each suite will be run sequentially in the order they appear
+in the config file.
+
+## Speeding things up - timeouts
+By default each scenario gets 30 seconds to execute. After which point it will
+fail with a timeout warning. Each context can define a custom timeout function:
+
+```elixir
+defmodule WhiteBread.Example.DefaultContext do
+  use WhiteBread.Context
+  scenario_timeouts fn _feature, scenario ->
+    case scenario.name do
+      "possible slow scenario" -> 60_000
+      _               -> 5000
+    end
+  end
+
+  # Rest of the context here as usual
+  #...
+end
+```
+This function gets the full structs representing the feature and scenario being
+executed so it's possible to base the decision to change the timeout on any
+available property: tags, name, description etc.
 
 # Public interface and BC breaks
 The public interface of this library covers:
