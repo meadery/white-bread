@@ -6,5 +6,7 @@ defmodule WhiteBread.ContextBehaviour do
 
   @callback starting_state(any) :: any
 
+  @callback get_scenario_timeout(String.t, String.t) :: any
+
   @callback finalize(any) :: any
 end
