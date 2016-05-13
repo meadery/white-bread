@@ -1,8 +1,4 @@
 defmodule WhiteBread.Runners.FeatureRunner do
-
-  #1 minute
-  @default_scenario_run_time 1000 * 60
-
   alias WhiteBread.Runners.Setup
   alias WhiteBread.Runners.ScenarioRunner
   alias WhiteBread.Runners.ScenarioOutlineRunner
@@ -10,15 +6,12 @@ defmodule WhiteBread.Runners.FeatureRunner do
   alias WhiteBread.Gherkin.Elements.Scenario
   alias WhiteBread.Gherkin.Elements.ScenarioOutline
 
-  def run(feature, context, progress_reporter, async: async)
-  do
-    %{scenarios: scenarios, background_steps: background_steps} = feature
-
+  def run(feature, context, progress_reporter, async: async) do
     setup = Setup.new
       |> Map.put(:progress_reporter, progress_reporter)
-      |> Map.put(:background_steps, background_steps)
+      |> Map.put(:background_steps, feature.background_steps)
 
-    results = scenarios
+    results = feature
       |> run_all_scenarios_for_context(context, setup, async: async)
       |> flatten_any_result_lists
 
@@ -28,27 +21,35 @@ defmodule WhiteBread.Runners.FeatureRunner do
     }
   end
 
-  defp run_all_scenarios_for_context(scenarios, context, setup, async: async) do
+  defp run_all_scenarios_for_context(feature, context, setup, async: async) do
     starting_state = apply(context, :feature_state, [])
     setup_with_state = setup
       |> Map.put(:starting_state, starting_state)
 
     if async do
-      scenarios
-        |> Enum.map(&run_scenario_async(&1, context, setup_with_state))
+      feature.scenarios
+        |> Enum.map(&run_scenario_async(feature, &1, context, setup_with_state))
         |> Enum.map(&scenario_await/1)
     else
-      scenarios
+      feature.scenarios
         |> Enum.map(&run_scenario(&1, context, setup_with_state))
     end
   end
 
-  defp run_scenario_async(scenario, context, setup) do
-    Task.async fn -> run_scenario(scenario, context, setup) end
+  defp run_scenario_async(_feature, scenario, context, setup) do
+    {
+      scenario,
+      5000, #context.get_scenario_timeout(feature.name, scenario.name),
+      Task.async fn -> run_scenario(scenario, context, setup) end
+    }
   end
 
-  defp scenario_await(task) do
-    Task.await(task, @default_scenario_run_time)
+  defp scenario_await({scenario, timeout, task}) do
+    case Task.yield(task, timeout) do
+      {:ok, result}   -> result
+      {:exit, reason} -> {scenario, {:failed, reason}}
+      nil             -> {scenario, {:failed, :timeout}}
+    end
   end
 
   defp run_scenario(%Scenario{} = scenario, context, setup) do
