@@ -1,6 +1,9 @@
 defmodule WhiteBread.Context.Setup do
   def before do
     quote do
+      # 30 seconds max per scenario
+      @default_scenario_timeout 1000 * 30
+
       def get_steps do
         @sub_context_modules
          |> Enum.map(fn(sub_module) -> apply(sub_module, :get_steps, []) end)
@@ -26,7 +29,9 @@ defmodule WhiteBread.Context.Setup do
       end
 
       unless @timeouts_definied do
-        def get_scenario_timeout(feature, scenario), do: 5000
+        def get_scenario_timeout(_feature, _scenario) do
+          @default_scenario_timeout
+        end
       end
 
     end
