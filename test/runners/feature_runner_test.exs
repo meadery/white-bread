@@ -77,7 +77,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
       %Steps.When{text: "I take too long to execute"}
     ]
 
-    scenario = %Scenario{name: "test scenario", steps: steps}
+    scenario = %Scenario{name: "slow scenario", steps: steps}
     feature = %Feature{name: "test feature", scenarios: [scenario]}
 
     output = WhiteBread.Outputers.Console.start
@@ -113,6 +113,13 @@ end
 defmodule WhiteBread.FeatureRunnerTest.ExampleContext do
   use WhiteBread.Context
   alias WhiteBread.FeatureRunnerTest.GlobalCounter
+
+  scenario_timeouts fn _feature, scenario ->
+    case scenario.name do
+      "slow scenario" -> 1
+      _               -> 5000
+    end
+  end
 
   when_ "step one", fn _state ->
     {:ok, :step_one_complete}

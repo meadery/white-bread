@@ -39,7 +39,7 @@ defmodule WhiteBread.Runners.FeatureRunner do
   defp run_scenario_async(feature, scenario, context, setup) do
     {
       scenario,
-      context.get_scenario_timeout(feature.name, scenario.name),
+      context.get_scenario_timeout(feature, scenario),
       Task.async fn -> run_scenario(scenario, context, setup) end
     }
   end

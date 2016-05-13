@@ -1,4 +1,6 @@
 defmodule WhiteBread.ContextBehaviour do
+  alias WhiteBread.Gherkin.Elements.Feature
+  alias WhiteBread.Gherkin.Elements.Scenario
 
   @callback get_steps() :: [WhiteBread.Context.StepFunction.t]
 
@@ -6,7 +8,7 @@ defmodule WhiteBread.ContextBehaviour do
 
   @callback starting_state(any) :: any
 
-  @callback get_scenario_timeout(String.t, String.t) :: any
+  @callback get_scenario_timeout(Feature.t, Scenario.t) :: number
 
   @callback finalize(any) :: any
 end
