@@ -1,5 +1,18 @@
 # Changelog
 
+## V-NEXT (YYYY-MM-DD)
+
+### Enhancements
+- Roles are now parsed. So any feature with ```As a Person``` in the description can be filtered using it. See #54 for details.
+- In async mode scenerios can now timeout. The scenario_timeouts macro is can be used to specifiy a function which generates custom timeouts. See #57.
+
+### Bug fixes
+- Long running scenerio steps now longer cause undefined failures in aysnc mode see #52.
+
+### Backwards incompatible changes
+- Elixir 1.0 no longer supported due to changes in #57. Elixir 1.1 and above is needed.
+- The context behaviour is extended to require ```callback get_scenario_timeout(Feature.t, Scenario.t) :: number``` any contexts not ```use```ing ```WhiteBread.Context``` will need to add the function.
+
 ## V2.7.0 (2016-04-23)
 
 ### Enhancements
