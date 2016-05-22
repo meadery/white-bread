@@ -72,6 +72,24 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     }
   end
 
+  test "timed out scenarios should be failed" do
+    steps = [
+      %Steps.When{text: "I take too long to execute"}
+    ]
+
+    scenario = %Scenario{name: "slow scenario", steps: steps}
+    feature = %Feature{name: "test feature", scenarios: [scenario]}
+
+    output = WhiteBread.Outputers.Console.start
+    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output, async: true)
+    output |> WhiteBread.Outputers.Console.stop
+
+    assert result == %{
+      failures: [{scenario, {:failed, :timeout}}],
+      successes: []
+    }
+  end
+
   test "feature runner should run given scenarios only once" do
 
     WhiteBread.FeatureRunnerTest.GlobalCounter.start_link
@@ -96,6 +114,13 @@ defmodule WhiteBread.FeatureRunnerTest.ExampleContext do
   use WhiteBread.Context
   alias WhiteBread.FeatureRunnerTest.GlobalCounter
 
+  scenario_timeouts fn _feature, scenario ->
+    case scenario.name do
+      "slow scenario" -> 1
+      _               -> 5000
+    end
+  end
+
   when_ "step one", fn _state ->
     {:ok, :step_one_complete}
   end
@@ -111,6 +136,11 @@ defmodule WhiteBread.FeatureRunnerTest.ExampleContext do
   when_ "make a failing assestion", fn _state ->
     assert 1 == 0
     {:ok, :impossible}
+  end
+
+  when_ "I take too long to execute", fn _state ->
+    :timer.sleep(1000 * 60)
+    {:ok, :slow}
   end
 
   when_ "increment global counter", fn _state->

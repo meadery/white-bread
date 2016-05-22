@@ -46,6 +46,8 @@ defmodule WhiteBread.FinalResultPrinter do
     step_helper.text(failure_type, failing_step, fail_data)
   end
 
+  defp get_fail_reason(:timeout, _), do: "Scenario timed out waiting for result"
+
   defp get_fail_reason(_, _), do: "Ended in a not okay state"
 
   defp add_newline(string), do: string <> "\n"

@@ -21,6 +21,8 @@ defmodule WhiteBread.Context do
       @scenario_finalize_defined false
       @feature_state_definied false
 
+      @timeouts_definied false
+
       @before_compile WhiteBread.Context
     end
   end
@@ -70,6 +72,15 @@ defmodule WhiteBread.Context do
           is_function(unquote(function), 0)
             -> unquote(function).()
         end
+      end
+    end
+  end
+
+  defmacro scenario_timeouts(function) do
+    quote do
+      @timeouts_definied true
+      def get_scenario_timeout(feature, scenario) do
+        unquote(function).(feature, scenario)
       end
     end
   end
