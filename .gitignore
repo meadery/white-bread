@@ -6,7 +6,7 @@ erl_crash.dump
 /.vagrant/
 
 # JetBrains IDE stuff
-/white-bread.iml
+/*.iml
 /.idea/
 
 # Generated stuff
