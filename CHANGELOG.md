@@ -13,6 +13,17 @@
 - Elixir 1.0 no longer supported due to changes in #57. Elixir 1.1 and above is needed.
 - The context behaviour is extended to require ```callback get_scenario_timeout(Feature.t, Scenario.t) :: number``` any contexts not ```use```ing ```WhiteBread.Context``` will need to add the function.
 
+## V2.8.0 (2016-08-14)
+
+### Enhancements
+- Adds details of assertion errors to output. Thanks to @raycheung via #60.
+
+### Bug fixes
+none
+
+### Backwards incompatible changes
+none
+
 ## V2.7.0 (2016-04-23)
 
 ### Enhancements
