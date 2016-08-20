@@ -16,7 +16,7 @@ defmodule WhiteBread.Tables do
     row
       |> Stream.with_index
       |> Stream.map(&get_header(&1, header_row))
-      |> Stream.map(&header_atom_to_string/1)
+      |> Stream.map(&header_string_to_atom/1)
       |> Enum.reduce(%{}, &build_indexed_row/2)
   end
 
@@ -24,8 +24,9 @@ defmodule WhiteBread.Tables do
     {content, Enum.at(header_row, position)}
   end
 
-  defp header_atom_to_string({content, header_atom}) do
-    {content, String.to_atom(header_atom)}
+  defp header_string_to_atom({content, header_string})
+  when is_bitstring header_string do
+    {content, String.to_atom(header_string)}
   end
 
   defp build_indexed_row({value, index}, indexed_row) do
