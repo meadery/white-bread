@@ -1,4 +1,7 @@
 defmodule WhiteBread.Context.StepFunction do
+
+  alias WhiteBread.RegexExtension
+
   defstruct string: nil,
             regex: nil,
             function: nil,
@@ -47,6 +50,23 @@ defmodule WhiteBread.Context.StepFunction do
 
   def match?(%__MODULE__{type: :regex} = data, string) do
     Regex.match?(data.regex, string)
+  end
+
+  def call(%__MODULE__{type: :string, function: func}, step, state) do
+    args = [state, {:table_data, step.table_data}]
+    apply(func, args)
+  end
+
+  def call(%__MODULE__{type: :regex, function: func, regex: regex}, step, state) do
+    key_matches = RegexExtension.atom_keyed_named_captures(
+      regex,
+      step.text
+    )
+    extra = Map.new
+      |> Dict.merge(key_matches)
+      |> Dict.put(:table_data, step.table_data)
+      |> Dict.put(:doc_string, step.doc_string)
+    apply(func, [state, extra])
   end
 
 end
