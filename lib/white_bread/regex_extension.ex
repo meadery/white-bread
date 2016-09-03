@@ -6,14 +6,14 @@ defmodule WhiteBread.RegexExtension do
 
   ## Examples
 
-  iex> atom_keyed_named_captures(~r/hello (?<world>[a-z]+)/, "hello earth")
-  [world: "earth"]
+      iex> atom_keyed_named_captures(~r/hello (?<world>[a-z]+)/, "hello earth")
+      [world: "earth"]
 
-  iex> atom_keyed_named_captures(~r/(?<a>[a-z]+) (?<b>[a-z]+)/, "hello earth")
-  [a: "hello", b: "earth"]
+      iex> atom_keyed_named_captures(~r/(?<a>[a-z]+) (?<b>[a-z]+)/, "hello earth")
+      [a: "hello", b: "earth"]
 
-  iex> atom_keyed_named_captures(~r/.+/, "hello earth")
-  []
+      iex> atom_keyed_named_captures(~r/.+/, "hello earth")
+      []
 
   """
   def atom_keyed_named_captures(regex, string) do
