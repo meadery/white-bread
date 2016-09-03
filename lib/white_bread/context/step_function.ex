@@ -44,6 +44,31 @@ defmodule WhiteBread.Context.StepFunction do
     type
   end
 
+  @doc ~S"""
+  Indicates if the step function matches the given string.
+  String step functions match if the whole string matches.
+  Regex steps pass the call to Regex.match?
+
+  ## Example - String step functions
+
+      iex> step_function = StepFunction.new("hello midgard", fn -> :hooray end)
+      iex> StepFunction.match?(step_function, "hello midgard")
+      true
+
+      iex> step_function = StepFunction.new("hello asgard", fn -> :hooray end)
+      iex> StepFunction.match?(step_function, "hello midgard")
+      false
+
+  ## Example - Regex step functions
+
+      iex> step_function = StepFunction.new(~r/^hello (.+)$/, fn -> :hooray end)
+      iex> StepFunction.match?(step_function, "hello midgard")
+      true
+
+      iex> step_function = StepFunction.new(~r/^hello ([a-z]+)$/, fn -> :hooray end)
+      iex> StepFunction.match?(step_function, "hello midgard 9")
+      false
+  """
   def match?(%__MODULE__{type: :string} = data, string) do
     string == data.string
   end
