@@ -37,7 +37,6 @@ defmodule WhiteBread.Mixfile do
       "whiteBread.run",
       "whiteBread.run --tags songs",
       "white_bread.run --context \"features/contexts/alternate_context.exs\"",
-      "dogma lib"
     ]
   end
 
@@ -52,9 +51,8 @@ defmodule WhiteBread.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:dogma, "0.0.11", only: [:dev, :test]},
-      {:credo, "0.2.5", only: [:dev]},
-      {:earmark, "~> 0.1", only: :dev},
+      {:credo, "0.4.11", only: [:dev]},
+      {:earmark, "~> 1.0.1", only: :dev},
       {:ex_doc, "~> 0.8", only: :dev}
     ]
   end
