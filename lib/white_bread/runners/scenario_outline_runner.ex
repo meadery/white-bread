@@ -13,7 +13,9 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
   end
 
   defp process_results([], _), do: [{:failed, :no_examples_given}]
-  defp process_results(results, scenario_outline), do: Enum.map(results, &process_result(&1, scenario_outline))
+  defp process_results(results, scenario_outline) do
+    Enum.map(results, &process_result(&1, scenario_outline))
+  end
 
   defp process_result({:ok, _last_state}, scenario), do: {:ok, scenario.name}
   defp process_result(error_data,        _scenario), do: {:failed, error_data}
