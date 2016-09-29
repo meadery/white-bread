@@ -6,14 +6,6 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunnerTest do
 
   alias WhiteBread.Runners.ScenarioOutlineRunner
 
-  test "Returns no results when there are no examples" do
-    steps = [
-      %Steps.When{text: "step one"}
-    ]
-    scenario_outline = %ScenarioOutline{name: "test scenario", steps: steps, examples: []}
-    assert [] == scenario_outline |> ScenarioOutlineRunner.run(ExampleContext)
-  end
-
   test "Inserts the expexted text and runs" do
     steps = [
       %Steps.When{text: "step <number_one>"},
