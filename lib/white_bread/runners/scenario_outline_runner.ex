@@ -8,8 +8,13 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
     scenario_outline
       |> build_each_example
       |> Enum.map(&run_steps(&1, context, setup))
-      |> Enum.map(&process_result(&1, scenario_outline))
+      |> process_results(scenario_outline)
       |> report_progress(setup, scenario_outline)
+  end
+
+  defp process_results([], _), do: [{:failed, :no_examples_given}]
+  defp process_results(results, scenario_outline) do
+    Enum.map(results, &process_result(&1, scenario_outline))
   end
 
   defp process_result({:ok, _last_state}, scenario), do: {:ok, scenario.name}

@@ -47,6 +47,7 @@ defmodule WhiteBread.FinalResultPrinter do
   end
 
   defp get_fail_reason(:timeout, _), do: "Scenario timed out waiting for result"
+  defp get_fail_reason(:no_examples_given, _), do: "Scenario Outline needs at least one example"
 
   defp get_fail_reason(_, _), do: "Ended in a not okay state"
 
