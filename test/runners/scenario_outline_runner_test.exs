@@ -52,6 +52,21 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunnerTest do
     assert expected_result == :failed
   end
 
+  test "Returns failure if no examples are provided" do
+    steps = [
+      %Steps.When{text: "step <number_one>"},
+      %Steps.When{text: "step <number_two>"}
+    ]
+    examples = []
+
+    scenario_outline = %ScenarioOutline{name: "test scenario", steps: steps, examples: examples}
+
+    [{expected_result, failure_data}] = scenario_outline |> ScenarioOutlineRunner.run(ExampleContext)
+
+    assert expected_result == :failed
+    assert failure_data == :no_examples_given
+  end
+
 end
 
 defmodule WhiteBread.ScenarioOutlineRunnerTest.ExampleContext do
