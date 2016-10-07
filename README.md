@@ -126,7 +126,7 @@ end
 
 # Next steps - Suites and subcontexts
 
-After following the getting started steps you may find your default context starts to get a bit large. Defining suites allows you to break your your contexts apart and assign them to specific features. You can even run one feature multiple times under different contexts. This is especially useful if you have a few different ways of accessing your software (web, rest api, command line etc.).
+After following the getting started steps you may find your default context starts to get a bit large. Defining suites allows you to break your contexts apart and assign them to specific features. You can even run one feature multiple times under different contexts. This is especially useful if you have a few different ways of accessing your software (web, rest api, command line etc.).
 
 Suite configuration is loaded from ```features/config.exs```. Create this file then add something like:
 
