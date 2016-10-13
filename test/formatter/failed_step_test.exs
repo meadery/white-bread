@@ -23,11 +23,11 @@ defmodule WhiteBread.Formatter.FailedStepTest do
   test "Prints out assestion failing steps" do
     step = %{text: "failing step"}
     assertion_failure = %ExUnit.AssertionError{
-      message: "this is my assestion message"
+      message: "this is my assertion message"
     }
 
     output = FailedStep.text(assertion_failure, step, assertion_failure)
-    assert output == "failing step: this is my assestion message"
+    assert output == "failing step: this is my assertion message"
   end
 
   test "Prints out other failing steps" do
