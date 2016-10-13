@@ -133,7 +133,7 @@ defmodule WhiteBread.FeatureRunnerTest.ExampleContext do
     {:ok, :step_two_complete}
   end
 
-  when_ "make a failing assestion", fn _state ->
+  when_ "make a failing assertion", fn _state ->
     assert 1 == 0
     {:ok, :impossible}
   end

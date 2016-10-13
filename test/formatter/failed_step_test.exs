@@ -20,14 +20,14 @@ defmodule WhiteBread.Formatter.FailedStepTest do
     assert output == "\e[34mundefined step: missing step implement with\n\n" <> code_to_implement <> "\e[0m"
   end
 
-  test "Prints out assestion failing steps" do
+  test "Prints out assertion failing steps" do
     step = %{text: "failing step"}
     assertion_failure = %ExUnit.AssertionError{
-      message: "this is my assestion message"
+      message: "this is my assertion message"
     }
 
     output = FailedStep.text(assertion_failure, step, assertion_failure)
-    assert output == "failing step: this is my assestion message"
+    assert output =~ ~r/failing step: this is my assertion message/
   end
 
   test "Prints out other failing steps" do

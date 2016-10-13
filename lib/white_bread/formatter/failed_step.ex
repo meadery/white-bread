@@ -33,17 +33,8 @@ end
 defimpl WhiteBread.Formatter.FailedStep,
 for: [ESpec.AssertionError, ExUnit.AssertionError] do
   def text(_, step, assertion_failure) do
-    print_assertion_failure assertion_failure
     %{text: step_text} = step
-    %{message: assestion_message} = assertion_failure
-    "#{step_text}: #{assestion_message}"
-  end
-
-  defp print_assertion_failure(assertion_failure) do
-    msg = ExUnit.AssertionError.message(assertion_failure)
-    formatted = [:red | msg]
-                |> IO.ANSI.format(true)
-                |> IO.iodata_to_binary
-    IO.puts formatted
+    %{message: assertion_message} = assertion_failure
+    WhiteBread.Outputers.Style.failed "#{step_text}: #{assertion_message}"
   end
 end
