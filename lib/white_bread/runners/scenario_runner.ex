@@ -42,6 +42,8 @@ defmodule WhiteBread.Runners.ScenarioRunner do
     pass_through
   end
 
+  defp update_result_with_exits(result = {:other_failure, _, _}), do: result
+
   defp update_result_with_exits(result) do
     receive do
       {'DOWN', _ref, _process, _pid2, _reason} = exit_message ->
