@@ -20,6 +20,7 @@ defmodule WhiteBread.Context do
       @scenario_state_definied false
       @scenario_finalize_defined false
       @feature_state_definied false
+      @feature_finalize_defined false
 
       @timeouts_definied false
 
@@ -78,7 +79,7 @@ defmodule WhiteBread.Context do
 
   defmacro feature_finalize(function) do
     quote do
-      @scenario_finalize_defined true
+      @feature_finalize_defined true
       def feature_finalize(state) do
         cond do
           is_function(unquote(function), 1)

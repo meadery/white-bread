@@ -28,6 +28,10 @@ defmodule WhiteBread.Context.Setup do
         def scenario_finalize(_ignored_state), do: nil
       end
 
+      unless @feature_finalize_defined do
+        def feature_finalize(_ignored_state), do: nil
+      end
+
       unless @timeouts_definied do
         def get_scenario_timeout(_feature, _scenario) do
           @default_scenario_timeout
