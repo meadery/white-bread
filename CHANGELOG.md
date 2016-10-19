@@ -12,6 +12,7 @@
 ### Backwards incompatible changes
 - Elixir 1.0 no longer supported due to changes in #57. Elixir 1.1 and above is needed.
 - The context behaviour is extended to require ```callback get_scenario_timeout(Feature.t, Scenario.t) :: number``` any contexts not ```use```ing ```WhiteBread.Context``` will need to add the function.
+- The *_starting_state and *_finalize functions in the context behaviour have been standardised so a pair each for feature and scenario.
 
 ## V2.8.1 (2016-09-29)
 
