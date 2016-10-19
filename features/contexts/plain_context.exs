@@ -27,15 +27,16 @@ defmodule WhiteBread.Example.PlainContext do
 
   end
 
-  def feature_state() do
+  def feature_starting_state() do
       # Always default to an empty map
       %{}
   end
 
-  def starting_state(feature_state) do
+  def scenario_starting_state(feature_state) do
       feature_state
   end
 
-  def finalize(_ignored_state), do: nil
+  def scenario_finalize(_ignored_state), do: nil
+  def feature_finalize(_ignored_state), do: nil
 
 end
