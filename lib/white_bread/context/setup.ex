@@ -12,20 +12,20 @@ defmodule WhiteBread.Context.Setup do
       end
 
       unless @feature_state_definied do
-        def feature_state() do
+        def feature_starting_state() do
           # Always default to an empty map
           %{}
         end
       end
 
       unless @scenario_state_definied do
-        def starting_state(state) do
+        def scenario_starting_state(state) do
           state
         end
       end
 
       unless @scenario_finalize_defined do
-        def finalize(_ignored_state), do: nil
+        def scenario_finalize(_ignored_state), do: nil
       end
 
       unless @timeouts_definied do

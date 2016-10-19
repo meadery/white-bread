@@ -4,11 +4,14 @@ defmodule WhiteBread.ContextBehaviour do
 
   @callback get_steps() :: [WhiteBread.Context.StepFunction.t]
 
-  @callback feature_state() :: any
+  @callback feature_starting_state() :: any
 
-  @callback starting_state(any) :: any
+  @callback feature_finalize(any) :: any
+
+  @callback scenario_starting_state(any) :: any
+
+  @callback scenario_finalize(any) :: any
 
   @callback get_scenario_timeout(Feature.t, Scenario.t) :: number
 
-  @callback finalize(any) :: any
 end

@@ -19,7 +19,7 @@ defmodule WhiteBread.Runners.ScenarioRunner do
   end
 
   defp apply_scenario_starting_state(feature_state, context) do
-    apply(context, :starting_state, [feature_state])
+    apply(context, :scenario_starting_state, [feature_state])
   end
 
   defp build_result_tuple(result, scenario) do

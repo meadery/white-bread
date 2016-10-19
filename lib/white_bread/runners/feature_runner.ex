@@ -22,7 +22,7 @@ defmodule WhiteBread.Runners.FeatureRunner do
   end
 
   defp run_all_scenarios_for_context(feature, context, setup, async: async) do
-    starting_state = apply(context, :feature_state, [])
+    starting_state = apply(context, :feature_starting_state, [])
     setup_with_state = setup
       |> Map.put(:starting_state, starting_state)
 

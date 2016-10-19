@@ -30,11 +30,11 @@ defmodule WhiteBread.Runners.StepsRunner do
   end
 
   defp finalize(result = {:ok, state}, context) do
-    context.finalize(state)
+    context.scenario_finalize(state)
     result
   end
   defp finalize({error_result, state}, context) do
-    context.finalize(state)
+    context.scenario_finalize(state)
     error_result
   end
 

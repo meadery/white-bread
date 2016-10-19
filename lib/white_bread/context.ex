@@ -47,7 +47,7 @@ defmodule WhiteBread.Context do
   defmacro feature_starting_state(function) do
     quote do
       @feature_state_definied true
-      def feature_state() do
+      def feature_starting_state() do
         unquote(function).()
       end
     end
@@ -56,7 +56,7 @@ defmodule WhiteBread.Context do
   defmacro scenario_starting_state(function) do
     quote do
       @scenario_state_definied true
-      def starting_state(state) do
+      def scenario_starting_state(state) do
         unquote(function).(state)
       end
     end
@@ -65,7 +65,21 @@ defmodule WhiteBread.Context do
   defmacro scenario_finalize(function) do
     quote do
       @scenario_finalize_defined true
-      def finalize(state) do
+      def scenario_finalize(state) do
+        cond do
+          is_function(unquote(function), 1)
+            -> unquote(function).(state)
+          is_function(unquote(function), 0)
+            -> unquote(function).()
+        end
+      end
+    end
+  end
+
+  defmacro feature_finalize(function) do
+    quote do
+      @scenario_finalize_defined true
+      def feature_finalize(state) do
         cond do
           is_function(unquote(function), 1)
             -> unquote(function).(state)
