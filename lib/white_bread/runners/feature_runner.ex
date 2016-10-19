@@ -26,7 +26,7 @@ defmodule WhiteBread.Runners.FeatureRunner do
     setup_with_state = setup
       |> Map.put(:starting_state, starting_state)
 
-    if async do
+    results = if async do
       feature.scenarios
         |> Enum.map(&run_scenario_async(feature, &1, context, setup_with_state))
         |> Enum.map(&scenario_await/1)
@@ -34,6 +34,10 @@ defmodule WhiteBread.Runners.FeatureRunner do
       feature.scenarios
         |> Enum.map(&run_scenario(&1, context, setup_with_state))
     end
+
+    apply(context, :feature_finalize, [starting_state])
+
+    results
   end
 
   defp run_scenario_async(feature, scenario, context, setup) do
