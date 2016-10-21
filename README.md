@@ -204,7 +204,7 @@ More than likely you have a multicore machine. To get things going a little
 faster each suite can be configured to run all features and scenarios in a
 separate process.
 
-This can be done by setting async to true on any suite:
+This can be done by setting run_async to true on any suite:
 ```elixir
 defmodule WhiteBread.Example.Config do
   use WhiteBread.SuiteConfiguration
@@ -212,7 +212,7 @@ defmodule WhiteBread.Example.Config do
   suite name:          "Speedy run",
         context:       WhiteBread.Example.DefaultContext,
         feature_paths: ["features/sub_dir_one"],
-        async: true
+        run_async:     true
 end
 ```
 note: At the moment each suite will be run sequentially in the order they appear
