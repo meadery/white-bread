@@ -1,4 +1,6 @@
 defmodule WhiteBread.Runners.ScenarioOutlineRunner do
+  import WhiteBread.Runners.Utilities
+
   alias WhiteBread.Runners.Setup
 
   alias WhiteBread.Outputers.ProgressReporter
@@ -19,10 +21,6 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
 
   defp process_result({:ok, _last_state}, scenario), do: {:ok, scenario.name}
   defp process_result(error_data,        _scenario), do: {:failed, error_data}
-
-  defp apply_scenario_starting_state(feature_state, context) do
-    apply(context, :scenario_starting_state, [feature_state])
-  end
 
   defp build_each_example(outline) do
     outline.examples
