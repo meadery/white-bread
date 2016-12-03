@@ -25,4 +25,10 @@ defmodule WhiteBread.Example.Config do
         context:       WhiteBread.Example.PlainContext,
         feature_paths: ["features/"],
         roles:         ["singer"]
+
+  suite name:          "Outline context",
+        context:       WhiteBread.Example.OutlineContext,
+        feature_paths: ["features/"],
+        tags:          ["outline"]
+
 end
