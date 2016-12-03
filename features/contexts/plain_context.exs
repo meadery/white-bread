@@ -36,7 +36,7 @@ defmodule WhiteBread.Example.PlainContext do
       feature_state
   end
 
-  def scenario_finalize(_ignored_state), do: nil
-  def feature_finalize(_ignored_state), do: nil
+  def scenario_finalize(_ignored_status, _ignored_state), do: nil
+  def feature_finalize(_ignored_status, _ignored_state), do: nil
 
 end

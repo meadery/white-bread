@@ -25,11 +25,11 @@ defmodule WhiteBread.Context.Setup do
       end
 
       unless @scenario_finalize_defined do
-        def scenario_finalize(_ignored_state), do: nil
+        def scenario_finalize(_ignored_status, _ignored_state), do: nil
       end
 
       unless @feature_finalize_defined do
-        def feature_finalize(_ignored_state), do: nil
+        def feature_finalize(_ignored_status, _ignored_state), do: nil
       end
 
       unless @timeouts_definied do

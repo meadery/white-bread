@@ -6,11 +6,11 @@ defmodule WhiteBread.ContextBehaviour do
 
   @callback feature_starting_state() :: any
 
-  @callback feature_finalize(any) :: any
+  @callback feature_finalize(atom, any) :: any
 
   @callback scenario_starting_state(any) :: any
 
-  @callback scenario_finalize(any) :: any
+  @callback scenario_finalize(atom, any) :: any
 
   @callback get_scenario_timeout(Feature.t, Scenario.t) :: number
 
