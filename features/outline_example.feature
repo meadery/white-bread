@@ -20,3 +20,12 @@ Feature: Scenario outlines
     Examples:
       | dummy |
       | null  |
+
+  Scenario Outline: Reload starting state for each example row
+    Given some additional state "<state>"
+    Then it should have only the additional state "<state>"
+
+    Examples:
+      | state |
+      | foo   |
+      | bar   |
