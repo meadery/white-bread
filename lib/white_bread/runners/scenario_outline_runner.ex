@@ -20,6 +20,10 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
   defp process_result({:ok, _last_state}, scenario), do: {:ok, scenario.name}
   defp process_result(error_data,        _scenario), do: {:failed, error_data}
 
+  defp apply_scenario_starting_state(feature_state, context) do
+    apply(context, :scenario_starting_state, [feature_state])
+  end
+
   defp build_each_example(outline) do
     outline.examples
       |> WhiteBread.Tables.index_table_by_first_row
@@ -37,9 +41,12 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
   end
 
   defp run_steps(steps, context, %Setup{} = setup) when is_list(steps) do
-     StepsRunner.run(
-      steps, context, setup.background_steps, setup.starting_state
-     )
+    starting_state = setup.starting_state
+      |> apply_scenario_starting_state(context)
+
+    StepsRunner.run(
+      steps, context, setup.background_steps, starting_state
+    )
   end
 
   defp replace_in_step({replace, with}, step) do

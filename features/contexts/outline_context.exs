@@ -1,7 +1,7 @@
 defmodule WhiteBread.Example.OutlineContext do
-  import String, only: [contains?: 2]
-
   use WhiteBread.Context
+
+  subcontext WhiteBread.Example.OutlineContext.StringSteps
 
   feature_starting_state fn  ->
     %{feature_state_loaded: :yes}
@@ -14,6 +14,22 @@ defmodule WhiteBread.Example.OutlineContext do
   scenario_finalize fn _state ->
     # Do some finalization actions
   end
+
+  given_ ~r/^a scenario outline$/, fn state ->
+    {:ok, state}
+  end
+
+  then_ ~r/^it should load the scenario starting state$/, fn state ->
+    IO.inspect state
+    assert state[:starting_state_loaded] == :yes
+    {:ok, state}
+  end
+end
+
+defmodule WhiteBread.Example.OutlineContext.StringSteps do
+  import String, only: [contains?: 2]
+
+  use WhiteBread.Context
 
   given_ ~r/^the string "(?<string>[^"]+)"/, fn state, %{string: string} ->
     {:ok, put_in(state[:string], string)}

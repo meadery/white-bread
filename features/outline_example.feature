@@ -12,3 +12,11 @@ Feature: Scenario outlines
       | substring |
       | one       |
       | two       |
+
+  Scenario Outline: Load starting state
+    Given a scenario outline
+    Then it should load the scenario starting state
+
+    Examples:
+      | dummy |
+      | null  |
