@@ -11,7 +11,7 @@ defmodule WhiteBread.Example.OutlineContext do
   scenario_starting_state fn feature_state ->
     feature_state
     |> Dict.put(:starting_state_loaded, :yes)
-    |> Dict.put(:additional_state, %{})
+    |> Dict.put(:additional_state, [])
   end
 
   scenario_finalize fn _state ->
@@ -32,12 +32,13 @@ end
 defmodule WhiteBread.Example.OutlineContext.AdditionalStateSteps do
   use WhiteBread.Context
 
-  given_ ~r/^some additional state "(?<state_key>[^"]+)"$/, fn state, %{state_key: state_key} ->
-    {:ok, put_in(state[:additional_state][state_key], true)}
+  given_ ~r/^some additional state "(?<new_item>[^"]+)"$/, fn state, %{new_item: new_item} ->
+    {_, new_state} = get_and_update_in state[:additional_state], &{&1, [new_item|&1]}
+    {:ok, new_state}
   end
 
-  then_ ~r/^it should have only the additional state "(?<state_key>[^"]+)"$/, fn state, %{state_key: state_key} ->
-    assert state[:additional_state] == %{state_key => true}
+  then_ ~r/^it should have only the additional state "(?<item>[^"]+)"$/, fn state, %{item: item} ->
+    assert state[:additional_state] == [item]
     {:ok, state}
   end
 end
