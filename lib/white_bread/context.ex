@@ -66,8 +66,10 @@ defmodule WhiteBread.Context do
   defmacro scenario_finalize(function) do
     quote do
       @scenario_finalize_defined true
-      def scenario_finalize(state) do
+      def scenario_finalize(status \\ nil, state) do
         cond do
+          is_function(unquote(function), 2)
+            -> unquote(function).(status, state)
           is_function(unquote(function), 1)
             -> unquote(function).(state)
           is_function(unquote(function), 0)
@@ -80,8 +82,10 @@ defmodule WhiteBread.Context do
   defmacro feature_finalize(function) do
     quote do
       @feature_finalize_defined true
-      def feature_finalize(state) do
+      def feature_finalize(status \\ nil, state) do
         cond do
+          is_function(unquote(function), 2)
+            -> unquote(function).(status, state)
           is_function(unquote(function), 1)
             -> unquote(function).(state)
           is_function(unquote(function), 0)

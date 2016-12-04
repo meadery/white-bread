@@ -71,7 +71,8 @@ defmodule SunDoe.CoffeeShopContext do
     state
   end
 
-  scenario_finalize fn state ->
+  # `_status` will be either {:ok, scenario} | {:error, reason, scenario}
+  scenario_finalize fn _status, state ->
     state.in_memory_coffee_db |> shutdown_db
   end
 

@@ -10,7 +10,7 @@ defmodule WhiteBread.Runners.ScenarioRunner do
     starting_state = setup.starting_state
       |> apply_scenario_starting_state(context)
 
-    scenario.steps
+    {scenario, scenario.steps}
       |> StepsRunner.run(context, setup.background_steps, starting_state)
       |> update_result_with_exits
       |> stop_trapping_exits
