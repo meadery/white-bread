@@ -1,4 +1,6 @@
 defmodule WhiteBread.Runners.ScenarioRunner do
+  import WhiteBread.Runners.Utilities
+
   alias WhiteBread.Runners.Setup
 
   alias WhiteBread.Outputers.ProgressReporter
@@ -16,10 +18,6 @@ defmodule WhiteBread.Runners.ScenarioRunner do
       |> stop_trapping_exits
       |> build_result_tuple(scenario)
       |> output_result(setup.progress_reporter, scenario)
-  end
-
-  defp apply_scenario_starting_state(feature_state, context) do
-    apply(context, :scenario_starting_state, [feature_state])
   end
 
   defp build_result_tuple(result, scenario) do

@@ -1,4 +1,6 @@
 defmodule WhiteBread.Runners.ScenarioOutlineRunner do
+  import WhiteBread.Runners.Utilities
+
   alias WhiteBread.Runners.Setup
 
   alias WhiteBread.Outputers.ProgressReporter
@@ -37,9 +39,12 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
   end
 
   defp run_steps(steps, scenario_outline, context, %Setup{} = setup) when is_list(steps) do
-     StepsRunner.run(
-      {scenario_outline, steps}, context, setup.background_steps, setup.starting_state
-     )
+    starting_state = setup.starting_state
+      |> apply_scenario_starting_state(context)
+
+    StepsRunner.run(
+      {scenario_outline, steps}, context, setup.background_steps, starting_state
+    )
   end
 
   defp replace_in_step({replace, with}, step) do

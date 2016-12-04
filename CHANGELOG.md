@@ -7,6 +7,7 @@
 - In async mode scenerios can now timeout. The scenario_timeouts macro is can be used to specifiy a function which generates custom timeouts. See #57.
 
 ### Bug fixes
+- Run the scenario starting state for outlines just as for simple scenarios. [#73]
 - Long running scenerio steps now longer cause undefined failures in aysnc mode see #52.
 
 ### Backwards incompatible changes
