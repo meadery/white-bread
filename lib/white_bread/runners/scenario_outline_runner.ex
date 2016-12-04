@@ -9,7 +9,7 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
   def run(scenario_outline, context, %Setup{} = setup \\ Setup.new) do
     scenario_outline
       |> build_each_example
-      |> Enum.map(&run_steps(&1, context, setup))
+      |> Enum.map(&run_steps(&1, scenario_outline, context, setup))
       |> process_results(scenario_outline)
       |> report_progress(setup, scenario_outline)
   end
@@ -38,12 +38,12 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
       |> Enum.reduce(starting_step, &replace_in_step/2)
   end
 
-  defp run_steps(steps, context, %Setup{} = setup) when is_list(steps) do
+  defp run_steps(steps, scenario_outline, context, %Setup{} = setup) when is_list(steps) do
     starting_state = setup.starting_state
       |> apply_scenario_starting_state(context)
 
     StepsRunner.run(
-      steps, context, setup.background_steps, starting_state
+      {scenario_outline, steps}, context, setup.background_steps, starting_state
     )
   end
 

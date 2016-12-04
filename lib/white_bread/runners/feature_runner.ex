@@ -13,7 +13,6 @@ defmodule WhiteBread.Runners.FeatureRunner do
 
     results = feature
       |> run_all_scenarios_for_context(context, setup, async: async)
-      |> flatten_any_result_lists
 
     %{
       successes: results |> Enum.filter(&success?/1),
@@ -35,7 +34,9 @@ defmodule WhiteBread.Runners.FeatureRunner do
         |> Enum.map(&run_scenario(&1, context, setup_with_state))
     end
 
-    apply(context, :feature_finalize, [starting_state])
+    results = results |> flatten_any_result_lists()
+    status = if Enum.any?(results, &failure?/1), do: :error, else: :ok
+    apply(context, :feature_finalize, [status, starting_state])
 
     results
   end
