@@ -10,12 +10,13 @@ defmodule WhiteBread.CommandLine.SuiteRun do
 
     config_path
       |> get_suites_from_config
-      |> Enum.map(&run_suite/1)
+      |> Enum.map(fn suite -> run_suite(suite, context_path: context_path) end)
       |> Enum.flat_map(fn results -> results.failures end)
   end
 
-  defp run_suite(%Suite{} = suite) do
+  defp run_suite(%Suite{} = suite, context_path: context_path) do
     IO.puts "\n\nSuite: #{suite.name}"
+    ContextLoader.ensure_context(suite.context, context_path)
     WhiteBread.run(
       suite.context,
       suite.feature_paths,

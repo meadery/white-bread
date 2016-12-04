@@ -9,41 +9,30 @@ defmodule WhiteBread.CommandLine.ContextLoader do
       |> Enum.map(&Code.require_file/1)
   end
 
-  def load_create_context([first | _] = context_options)
-  when is_list(context_options)
-  do
-    existing_context = context_options
-      |> Stream.filter(&File.exists?/1)
-      |> Enum.take(1)
-    case existing_context do
-      [context] -> load_context_file(context)
-      []        -> create_context(first)
-    end
+  def ensure_context(context, context_path) do
+    if !Code.ensure_loaded?(context), do: create_context(context, context_path)
+    Code.ensure_loaded(context)
   end
 
+  def create_context(context, context_path) do
+    path = context_path <> Macro.underscore(context) <> ".exs"
 
-  def load_context_file(path) do
-    IO.puts "loading #{path}"
-    [{context_module, _} | _] = Code.load_file(path)
-    context_module
-  end
-
-  def context_from_string(context_name) do
-    {context, []} = Code.eval_string(context_name)
-    context
-  end
-
-  defp create_context(context) do
-    IO.puts "Default context module not found in #{context}. "
+    IO.puts "Context module not found #{context} (#{path})"
     IO.puts "Create one [Y/n]? "
     acceptance = IO.read(:stdio, :line)
 
     unless acceptance == "n" <> "\n" do
-      context_text = WhiteBread.CodeGenerator.Context.empty_context
-      context |> Path.dirname |> File.mkdir_p!
-      File.write!(context, context_text)
+      context_text = WhiteBread.CodeGenerator.Context.empty_context(context)
+      path |> Path.dirname |> File.mkdir_p!
+      File.write!(path, context_text)
     end
-    load_context_file(context)
+    load_context_file(path)
+  end
+
+  defp load_context_file(path) do
+    IO.puts "loading #{path}"
+    [{context_module, _} | _] = Code.load_file(path)
+    context_module
   end
 
   defp script?(file_path) do
