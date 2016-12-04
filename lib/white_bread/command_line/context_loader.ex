@@ -34,12 +34,12 @@ defmodule WhiteBread.CommandLine.ContextLoader do
   end
 
   defp create_context(context) do
-    context_text = WhiteBread.CodeGenerator.Context.empty_context
     IO.puts "Default context module not found in #{context}. "
     IO.puts "Create one [Y/n]? "
     acceptance = IO.read(:stdio, :line)
 
     unless acceptance == "n" <> "\n" do
+      context_text = WhiteBread.CodeGenerator.Context.empty_context
       context |> Path.dirname |> File.mkdir_p!
       File.write!(context, context_text)
     end

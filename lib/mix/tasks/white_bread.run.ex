@@ -24,14 +24,11 @@ defmodule Mix.Tasks.WhiteBread.Run do
   end
 
   defp run_suite(options, _arguments) do
-    #suite_config_present?
     SuiteRun.run_suites(
       config_path: config_path(options),
       contexts: contexts_path(options)
     )
   end
-
-  defp suite_config_present?, do: File.exists?(@default_suite_config)
 
   defp start_app(argv) do
     unless "--no-start" in argv do
