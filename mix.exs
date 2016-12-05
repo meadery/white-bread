@@ -36,8 +36,7 @@ defmodule WhiteBread.Mixfile do
       "compile --warnings-as-errors",
       "test",
       "whiteBread.run",
-      "whiteBread.run --tags songs",
-      "white_bread.run --context \"features/contexts/alternate_context.exs\"",
+      "white_bread.run --suite \"Plain context - Songs\""
     ]
   end
 

@@ -2,7 +2,6 @@ defmodule Mix.Tasks.WhiteBread.Run do
   use Mix.Task
 
   alias WhiteBread.CommandLine.SuiteRun
-  alias WhiteBread.CommandLine.SingleContextRun
 
   @shortdoc "Runs all the feature files with WhiteBread"
 
@@ -12,52 +11,24 @@ defmodule Mix.Tasks.WhiteBread.Run do
   @context_path_option :contexts
   @context_path "features/contexts/"
 
-  @default_contexts [
-    "features/contexts/default_context.exs",
-    "features/default_context.exs"
-  ]
-
   def run(argv) do
-    {options, arguments, _} = OptionParser.parse(argv)
+    {options, arguments, _} = argv
+    |> OptionParser.parse
+    |> check_for_deprecations
+
     start_app(argv)
-    failures = run_based_on_setup(options, arguments)
+    failures = run_suite(options, arguments)
     System.at_exit fn _ ->
       if Enum.count(failures) > 0, do: exit({:shutdown, 1})
     end
   end
 
-  defp run_based_on_setup(options, arguments) do
-    if run_as_suite?(options, arguments) do
-      run_suite(options, arguments)
-    else
-      run_single_context(options, arguments)
-    end
-  end
-
   defp run_suite(options, _arguments) do
-
     SuiteRun.run_suites(
+      options,
       config_path: config_path(options),
       contexts: contexts_path(options)
     )
-  end
-
-  defp run_single_context(options, arguments) do
-    SingleContextRun.run_single_context(
-      options, arguments, default_contexts: @default_contexts
-    )
-  end
-
-  defp run_as_suite?(options, arguments) do
-    suite_config_present?
-    && !single_context_config?(options, arguments)
-  end
-
-  defp suite_config_present?, do: File.exists?(@default_suite_config)
-
-  defp single_context_config?(options, _arguments) do
-    Dict.has_key?(options, :tags)
-    || Dict.has_key?(options, :context)
   end
 
   defp start_app(argv) do
@@ -80,6 +51,21 @@ defmodule Mix.Tasks.WhiteBread.Run do
     else
       @context_path
     end
+  end
+
+  defp check_for_deprecations({options, _arguments, _} = input) do
+    if Keyword.has_key?(options, :context) do
+      error_exit "Specifying a context on the command line is no longer supported. Use suite configuration instead."
+    end
+    if Keyword.has_key?(options, :tags) do
+      error_exit "Specifying tags on the command line is not yet supported in this version. Create a suite with the required filter."
+    end
+    input
+  end
+
+  defp error_exit(message) do
+    IO.puts message
+    exit({:shutdown, 1})
   end
 
 end
