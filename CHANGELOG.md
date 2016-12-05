@@ -5,10 +5,11 @@
 ### Enhancements
 - Roles are now parsed. So any feature with ```As a Person``` in the description can be filtered using it. See #54 for details.
 - In async mode scenerios can now timeout. The scenario_timeouts macro is can be used to specifiy a function which generates custom timeouts. See #57.
+- The finalize functions are now given the success (or failure) status. Thanks to @mgwidmann.[#75]
 
 ### Bug fixes
-- Run the scenario starting state for outlines just as for simple scenarios. [#73]
-- Long running scenerio steps now longer cause undefined failures in aysnc mode see #52.
+- Run the scenario starting state for outlines just as for simple scenarios. Thanks to @marnen. [#73]
+- Long running scenerio steps now longer cause undefined failures in aysnc mode see [#52].
 
 ### Backwards incompatible changes
 - Elixir 1.0 no longer supported due to changes in #57. Elixir 1.1 and above is needed.
