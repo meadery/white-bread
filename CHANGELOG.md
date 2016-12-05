@@ -6,6 +6,7 @@
 - Roles are now parsed. So any feature with ```As a Person``` in the description can be filtered using it. See #54 for details.
 - In async mode scenerios can now timeout. The scenario_timeouts macro is can be used to specifiy a function which generates custom timeouts. See #57.
 - The finalize functions are now given the success (or failure) status. Thanks to @mgwidmann.[#75]
+- `suite` can now be specified on the command line to filter to run a single suite from the config. [#77]
 
 ### Bug fixes
 - Run the scenario starting state for outlines just as for simple scenarios. Thanks to @marnen. [#73]
@@ -15,6 +16,7 @@
 - Elixir 1.0 no longer supported due to changes in #57. Elixir 1.1 and above is needed.
 - The context behaviour is extended to require ```callback get_scenario_timeout(Feature.t, Scenario.t) :: number``` any contexts not ```use```ing ```WhiteBread.Context``` will need to add the function.
 - The *_starting_state and *_finalize functions in the context behaviour have been standardised so a pair each for feature and scenario.
+- `tags` and `context` are no longer supported on the command line. Tags will be reintroduced in a later release. Context will not as everything will now require a suite configuration. [#77]
 
 ## V2.8.1 (2016-09-29)
 
