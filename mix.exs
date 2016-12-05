@@ -35,7 +35,8 @@ defmodule WhiteBread.Mixfile do
       &set_test_env/1,
       "compile --warnings-as-errors",
       "test",
-      "whiteBread.run"
+      "whiteBread.run",
+      "white_bread.run --suite \"Plain context - Songs\""
     ]
   end
 

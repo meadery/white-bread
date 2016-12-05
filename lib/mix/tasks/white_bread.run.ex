@@ -25,6 +25,7 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
   defp run_suite(options, _arguments) do
     SuiteRun.run_suites(
+      options,
       config_path: config_path(options),
       contexts: contexts_path(options)
     )
@@ -53,10 +54,10 @@ defmodule Mix.Tasks.WhiteBread.Run do
   end
 
   defp check_for_deprecations({options, _arguments, _} = input) do
-    if (Keyword.has_key?(options, :context)) do
+    if Keyword.has_key?(options, :context) do
       error_exit "Specifying a context on the command line is no longer supported. Use suite configuration instead."
     end
-    if (Keyword.has_key?(options, :tags)) do
+    if Keyword.has_key?(options, :tags) do
       error_exit "Specifying tags on the command line is not yet supported in this version. Create a suite with the required filter."
     end
     input
