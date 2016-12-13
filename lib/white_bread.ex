@@ -11,7 +11,9 @@ defmodule WhiteBread do
     async = options |> Keyword.get(:async, false)
     roles = options |> Keyword.get(:roles)
 
-    output = WhiteBread.Outputers.Console.start
+    output_module = outputer
+
+    output = output_module.start
 
     features = path
       |> WhiteBread.Feature.Finder.find_in_path
@@ -24,10 +26,12 @@ defmodule WhiteBread do
       |> results_as_map
       |> output_result(output)
 
-    output |> WhiteBread.Outputers.Console.stop
+    output |> output_module.stop
 
     results
   end
+
+  defp outputer, do: Application.fetch_env! :white_bread, :outputer
 
   defp results_as_map(results) do
     %{
