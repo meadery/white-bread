@@ -10,6 +10,12 @@ for: [WhiteBread.Outputers.Console] do
   end
 end
 
+defimpl WhiteBread.Outputers.ProgressReporter, for: WhiteBread.Outputers.HTML do
+  def report(outputer, report) do
+    WhiteBread.Outputers.HTML.report outputer, report
+  end
+end
+
 defimpl WhiteBread.Outputers.ProgressReporter, for: Any do
   def report(nil, _report_tuple), do: :skipped
 end
