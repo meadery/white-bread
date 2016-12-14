@@ -3,11 +3,9 @@ defmodule WhiteBread.Outputers.HTML do
   alias WhiteBread.Gherkin.Elements.Scenario
 
   @moduledoc """
-
   This generic server accumulates information about White Bread
   scenarios then formats them as HTML and outputs them to a file in
   one go.
-
   """
 
   defstruct pid: nil
@@ -15,16 +13,16 @@ defmodule WhiteBread.Outputers.HTML do
   ## Client Interface
 
   def start do
-    {:ok, x} = GenServer.start __MODULE__, []
-    %__MODULE__{pid: x}
+    {:ok, outputer} = GenServer.start __MODULE__, []
+    %__MODULE__{pid: outputer}
   end
 
-  def stop(%__MODULE__{pid: x}) do
-    :ok = GenServer.stop x, :normal, 2 * 1000
+  def stop(%__MODULE__{pid: outputer}) do
+    :ok = GenServer.stop outputer, :normal, 2 * 1000
   end
 
-  def report(%__MODULE__{pid: x}, y) do
-    GenServer.cast x, y
+  def report(%__MODULE__{pid: outputer}, report) do
+    GenServer.cast outputer, report
   end
 
   ## Interface to Generic Server Machinery
