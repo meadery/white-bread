@@ -2,6 +2,7 @@ defmodule WhiteBread.Outputers.HTML do
   use GenServer
   alias WhiteBread.Gherkin.Elements.Scenario
   alias WhiteBread.Gherkin.Elements.ScenarioOutline
+  alias WhiteBread.Outputers.HTML.Formatter
 
   @moduledoc """
   This generic server accumulates information about White Bread
@@ -42,7 +43,23 @@ defmodule WhiteBread.Outputers.HTML do
 
   def handle_cast(x, state) do
     require Logger
+
     Logger.warn "casted with #{inspect x}."
     {:noreply, state}
   end
+
+  def terminate(_, state) do
+    import WhiteBread.Outputers.HTML.Formatter
+
+    Enum.map(state, &format/1)
+    |> list
+    |> body
+    |> document
+    |> IO.puts
+  end
+
+  ## Internal
+
+  def format({:ok,     name}), do: Formatter.success(name)
+  def format({:failed, name}), do: Formatter.failure(name)
 end
