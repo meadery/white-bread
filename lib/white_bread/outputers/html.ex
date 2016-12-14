@@ -1,6 +1,7 @@
 defmodule WhiteBread.Outputers.HTML do
   use GenServer
   alias WhiteBread.Gherkin.Elements.Scenario
+  alias WhiteBread.Gherkin.Elements.ScenarioOutline
 
   @moduledoc """
   This generic server accumulates information about White Bread
@@ -27,11 +28,20 @@ defmodule WhiteBread.Outputers.HTML do
 
   ## Interface to Generic Server Machinery
 
-  def handle_cast({:scenario_result, {result, _}, %Scenario{name: n}}, state) do
-    {:noreply, [ {result, n} | state ]}
+  def handle_cast({:scenario_result, {result, _}, %Scenario{name: name}}, state) do
+    {:noreply, [ {result, name} | state ]}
   end
 
-  def handle_cast(_, state) do
+  def handle_cast({:scenario_result, {result, _}, %ScenarioOutline{}}, state) do
+    {:noreply, state}
+  end
+
+  def handle_cast({:final_results, %{successes: _, failures: _}}, state) do
+    {:noreply, state}
+  end
+
+  def handle_cast(x, state) do
+    Logger.warning "casted with #{inspect x}."
     {:noreply, state}
   end
 end
