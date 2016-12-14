@@ -28,11 +28,11 @@ defmodule WhiteBread.Outputers.HTML do
 
   ## Interface to Generic Server Machinery
 
-  def handle_cast({:scenario_result, {result, _}, %Scenario{name: name}}, state) do
+  def handle_cast({:scenario_result, {result, _}, %Scenario{name: name}}, state) when :ok == result or :failed == result do
     {:noreply, [ {result, name} | state ]}
   end
 
-  def handle_cast({:scenario_result, {result, _}, %ScenarioOutline{}}, state) do
+  def handle_cast({:scenario_result, {_, _}, %ScenarioOutline{}}, state) do
     {:noreply, state}
   end
 
@@ -41,7 +41,8 @@ defmodule WhiteBread.Outputers.HTML do
   end
 
   def handle_cast(x, state) do
-    Logger.warning "casted with #{inspect x}."
+    require Logger
+    Logger.warn "casted with #{inspect x}."
     {:noreply, state}
   end
 end
