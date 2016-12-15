@@ -24,7 +24,8 @@ defmodule WhiteBread.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [applications: [:logger],
-     env: [outputer: WhiteBread.Outputers.Console]]
+     env: [outputer: WhiteBread.Outputers.Console,
+           path: "~/report.html"]]
   end
 
   defp aliases do

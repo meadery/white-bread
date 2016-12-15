@@ -10,7 +10,7 @@ defmodule WhiteBread.Outputers.HTML do
   one go.
   """
 
-  defstruct pid: nil
+  defstruct pid: nil, path: nil, data: []
 
   ## Client Interface
 
@@ -29,8 +29,12 @@ defmodule WhiteBread.Outputers.HTML do
 
   ## Interface to Generic Server Machinery
 
+  def init(_) do
+    {:ok, %__MODULE__{path: path()}}
+  end
+
   def handle_cast({:scenario_result, {result, _}, %Scenario{name: name}}, state) when :ok == result or :failed == result do
-    {:noreply, [ {result, name} | state ]}
+    {:noreply, %{ state | data: [ {result, name} | state.data ]}}
   end
 
   def handle_cast({:scenario_result, {_, _}, %ScenarioOutline{}}, state) do
@@ -51,19 +55,21 @@ defmodule WhiteBread.Outputers.HTML do
   def terminate(_, state) do
     import WhiteBread.Outputers.HTML.Formatter
 
-    Enum.map(state, &format/1)
+    Enum.map(state.data, &format/1)
     |> list
     |> body
     |> document
-    |> write
+    |> write(state.path)
   end
 
   ## Internal
 
+  defp path, do: Path.expand Application.fetch_env! :white_bread, :path
+
   defp format({:ok,     name}), do: Formatter.success(name)
   defp format({:failed, name}), do: Formatter.failure(name)
 
-  defp write(content) do
-    :ok = File.write! Path.expand("~/report.html"), content
+  defp write(content, path) do
+    File.write! path, content
   end
 end
