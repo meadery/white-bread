@@ -6,16 +6,13 @@ defmodule WhiteBread.Outputers.HTML.Formatter do
   end
 
   def body(content) when is_binary(content) do
-    "<body>#{content}</body>"
+    "<body>#{paragraph "White Bread scenario results:"}#{content}</body>"
   end
 
-  def list([]) do
-    "Nothing to report."
-  end
-
-  def list(elements) when is_list(elements) and length(elements) > 0 do
-    list(elements, "")
-  end
+  def list([]),
+    do: "Nothing to report."
+  def list(elements) when is_list(elements) and length(elements) > 0,
+    do: list(elements, "")
 
   defp list([], content) do
     "<ul style=\"list-style-type:square\">#{content}</ul>"
@@ -28,6 +25,9 @@ defmodule WhiteBread.Outputers.HTML.Formatter do
   defp element(content) when is_binary(content) do
     "<li>#{content}</li>"
   end
+
+  defp paragraph(content) when is_binary(content),
+    do: "<p>#{content}</p>"
 
   def success(text) when is_binary(text), do: text
 
