@@ -55,11 +55,15 @@ defmodule WhiteBread.Outputers.HTML do
     |> list
     |> body
     |> document
-    |> IO.puts
+    |> write
   end
 
   ## Internal
 
-  def format({:ok,     name}), do: Formatter.success(name)
-  def format({:failed, name}), do: Formatter.failure(name)
+  defp format({:ok,     name}), do: Formatter.success(name)
+  defp format({:failed, name}), do: Formatter.failure(name)
+
+  defp write(content) do
+    :ok = File.write! Path.expand("~/report.html"), content
+  end
 end
