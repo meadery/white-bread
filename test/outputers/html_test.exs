@@ -24,8 +24,7 @@ defmodule WhiteBread.Outputers.HTMLTests do
   test "write file on termaination" do
     p = Path.expand("~/fu/report.html")
     HTML.terminate :normal, %HTML{path: p, data: [{:ok, "X"}]}
-    s = File.stat! p
-    assert File.exists? p
+    assert {:ok, s} = File.stat p
     assert s.size > 0
     File.rm! p
   end

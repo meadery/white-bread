@@ -9,10 +9,8 @@ defmodule WhiteBread.Outputers.HTML.Formatter do
     "<body>#{paragraph "White Bread scenario results:"}#{content}</body>"
   end
 
-  def list([]),
-    do: "Nothing to report."
-  def list(elements) when is_list(elements) and length(elements) > 0,
-    do: list(elements, "")
+  def list([]), do: "Nothing to report."
+  def list([_|_] = elements), do: list(elements, "")
 
   defp list([], content) do
     "<ul style=\"list-style-type:square\">#{content}</ul>"

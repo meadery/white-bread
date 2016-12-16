@@ -14,15 +14,18 @@ defmodule WhiteBread.Outputers.HTML do
 
   ## Client Interface
 
+  @doc false
   def start do
     {:ok, outputer} = GenServer.start __MODULE__, []
     %__MODULE__{pid: outputer}
   end
 
+  @doc false
   def stop(%__MODULE__{pid: outputer}) do
     :ok = GenServer.stop outputer, :normal, 2 * 1000
   end
 
+  @doc "Interface function for the `ProgressReporter` protocol."
   def report(%__MODULE__{pid: outputer}, report) do
     GenServer.cast outputer, report
   end
@@ -38,10 +41,12 @@ defmodule WhiteBread.Outputers.HTML do
   end
 
   def handle_cast({:scenario_result, {_, _}, %ScenarioOutline{}}, state) do
+    ## This clause here for more sophisticated report in the future.
     {:noreply, state}
   end
 
   def handle_cast({:final_results, %{successes: _, failures: _}}, state) do
+    ## This clause here for more sophisticated report in the future.
     {:noreply, state}
   end
 
@@ -53,7 +58,7 @@ defmodule WhiteBread.Outputers.HTML do
   end
 
   def terminate(_, state) do
-    import WhiteBread.Outputers.HTML.Formatter
+    import Formatter, only: [list: 1, body: 1, document: 1]
 
     Enum.map(state.data, &format/1)
     |> list
@@ -64,17 +69,29 @@ defmodule WhiteBread.Outputers.HTML do
 
   ## Internal
 
-  defp path, do: Path.expand Application.fetch_env! :white_bread, :path
+  defp path do
+    case Application.fetch_env!(:white_bread, :path) do
+      "/" ->
+        raise WhiteBread.Outputers.HTML.PathError
+      x when is_binary(x) ->
+        Path.expand x
+    end
+  end
 
   defp format({:ok,     name}), do: Formatter.success(name)
   defp format({:failed, name}), do: Formatter.failure(name)
 
   defp write(content, path) do
-    File.mkdir_p!(parent path) && (File.write! path, content)
+    File.mkdir_p!(parent path) && File.write!(path, content)
   end
 
   defp parent(path) do
-    x = Path.split path
-    Path.join x -- [ List.last(x) ]
+    Path.join(drop(Path.split path))
+  end
+
+  defp drop(x) when is_list(x), do: x -- [ List.last(x) ]
+
+  defmodule PathError do
+    defexception message: "Given root directory."
   end
 end
