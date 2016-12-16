@@ -70,6 +70,11 @@ defmodule WhiteBread.Outputers.HTML do
   defp format({:failed, name}), do: Formatter.failure(name)
 
   defp write(content, path) do
-    File.write! path, content
+    File.mkdir_p!(parent path) && (File.write! path, content)
+  end
+
+  defp parent(path) do
+    x = Path.split path
+    Path.join x -- [ List.last(x) ]
   end
 end
