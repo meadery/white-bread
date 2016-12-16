@@ -33,23 +33,20 @@ defmodule WhiteBread.Outputers.HTML do
   ## Interface to Generic Server Machinery
 
   def init(_) do
-    {:ok, %__MODULE__{path: path()}}
+    {:ok, %__MODULE__{path: document_path()}}
   end
 
   def handle_cast({:scenario_result, {result, _}, %Scenario{name: name}}, state) when :ok == result or :failed == result do
-    {:noreply, %{ state | data: [ {result, name} | state.data ]}}
+    {:noreply, %{state | data: [{result, name}|state.data]}}
   end
-
   def handle_cast({:scenario_result, {_, _}, %ScenarioOutline{}}, state) do
     ## This clause here for more sophisticated report in the future.
     {:noreply, state}
   end
-
   def handle_cast({:final_results, %{successes: _, failures: _}}, state) do
     ## This clause here for more sophisticated report in the future.
     {:noreply, state}
   end
-
   def handle_cast(x, state) do
     require Logger
 
@@ -60,7 +57,8 @@ defmodule WhiteBread.Outputers.HTML do
   def terminate(_, state) do
     import Formatter, only: [list: 1, body: 1, document: 1]
 
-    Enum.map(state.data, &format/1)
+    state.data
+    |> Enum.map(&format/1)
     |> list
     |> body
     |> document
@@ -69,7 +67,7 @@ defmodule WhiteBread.Outputers.HTML do
 
   ## Internal
 
-  defp path do
+  defp document_path do
     case Application.fetch_env!(:white_bread, :path) do
       "/" ->
         raise WhiteBread.Outputers.HTML.PathError
@@ -89,7 +87,7 @@ defmodule WhiteBread.Outputers.HTML do
     Path.join(drop(Path.split path))
   end
 
-  defp drop(x) when is_list(x), do: x -- [ List.last(x) ]
+  defp drop(x) when is_list(x), do: x -- [List.last(x)]
 
   defmodule PathError do
     defexception message: "Given root directory."

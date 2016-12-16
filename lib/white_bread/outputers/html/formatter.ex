@@ -15,8 +15,7 @@ defmodule WhiteBread.Outputers.HTML.Formatter do
   defp list([], content) do
     "<ul style=\"list-style-type:square\">#{content}</ul>"
   end
-
-  defp list([ head | tail ], content) when is_binary(head) do
+  defp list([head|tail], content) when is_binary(head) do
     list(tail, content <> element(head))
   end
 
