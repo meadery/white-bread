@@ -1,7 +1,7 @@
 defmodule WhiteBread.TestContextPerFeature.MyOtherFeatureBContext do
   use WhiteBread.Context
 
-  subcontext WhiteBread.TestContextPerFeature.OtherFeatureContext
+  import_steps_from WhiteBread.TestContextPerFeature.OtherFeatureContext
 
   feature_starting_state fn  ->
     %{feature_state_loaded: :yes}

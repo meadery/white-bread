@@ -1,11 +1,11 @@
 defmodule WhiteBread.Example.DefaultContext do
   use WhiteBread.Context
 
-  subcontext WhiteBread.Example.DocStringContext
-  subcontext WhiteBread.Example.CoffeeContext
-  subcontext WhiteBread.Example.SongContext
-  subcontext WhiteBread.Example.TableContext
-  subcontext WhiteBread.Example.DefaultContext.LoafContext
+  import_steps_from WhiteBread.Example.DocStringContext
+  import_steps_from WhiteBread.Example.CoffeeContext
+  import_steps_from WhiteBread.Example.SongContext
+  import_steps_from WhiteBread.Example.TableContext
+  import_steps_from WhiteBread.Example.DefaultContext.LoafContext
 
   feature_starting_state fn  ->
     %{feature_state_loaded: :yes}

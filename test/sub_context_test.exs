@@ -11,8 +11,8 @@ end
 defmodule WhiteBread.SubContextTest.ExampleContext do
   use WhiteBread.Context
 
-  subcontext WhiteBread.SubContextTest.SubExampleContext.One
-  subcontext WhiteBread.SubContextTest.SubExampleContext.Two
+  import_steps_from WhiteBread.SubContextTest.SubExampleContext.One
+  import_steps_from WhiteBread.SubContextTest.SubExampleContext.Two
 
 end
 

@@ -1,8 +1,8 @@
 defmodule WhiteBread.Example.OutlineContext do
   use WhiteBread.Context
 
-  subcontext WhiteBread.Example.OutlineContext.AdditionalStateSteps
-  subcontext WhiteBread.Example.OutlineContext.StringSteps
+  import_steps_from WhiteBread.Example.OutlineContext.AdditionalStateSteps
+  import_steps_from WhiteBread.Example.OutlineContext.StringSteps
 
   feature_starting_state fn  ->
     %{feature_state_loaded: :yes}

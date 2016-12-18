@@ -104,7 +104,7 @@ defmodule WhiteBread.Context do
     end
   end
 
-  defmacro subcontext(context_module) do
+  defmacro import_steps_from(context_module) do
     quote do
       @sub_context_modules [unquote(context_module) | @sub_context_modules]
     end

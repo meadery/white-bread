@@ -1,7 +1,7 @@
 defmodule WhiteBread.Example.AlternateContext do
   use WhiteBread.Context
 
-  subcontext WhiteBread.Example.AnythingGoesContext
+  import_steps_from WhiteBread.Example.AnythingGoesContext
 
   feature_starting_state fn  ->
     %{feature_state_loaded: :yes}

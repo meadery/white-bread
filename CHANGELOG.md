@@ -18,6 +18,7 @@
 - The context behaviour is extended to require ```callback get_scenario_timeout(Feature.t, Scenario.t) :: number``` any contexts not ```use```ing ```WhiteBread.Context``` will need to add the function.
 - The *_starting_state and *_finalize functions in the context behaviour have been standardised so a pair each for feature and scenario.
 - `tags` and `context` are no longer supported on the command line. Tags will be reintroduced in a later release. Context will not as everything will now require a suite configuration. [#77]
+- `subcontext` macro renamed to `import_steps_from` to make intent clearer.
 
 ## V2.8.1 (2016-09-29)
 

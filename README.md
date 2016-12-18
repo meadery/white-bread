@@ -141,7 +141,7 @@ end
 After following the getting started steps you may find your default context starts to get a bit large. 
 There are two ways this can be broken apart:
 
-1. By composing your default suite out of subcontexts.
+1. By composing your default suite out of subcontexts using the `import_steps_from` macro.
 2. By splitting your features into different suites each starting with a different context.
 
 ## Subcontexts
@@ -154,7 +154,7 @@ will be available.
 defmodule WhiteBread.Example.DefaultContext do
   use WhiteBread.Context
 
-  subcontext WhiteBread.Example.SharedContext
+  import_steps_from WhiteBread.Example.SharedContext
 
   # Rest of the context here as usual
   #...
