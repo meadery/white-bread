@@ -23,7 +23,7 @@ Add "white_bread" to your `mix.exs` file with the version you wish to use:
 defp deps do
     [
         ...
-        { :white_bread, "~> 2.5", only: [:dev, :test] }
+        { :white_bread, "~> 3.0", only: [:dev, :test] }
         ...
     ]
 end
@@ -48,13 +48,24 @@ Run the command:
 ```bash
 mix white_bread.run
 ```
-This will prompt you with a message like:
+This should prompt you with a few messages like:
+
+```bash
+loading config from features/config.exs
+Config file not found at features/config.exs. 
+Create one [Y/n]? 
+y
+
+Suite: All
+Context module not found Elixir.WhiteBreadContext (features/contexts/white_bread_context.exs)
+Create one [Y/n]? 
+y
+
 ```
-Default context module not found in features/contexts/default_context.exs.
-Create one [Y/n]?
-```
-Selecting yes will create a basic context file in ```features/contexts/default_context.exs```.
-The context file tells WhiteBread how to understand the gherkin in your feature files.
+This will create a basic config file and also a context ```features/contexts/default_context.exs```.
+A context file tells WhiteBread how to understand the gherkin in your feature files and also
+what setup is required.
+
 These will need to be implemented like:
 
 ```elixir
@@ -125,11 +136,39 @@ def project do
 end
 ```
 
-# Next steps - Suites and subcontexts
+# Next steps - Additional Suites and subcontexts
 
-After following the getting started steps you may find your default context starts to get a bit large. Defining suites allows you to break your contexts apart and assign them to specific features. You can even run one feature multiple times under different contexts. This is especially useful if you have a few different ways of accessing your software (web, rest api, command line etc.).
+After following the getting started steps you may find your default context starts to get a bit large. 
+There are two ways this can be broken apart:
 
-Suite configuration is loaded from ```features/config.exs```. Create this file then add something like:
+1. By composing your default suite out of subcontexts.
+2. By splitting your features into different suites each starting with a different context.
+
+## Subcontexts
+
+Sub contexts allow the step definitions of multiple contexts to be imported in to a parent context.
+The parent context defines all the start and stop callbacks but all the steps in the child context
+will be available.
+
+```elixir
+defmodule WhiteBread.Example.DefaultContext do
+  use WhiteBread.Context
+
+  subcontext WhiteBread.Example.SharedContext
+
+  # Rest of the context here as usual
+  #...
+end
+```
+
+## Multiple suites
+
+Defining suites allows you to use a different starting context for groups of features. This will
+often be along the lines of a bounded context.
+You can also run one feature multiple times under different contexts. This is especially useful 
+if you have a few different ways of accessing your software (web, rest api, command line etc.).
+
+Suite configuration is loaded from ```features/config.exs```. An example with multiple suites is:
 
 ```elixir
 defmodule WhiteBread.Example.Config do
@@ -149,7 +188,8 @@ defmodule WhiteBread.Example.Config do
         tags:          ["songs"]
 end
 ```
-Each suite gets run loading all the features in the given paths and running them using the specified context. Additionally the scenarios can be filtered to specific tags.
+Each suite gets run loading all the features in the given paths and running them using the specified context. 
+Additionally the scenarios can be filtered to specific tags.
 
 ## Suites: Context per feature
 
@@ -184,20 +224,6 @@ About the `context_per_feature` configuration:
 - `entry_path:` the location of your feature files.
 
 **note:** context files need to be added to your `features/contexts` folder still.
-
-## Subcontexts
-
-It's quite likely that there will be some common steps in your contexts. These steps can be stored in a shared context then imported as a subcontext:
-```elixir
-defmodule WhiteBread.Example.DefaultContext do
-  use WhiteBread.Context
-
-  subcontext WhiteBread.Example.SharedContext
-
-  # Rest of the context here as usual
-  #...
-end
-```
 
 ## Speeding things up - async running
 
