@@ -23,7 +23,9 @@ defmodule WhiteBread.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger]]
+    [applications: [:logger],
+     env: [outputer: WhiteBread.Outputers.Console,
+           path: "~/report.html"]]
   end
 
   defp aliases do
@@ -51,7 +53,7 @@ defmodule WhiteBread.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:credo, "0.4.11", only: [:dev]},
+      {:credo, "~> 0.5", only: [:dev]},
       {:earmark, "~> 1.0.1", only: :dev},
       {:ex_doc, "~> 0.8", only: :dev}
     ]

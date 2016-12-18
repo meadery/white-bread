@@ -241,6 +241,16 @@ This function gets the full structs representing the feature and scenario being
 executed so it's possible to base the decision to change the timeout on any
 available property: tags, name, description etc.
 
+## HTML Output
+
+For HTML reports configure WhiteBread (e.g. in `config.exs`) with the HTML outputer and optionally a file name for the document:
+
+```Elixir
+config :white_bread,
+  outputer: WhiteBread.Outputers.HTML,
+  path: "~/report.html"
+```
+
 # Public interface and BC breaks
 The public interface of this library covers:
 
