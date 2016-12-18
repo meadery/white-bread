@@ -1,12 +1,13 @@
 # Changelog
 
-## V-NEXT (YYYY-MM-DD)
+## 3.0.0 (2016-12-18)
 
 ### Enhancements
 - Roles are now parsed. So any feature with ```As a Person``` in the description can be filtered using it. See #54 for details.
 - In async mode scenerios can now timeout. The scenario_timeouts macro is can be used to specifiy a function which generates custom timeouts. See #57.
 - The finalize functions are now given the success (or failure) status. Thanks to @mgwidmann.[#75]
 - `suite` can now be specified on the command line to filter to run a single suite from the config. [#77]
+- HTML Output for White Bread now available thanks to @Dzol (and @mentels for reviewing) [#81]
 
 ### Bug fixes
 - Run the scenario starting state for outlines just as for simple scenarios. Thanks to @marnen. [#73]
