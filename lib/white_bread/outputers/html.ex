@@ -54,15 +54,8 @@ defmodule WhiteBread.Outputers.HTML do
     {:noreply, state}
   end
 
-  def terminate(_, state) do
-    import Formatter, only: [list: 1, body: 1, document: 1]
-
-    state.data
-    |> Enum.map(&format/1)
-    |> list
-    |> body
-    |> document
-    |> write(state.path)
+  def terminate(_, %__MODULE__{data: content, path: path}) do
+    report_ content, path
   end
 
   ## Internal
@@ -91,5 +84,16 @@ defmodule WhiteBread.Outputers.HTML do
 
   defmodule PathError do
     defexception message: "Given root directory."
+  end
+
+  defp report_(content, path) do
+    import Formatter, only: [list: 1, body: 1, document: 1]
+
+    content
+    |> Enum.map(&format/1)
+    |> list
+    |> body
+    |> document
+    |> write(path)
   end
 end
