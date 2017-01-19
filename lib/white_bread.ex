@@ -1,5 +1,4 @@
 defmodule WhiteBread do
-  alias WhiteBread.Outputers.ProgressReporter
   alias WhiteBread.Runners.FeatureRunner
 
   # Features are capped to one hour. In practise the scenario's should be
@@ -11,10 +10,6 @@ defmodule WhiteBread do
     async = options |> Keyword.get(:async, false)
     roles = options |> Keyword.get(:roles)
 
-    output_module = outputer
-
-    output = output_module.start
-
     features = path
       |> WhiteBread.Feature.Finder.find_in_path
       |> read_in_feature_files
@@ -22,16 +17,12 @@ defmodule WhiteBread do
       |> filter_features(tags: tags, roles: roles)
 
     results = features
-      |> run_all_features(context, output, async: async)
+      |> run_all_features(context, async: async)
       |> results_as_map
-      |> output_result(output)
-
-    output |> output_module.stop
+      |> output_result
 
     results
   end
-
-  defp outputer, do: Application.fetch_env! :white_bread, :outputer
 
   defp results_as_map(results) do
     %{
@@ -40,8 +31,8 @@ defmodule WhiteBread do
     }
   end
 
-  defp output_result(result_map, output) do
-    output |> ProgressReporter.report({:final_results, result_map})
+  defp output_result(result_map) do
+    WhiteBread.EventManager.report({:final_results, result_map})
     result_map
   end
 
@@ -77,24 +68,24 @@ defmodule WhiteBread do
         |> WhiteBread.Roles.FeatureFilterer.get_for_roles(roles)
   end
 
-  defp run_all_features(features, context, output, async: true) do
+  defp run_all_features(features, context, async: true) do
     features
-      |> Enum.map(&run_feature_async(&1, context, output))
+      |> Enum.map(&run_feature_async(&1, context))
       |> Enum.map(&Task.await(&1, @max_feature_run_time))
   end
 
-  defp run_all_features(features, context, output, async: false) do
+  defp run_all_features(features, context, async: false) do
     features
-      |> Enum.map(&run_feature(&1, context, output))
+      |> Enum.map(&run_feature(&1, context))
   end
 
-  defp run_feature(feature, context, output) do
-    {feature, FeatureRunner.run(feature, context, output, async: false)}
+  defp run_feature(feature, context) do
+    {feature, FeatureRunner.run(feature, context, async: false)}
   end
 
-  defp run_feature_async(feature, context, output) do
+  defp run_feature_async(feature, context) do
     Task.async fn ->
-      {feature, FeatureRunner.run(feature, context, output, async: true)}
+      {feature, FeatureRunner.run(feature, context, async: true)}
     end
   end
 

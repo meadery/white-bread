@@ -6,9 +6,8 @@ defmodule WhiteBread.Runners.FeatureRunner do
   alias WhiteBread.Gherkin.Elements.Scenario
   alias WhiteBread.Gherkin.Elements.ScenarioOutline
 
-  def run(feature, context, progress_reporter, async: async) do
+  def run(feature, context, async: async) do
     setup = Setup.new
-      |> Map.put(:progress_reporter, progress_reporter)
       |> Map.put(:background_steps, feature.background_steps)
 
     results = feature

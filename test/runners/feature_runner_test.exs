@@ -15,7 +15,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     feature = %Feature{name: "test feature", scenarios: [scenario]}
 
     output = WhiteBread.Outputers.Console.start
-    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output, async: false)
+    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: false)
     output |> WhiteBread.Outputers.Console.stop
 
     assert result == %{
@@ -41,7 +41,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     feature = %Feature{name: "test feature", scenarios: [scenario, failing_scenario]}
 
     output = WhiteBread.Outputers.Console.start
-    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output, async: false)
+    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: false)
     output |> WhiteBread.Outputers.Console.stop
 
     %{
@@ -63,7 +63,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     feature = %Feature{name: "test feature", scenarios: [scenario], background_steps: background_steps}
 
     output = WhiteBread.Outputers.Console.start
-    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output, async: false)
+    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: false)
     output |> WhiteBread.Outputers.Console.stop
 
     assert result == %{
@@ -81,7 +81,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     feature = %Feature{name: "test feature", scenarios: [scenario]}
 
     output = WhiteBread.Outputers.Console.start
-    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output, async: true)
+    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: true)
     output |> WhiteBread.Outputers.Console.stop
 
     assert result == %{
@@ -101,7 +101,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     scenario = %Scenario{name: "test scenario", steps: steps}
     feature = %Feature{name: "test feature", scenarios: [scenario]}
     output = WhiteBread.Outputers.Console.start
-    WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, output, async: false)
+    WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: false)
     output |> WhiteBread.Outputers.Console.stop
 
     count_at_end = WhiteBread.FeatureRunnerTest.GlobalCounter.get

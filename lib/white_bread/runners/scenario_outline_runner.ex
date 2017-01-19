@@ -3,7 +3,6 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
 
   alias WhiteBread.Runners.Setup
 
-  alias WhiteBread.Outputers.ProgressReporter
   alias WhiteBread.Runners.StepsRunner
 
   def run(scenario_outline, context, %Setup{} = setup \\ Setup.new) do
@@ -11,7 +10,7 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
       |> build_each_example
       |> Enum.map(&run_steps(&1, scenario_outline, context, setup))
       |> process_results(scenario_outline)
-      |> report_progress(setup, scenario_outline)
+      |> report_progress(scenario_outline)
   end
 
   defp process_results([], _), do: [{:failed, :no_examples_given}]
@@ -54,13 +53,12 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
     %{step | text: updated_text}
   end
 
-  defp report_progress(results, setup, scenario_outline) do
+  defp report_progress(results, scenario_outline) do
     failures? = results |> Enum.any?(fn {success, _} -> success != :ok end)
     success_status = if failures?, do: :failed, else: :ok
     scenario_report ={:scenario_result, {success_status, nil},
     scenario_outline}
-    setup.progress_reporter
-      |> ProgressReporter.report(scenario_report)
+    WhiteBread.EventManager.report(scenario_report)
     results
   end
 

@@ -23,7 +23,8 @@ defmodule WhiteBread.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger],
+    [mod: {WhiteBread.Application, []},
+     applications: [:logger],
      env: [outputer: WhiteBread.Outputers.Console,
            path: "~/report.html"]]
   end

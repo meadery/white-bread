@@ -3,7 +3,6 @@ defmodule WhiteBread.Runners.ScenarioRunner do
 
   alias WhiteBread.Runners.Setup
 
-  alias WhiteBread.Outputers.ProgressReporter
   alias WhiteBread.Runners.StepsRunner
 
   def run(scenario, context, %Setup{} = setup \\ Setup.new) do
@@ -17,7 +16,7 @@ defmodule WhiteBread.Runners.ScenarioRunner do
       |> update_result_with_exits
       |> stop_trapping_exits
       |> build_result_tuple(scenario)
-      |> output_result(setup.progress_reporter, scenario)
+      |> output_result(scenario)
   end
 
   defp build_result_tuple(result, scenario) do
@@ -27,9 +26,8 @@ defmodule WhiteBread.Runners.ScenarioRunner do
     end
   end
 
-  defp output_result(result_tuple, progress_reporter, scenario) do
-    progress_reporter
-      |> ProgressReporter.report({:scenario_result, result_tuple, scenario})
+  defp output_result(result_tuple, scenario) do
+    WhiteBread.EventManager.report({:scenario_result, result_tuple, scenario})
     result_tuple
   end
 

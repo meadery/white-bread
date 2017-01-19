@@ -26,8 +26,7 @@ defmodule WhiteBread.Outputers.HTML do
     :ok = GenServer.stop outputer, :normal, 2 * 1000
   end
 
-  @doc "Interface function for the `ProgressReporter` protocol."
-  def report(%__MODULE__{pid: outputer}, report) do
+  def report(outputer, report) do
     GenServer.cast outputer, report
   end
 
@@ -44,24 +43,24 @@ defmodule WhiteBread.Outputers.HTML do
     ## This clause here for more sophisticated report in the future.
     {:noreply, state}
   end
+  def handle_cast({:scenario_result, _}, state) do
+    ## This clause here for more sophisticated report in the future.
+    {:noreply, state}
+  end
   def handle_cast({:final_results, %{successes: [{%Feature{name: x}, _}|_], failures: _}}, state) do
     ## This clause here for more sophisticated report in the future.
-
-    # IO.puts "FEATURE = #{inspect x}"
-    # IO.puts "STATE = #{inspect state}"
-
     {:noreply, %{state | tree: Map.put(state.tree, x, state.data), data: []}}
   end
   def handle_cast(x, state) do
     require Logger
 
-    Logger.warn "casted with #{inspect x}."
+    Logger.warn "cast with #{inspect x}."
     {:noreply, state}
   end
 
   def terminate(_, %__MODULE__{data: content, path: path, tree: tree}) do
     IO.inspect tree
-    # report_ content, path
+    report_ content, path
   end
 
   ## Internal

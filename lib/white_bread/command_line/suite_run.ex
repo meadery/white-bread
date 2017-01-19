@@ -7,6 +7,8 @@ defmodule WhiteBread.CommandLine.SuiteRun do
     config_path: config_path,
     contexts: context_path)
   do
+    WhiteBread.EventManager.add_handler(outputer(), [])
+
     ContextLoader.load_context_files(context_path)
 
     config_path
@@ -60,4 +62,5 @@ defmodule WhiteBread.CommandLine.SuiteRun do
     |> Stream.filter(fn suite -> suite.name == requested_suite end)
   end
 
+  defp outputer, do: Application.fetch_env! :white_bread, :outputer
 end
