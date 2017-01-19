@@ -2,6 +2,7 @@ defmodule WhiteBread.Outputers.HTML do
   use GenServer
   alias WhiteBread.Gherkin.Elements.Scenario
   alias WhiteBread.Gherkin.Elements.ScenarioOutline
+  alias WhiteBread.Gherkin.Elements.Feature
   alias WhiteBread.Outputers.HTML.Formatter
 
   @moduledoc """
@@ -10,7 +11,7 @@ defmodule WhiteBread.Outputers.HTML do
   one go.
   """
 
-  defstruct pid: nil, path: nil, data: []
+  defstruct pid: nil, path: nil, tree: %{}, data: []
 
   ## Client Interface
 
@@ -43,9 +44,13 @@ defmodule WhiteBread.Outputers.HTML do
     ## This clause here for more sophisticated report in the future.
     {:noreply, state}
   end
-  def handle_cast({:final_results, %{successes: _, failures: _}}, state) do
+  def handle_cast({:final_results, %{successes: [{%Feature{name: x}, _}|_], failures: _}}, state) do
     ## This clause here for more sophisticated report in the future.
-    {:noreply, state}
+
+    # IO.puts "FEATURE = #{inspect x}"
+    # IO.puts "STATE = #{inspect state}"
+
+    {:noreply, %{state | tree: Map.put(state.tree, x, state.data), data: []}}
   end
   def handle_cast(x, state) do
     require Logger
@@ -54,8 +59,9 @@ defmodule WhiteBread.Outputers.HTML do
     {:noreply, state}
   end
 
-  def terminate(_, %__MODULE__{data: content, path: path}) do
-    report_ content, path
+  def terminate(_, %__MODULE__{data: content, path: path, tree: tree}) do
+    IO.inspect tree
+    # report_ content, path
   end
 
   ## Internal

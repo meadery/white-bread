@@ -9,6 +9,9 @@ defmodule WhiteBread.Outputers.HTML.Formatter do
     "<body>#{paragraph "White Bread scenario results:"}#{content}</body>"
   end
 
+  def section(_, []), do: ""
+  def section(title, results) when is_binary(title), do: "#{paragraph(title)}#{list(results)}"
+
   def list([]), do: "Nothing to report."
   def list([_|_] = elements), do: list(elements, "")
 
