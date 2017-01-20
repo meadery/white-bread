@@ -25,8 +25,9 @@ defmodule WhiteBread.Mixfile do
   def application do
     [mod: {WhiteBread.Application, []},
      applications: [:logger],
-     env: [outputer: WhiteBread.Outputers.Console,
-           path: "~/report.html"]]
+     env: [outputers: [{WhiteBread.Outputers.Console, []}]
+          ]
+    ]
   end
 
   defp aliases do

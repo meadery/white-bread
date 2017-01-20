@@ -18,16 +18,12 @@ defmodule WhiteBread.Outputers.HTML do
   @doc false
   def start do
     {:ok, outputer} = GenServer.start __MODULE__, []
-    %__MODULE__{pid: outputer}
+    outputer
   end
 
   @doc false
-  def stop(%__MODULE__{pid: outputer}) do
-    :ok = GenServer.stop outputer, :normal, 2 * 1000
-  end
-
-  def report(outputer, report) do
-    GenServer.cast outputer, report
+  def stop(outputer) do
+    :ok = GenServer.stop outputer, :normal
   end
 
   ## Interface to Generic Server Machinery
@@ -59,6 +55,7 @@ defmodule WhiteBread.Outputers.HTML do
   end
 
   def terminate(_, %__MODULE__{data: content, path: path, tree: tree}) do
+    IO.inspect content
     IO.inspect tree
     report_ content, path
   end
@@ -66,10 +63,10 @@ defmodule WhiteBread.Outputers.HTML do
   ## Internal
 
   defp document_path do
-    case Application.fetch_env!(:white_bread, :path) do
-      "/" ->
+    case Keyword.fetch!(outputers(), __MODULE__) do
+      [path: "/"] ->
         raise WhiteBread.Outputers.HTML.PathError
-      x when is_binary(x) ->
+      [path: x] when is_binary(x) ->
         Path.expand x
     end
   end
@@ -100,5 +97,9 @@ defmodule WhiteBread.Outputers.HTML do
     |> body
     |> document
     |> write(path)
+  end
+
+  defp outputers do
+    Application.fetch_env!(:white_bread, :outputers)
   end
 end

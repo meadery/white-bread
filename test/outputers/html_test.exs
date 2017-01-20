@@ -6,14 +6,14 @@ defmodule WhiteBread.Outputers.HTMLTests do
   @console WhiteBread.Outputers.Console
 
   test "default outputer is for the console" do
-     assert @console = Application.fetch_env! :white_bread, :outputer
+     assert [{@console, []}|_] = Application.fetch_env! :white_bread, :outputers
   end
 
   test "file path fetched on initialization" do
-    old = Application.fetch_env! :white_bread, :path
-    :ok = Application.put_env :white_bread, :path, "/fu/bar.baz"
+    old = Application.fetch_env! :white_bread, :outputers
+    :ok = Application.put_env :white_bread, :outputers, [{HTML, path: "/fu/bar.baz"}]
     assert {:ok, %HTML{path: "/fu/bar.baz"}} = HTML.init []
-    :ok = Application.put_env :white_bread, :path, old
+    :ok = Application.put_env :white_bread, :outputers, old
   end
 
   test "success result stored with the scenario name" do

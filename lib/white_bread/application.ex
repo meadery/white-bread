@@ -11,4 +11,8 @@ defmodule WhiteBread.Application do
     opts = [strategy: :one_for_one, name: WhiteBread.Supervisor]
     Supervisor.start_link([child], opts)
   end
+
+  def stop() do
+    WhiteBread.EventManager.stop()
+  end
 end

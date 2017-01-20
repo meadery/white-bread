@@ -24,7 +24,7 @@ defmodule WhiteBread.EventManager do
   end
 
   def report(details) do
-    notify({:scenario_result, details})
+    notify(details)
   end
 
   defp notify(msg) do
