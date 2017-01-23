@@ -5,6 +5,11 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
   alias WhiteBread.Gherkin.Elements.Scenario, as: Scenario
   alias WhiteBread.FeatureRunnerTest.ExampleContext, as: ExampleContext
 
+  setup_all do
+    {:ok, o} = WhiteBread.EventManager.add_handler(WhiteBread.Outputers.Console, [])
+    {:ok, outputer: o}
+  end
+
   test "feature runner should return succesful scenarios" do
     steps = [
       %Steps.When{text: "step one"},
@@ -14,9 +19,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     scenario = %Scenario{name: "test scenario", steps: steps}
     feature = %Feature{name: "test feature", scenarios: [scenario]}
 
-    output = WhiteBread.Outputers.Console.start
     result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: false)
-    output |> WhiteBread.Outputers.Console.stop
 
     assert result == %{
       failures: [],
@@ -40,9 +43,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     failing_scenario = %Scenario{name: "failing scenario", steps: failing_steps}
     feature = %Feature{name: "test feature", scenarios: [scenario, failing_scenario]}
 
-    output = WhiteBread.Outputers.Console.start
     result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: false)
-    output |> WhiteBread.Outputers.Console.stop
 
     %{
       failures: [{^failing_scenario, {:failed, {failing_reason, ^failing_step, _}}}],
@@ -62,9 +63,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     scenario = %Scenario{name: "test scenario", steps: steps}
     feature = %Feature{name: "test feature", scenarios: [scenario], background_steps: background_steps}
 
-    output = WhiteBread.Outputers.Console.start
     result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: false)
-    output |> WhiteBread.Outputers.Console.stop
 
     assert result == %{
       failures: [],
@@ -80,9 +79,7 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     scenario = %Scenario{name: "slow scenario", steps: steps}
     feature = %Feature{name: "test feature", scenarios: [scenario]}
 
-    output = WhiteBread.Outputers.Console.start
     result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: true)
-    output |> WhiteBread.Outputers.Console.stop
 
     assert result == %{
       failures: [{scenario, {:failed, :timeout}}],
@@ -100,9 +97,8 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
 
     scenario = %Scenario{name: "test scenario", steps: steps}
     feature = %Feature{name: "test feature", scenarios: [scenario]}
-    output = WhiteBread.Outputers.Console.start
+
     WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: false)
-    output |> WhiteBread.Outputers.Console.stop
 
     count_at_end = WhiteBread.FeatureRunnerTest.GlobalCounter.get
 
