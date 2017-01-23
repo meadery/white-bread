@@ -57,7 +57,7 @@ defmodule WhiteBread.Outputers.HTML do
   def terminate(_, %__MODULE__{data: content, path: path, tree: tree}) do
     IO.inspect content
     IO.inspect tree
-    report_ content, path
+    report_ tree, path
   end
 
   ## Internal
@@ -89,11 +89,12 @@ defmodule WhiteBread.Outputers.HTML do
   end
 
   defp report_(content, path) do
-    import Formatter, only: [list: 1, body: 1, document: 1]
+    import Formatter, only: [body: 1, document: 1]
 
     content
-    |> Enum.map(&format/1)
-    |> list
+    |> elements
+    |> sections
+    |> IO.iodata_to_binary
     |> body
     |> document
     |> write(path)
@@ -101,5 +102,21 @@ defmodule WhiteBread.Outputers.HTML do
 
   defp outputers do
     Application.fetch_env!(:white_bread, :outputers)
+  end
+
+  defp elements(x) do
+    Enum.map(x, &element/1)
+  end
+
+  defp element({suite, cases}) do
+    {suite, Enum.map(cases, &format/1)}
+  end
+
+  defp sections(x) do
+    Enum.map(x, &section/1)
+  end
+
+  defp section({name, children}) do
+    Formatter.section(name, children)
   end
 end
