@@ -33,7 +33,7 @@ defmodule WhiteBread.Outputers.HTML do
   end
 
   def handle_cast({:suite, name}, state) when is_binary(name) do
-    {:noreply, %{state | suite: name, tree: Map.put(state.tree, name, state.data), data: []}}
+    {:noreply, %{state | suite: name, tree: transplant(state, name), data: []}}
   end
   def handle_cast({:scenario_result, {result, _}, %Scenario{name: name}}, state) when :ok == result or :failed == result do
     {:noreply, %{state | data: [{result, name}|state.data]}}
@@ -53,8 +53,8 @@ defmodule WhiteBread.Outputers.HTML do
     {:noreply, state}
   end
 
-  def terminate(_, %__MODULE__{path: path, tree: tree}) do
-    report_ tree, path
+  def terminate(_, state = %__MODULE__{path: path}) do
+    report_ transplant(state), path
   end
 
   ## Internal
@@ -66,6 +66,14 @@ defmodule WhiteBread.Outputers.HTML do
       [path: x] when is_binary(x) ->
         Path.expand x
     end
+  end
+
+  defp transplant(state) do
+    transplant(state, state.suite)
+  end
+
+  defp transplant(state, name) do
+    Map.put(state.tree, name, state.data)
   end
 
   defp format({:ok,     name}), do: Formatter.success(name)
