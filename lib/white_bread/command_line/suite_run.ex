@@ -18,7 +18,7 @@ defmodule WhiteBread.CommandLine.SuiteRun do
   end
 
   defp run_suite(%Suite{} = suite, context_path: context_path) do
-    IO.puts "\n\nSuite: #{suite.name}"
+    WhiteBread.EventManager.report({:suite, suite.name})
     ContextLoader.ensure_context(suite.context, context_path)
     WhiteBread.run(
       suite.context,

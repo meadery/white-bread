@@ -19,6 +19,10 @@ defmodule WhiteBread.Outputers.Console do
 
   ## Interface to Generic Server Machinery
 
+  def handle_cast({:suite, name}, state) when is_binary(name) do
+    IO.puts("\n\nSuite: #{name}")
+    {:noreply, state}
+  end
   def handle_cast({:scenario_result, result, scenario}, state) do
     output_scenario_result(result, scenario)
     {:noreply, state}

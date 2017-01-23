@@ -11,7 +11,7 @@ defmodule WhiteBread.Outputers.HTML do
   one go.
   """
 
-  defstruct pid: nil, path: nil, tree: %{}, data: []
+  defstruct pid: nil, path: nil, tree: %{}, data: [], suite: <<>>
 
   ## Client Interface
 
@@ -32,6 +32,9 @@ defmodule WhiteBread.Outputers.HTML do
     {:ok, %__MODULE__{path: document_path()}}
   end
 
+  def handle_cast({:suite, name}, state) when is_binary(name) do
+    {:noreply, %{state | suite: name, tree: Map.put(state.tree, name, state.data), data: []}}
+  end
   def handle_cast({:scenario_result, {result, _}, %Scenario{name: name}}, state) when :ok == result or :failed == result do
     {:noreply, %{state | data: [{result, name}|state.data]}}
   end
@@ -39,13 +42,9 @@ defmodule WhiteBread.Outputers.HTML do
     ## This clause here for more sophisticated report in the future.
     {:noreply, state}
   end
-  def handle_cast({:scenario_result, _}, state) do
+  def handle_cast({:final_results, %{successes: [{%Feature{name: _}, _}|_], failures: _}}, state) do
     ## This clause here for more sophisticated report in the future.
     {:noreply, state}
-  end
-  def handle_cast({:final_results, %{successes: [{%Feature{name: x}, _}|_], failures: _}}, state) do
-    ## This clause here for more sophisticated report in the future.
-    {:noreply, %{state | tree: Map.put(state.tree, x, state.data), data: []}}
   end
   def handle_cast(x, state) do
     require Logger
@@ -54,9 +53,7 @@ defmodule WhiteBread.Outputers.HTML do
     {:noreply, state}
   end
 
-  def terminate(_, %__MODULE__{data: content, path: path, tree: tree}) do
-    IO.inspect content
-    IO.inspect tree
+  def terminate(_, %__MODULE__{path: path, tree: tree}) do
     report_ tree, path
   end
 
