@@ -23,12 +23,13 @@ defmodule WhiteBread.Outputers.HTML do
 
   @doc false
   def stop(outputer) do
-    :ok = GenServer.stop outputer, :normal
+    GenServer.cast(outputer, :stop)
   end
 
   ## Interface to Generic Server Machinery
 
   def init(_) do
+    Process.flag(:trap_exit, true)
     {:ok, %__MODULE__{path: document_path()}}
   end
 
@@ -45,6 +46,9 @@ defmodule WhiteBread.Outputers.HTML do
   def handle_cast({:final_results, %{successes: [{%Feature{name: _}, _}|_], failures: _}}, state) do
     ## This clause here for more sophisticated report in the future.
     {:noreply, state}
+  end
+  def handle_cast(:stop, state) do
+    {:stop, :normal, state}
   end
   def handle_cast(x, state) do
     require Logger

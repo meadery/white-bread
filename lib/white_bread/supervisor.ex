@@ -8,7 +8,7 @@ defmodule WhiteBread.Supervisor do
   end
 
   def init([]) do
-    supervise(children(), strategy: :one_for_one)
+    supervise(children(), strategy: :one_for_one, name: __MODULE__)
   end
 
   defp children do

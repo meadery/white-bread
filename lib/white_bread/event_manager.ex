@@ -14,9 +14,9 @@ defmodule WhiteBread.EventManager do
 
   def stop() do
     for {_, pid, _, _} <- Supervisor.which_children(__MODULE__) do
-      GenServer.stop(pid, :normal, @timeout)
+      :ok = Supervisor.terminate_child(__MODULE__, pid)
     end
-    Supervisor.stop(__MODULE__)
+    Supervisor.terminate_child(WhiteBread.Supervisor, __MODULE__)
   end
 
   def add_handler(handler, opts) do
