@@ -3,8 +3,8 @@ defmodule WhiteBread.Runners.FeatureRunner do
   alias WhiteBread.Runners.ScenarioRunner
   alias WhiteBread.Runners.ScenarioOutlineRunner
 
-  alias WhiteBread.Gherkin.Elements.Scenario
-  alias WhiteBread.Gherkin.Elements.ScenarioOutline
+  alias Gherkin.Elements.Scenario
+  alias Gherkin.Elements.ScenarioOutline
 
   def run(feature, context, async: async) do
     setup = Setup.new
