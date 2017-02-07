@@ -1,7 +1,7 @@
 defmodule ScenarioRunner.ScenarioRunnerTest do
   use ExUnit.Case
-  alias WhiteBread.Gherkin.Elements.Steps, as: Steps
-  alias WhiteBread.Gherkin.Elements.Scenario, as: Scenario
+  alias Gherkin.Elements.Steps, as: Steps
+  alias Gherkin.Elements.Scenario, as: Scenario
   alias WhiteBread.ScenarioRunnerTest.ExampleContext, as: ExampleContext
   alias WhiteBread.Runners.Setup
 

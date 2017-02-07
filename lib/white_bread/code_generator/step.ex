@@ -18,7 +18,7 @@ defmodule WhiteBread.CodeGenerator.Step do
   def regex_code_for_step(%{text: text, __struct__: struct_type}) do
     step_type = struct_type
       |> Atom.to_string
-      |> String.replace("Elixir.WhiteBread.Gherkin.Elements.Steps.", "")
+      |> String.replace("Elixir.Gherkin.Elements.Steps.", "")
       |> String.downcase
 
     case @quoted_string_regex |> Regex.match?(text) do

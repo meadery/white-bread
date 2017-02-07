@@ -1,8 +1,8 @@
 defmodule WhiteBread.Runners.FeatureRunnerTest do
   use ExUnit.Case
-  alias WhiteBread.Gherkin.Elements.Steps, as: Steps
-  alias WhiteBread.Gherkin.Elements.Feature, as: Feature
-  alias WhiteBread.Gherkin.Elements.Scenario, as: Scenario
+  alias Gherkin.Elements.Steps, as: Steps
+  alias Gherkin.Elements.Feature, as: Feature
+  alias Gherkin.Elements.Scenario, as: Scenario
   alias WhiteBread.FeatureRunnerTest.ExampleContext, as: ExampleContext
 
   setup_all do

@@ -2,7 +2,7 @@ defmodule WhiteBread.Formatter.FailedStepTest do
   use ExUnit.Case
   alias WhiteBread.Formatter.FailedStep
   alias WhiteBread.CodeGenerator
-  alias WhiteBread.Gherkin.Elements.Steps
+  alias Gherkin.Elements.Steps
 
   test "Prints out failure with a trace when no matching clause is found" do
     trace = System.stacktrace
