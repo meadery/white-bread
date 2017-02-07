@@ -32,7 +32,7 @@ defmodule WhiteBread do
   end
 
   defp output_result(result_map) do
-    WhiteBread.EventManager.report({:final_results, result_map})
+    WhiteBread.Outputer.report({:final_results, result_map})
     result_map
   end
 

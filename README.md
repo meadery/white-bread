@@ -267,14 +267,15 @@ This function gets the full structs representing the feature and scenario being
 executed so it's possible to base the decision to change the timeout on any
 available property: tags, name, description etc.
 
-## HTML Output
+## HTML Output (and other outputs)
 
 For HTML reports configure WhiteBread (e.g. in `config.exs`) with the HTML outputer and optionally a file name for the document:
 
 ```Elixir
 config :white_bread,
-  outputer: WhiteBread.Outputers.HTML,
-  path: "~/report.html"
+  outputers: [{WhiteBread.Outputers.Console, []},
+              {WhiteBread.Outputers.HTML, path: "~/build/whitebread_report.html"}
+             ]
 ```
 
 # Public interface and BC breaks
@@ -287,6 +288,7 @@ The public interface of this library covers:
 * The config.exs structure and the macros exported by the ```WhiteBread.SuiteConfiguration``` module.
 * The structures defined in ```WhiteBread.Gherkin```.
 * The location of feature and context files loaded automatically.
+* The messages that custom outputers receive (documented in WhiteBread.Outputer)
 
 Any changes outside of the above will not be considered a BC break. Although every effort will be made to not introduce unnecessary change in any other area.
 
