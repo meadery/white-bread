@@ -27,7 +27,7 @@ defmodule WhiteBread.Runners.ScenarioRunner do
   end
 
   defp output_result(result_tuple, scenario) do
-    WhiteBread.EventManager.report({:scenario_result, result_tuple, scenario})
+    WhiteBread.Outputter.report({:scenario_result, result_tuple, scenario})
     result_tuple
   end
 

@@ -58,7 +58,7 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
     success_status = if failures?, do: :failed, else: :ok
     scenario_report ={:scenario_result, {success_status, nil},
     scenario_outline}
-    WhiteBread.EventManager.report(scenario_report)
+    WhiteBread.Outputter.report(scenario_report)
     results
   end
 
