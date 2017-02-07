@@ -16,6 +16,9 @@ The short answer is no. The medium answer is it's a development tool that should
 Gherkin and cucumber made me think of [cucumber sandwiches](http://en.wikipedia.org/wiki/Cucumber_sandwich).
 Which are traditionally made with very thin white bread.
 
+# Alternative tools
+Before adopting whitebread you should investigate the alternaitves. This project (whitebread) contains a lot of code around setup, execution, and output of tests. An alternative gherkin based BDD tool can be found at https://github.com/cabbage-ex/cabbage. Cabbage parses gherkin feature files and creates exunit tests. This means a lot more of the logic is standard exunit code.
+
 # Getting started - installing
 Add "white_bread" to your `mix.exs` file with the version you wish to use:
 
