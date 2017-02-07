@@ -5,8 +5,8 @@ defmodule WhiteBread.Outputter do
     EventManager.report({:final_results, result_map})
   end
 
-  def report({:suite, suite.name}) do
-    EventManager.report({:suite, suite.name})
+  def report({:suite, suite_name}) do
+    EventManager.report({:suite, suite_name})
   end
 
   def report({:scenario_result, result_tuple, scenario_or_outline}) do
