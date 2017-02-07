@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.1.0 (PENDING)
+
+### Enhancements
+- Better structure for outputting results. Thanks to @dzol/@findmypast [#83]
+
+### Bug fixes
+none
+
+### Backwards incompatible changes
+- The way custom output is configured has changed. Previously a config key `outputer` was expected to give a 
+module implementing the output protocol. This has now been replaced with an event driven model and the key `outputers`
+is now expected see #83 for details. This detail was not previously part of the official public interface.
+
 ## 3.0.0 (2016-12-18)
 
 ### Enhancements
