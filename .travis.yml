@@ -3,16 +3,26 @@ language: elixir
 otp_release:
   - 17.5
   - 18.0
+  - 19.2
 
 elixir:
-  - 1.0.5
-  
-  - 1.1.0
-  - 1.2.1
+  - 1.1
+  - 1.2
+  - 1.3
+  - 1.4
 
 matrix:
+  exclude:
+    - otp_release: 17.5
+      elixir: 1.2
+    - otp_release: 17.5
+      elixir: 1.3
+    - otp_release: 17.5
+      elixir: 1.4
+    - otp_release: 19.2
+      elixir: 1.1
   allow_failures:
-    - elixir: 1.0.5
+    - elixir: 1.4 # There are deprecation warnings that need to be fixed.
 
 script:
   - mix local.hex --force
