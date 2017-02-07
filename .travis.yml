@@ -15,6 +15,8 @@ matrix:
   exclude:
     - otp_release: 19.2
       elixir: 1.1
+  allow_failures:
+    - elixir: 1.4 # There are deprecation warnings that need to be fixed.
 
 script:
   - mix local.hex --force
