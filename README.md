@@ -5,6 +5,9 @@ WhiteBread
 [![Stories in Ready](https://badge.waffle.io/meadsteve/white-bread.png?label=ready&title=Ready)](https://waffle.io/meadsteve/white-bread)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/meadsteve/white-bread?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
+# Looking for maintainers
+This project is looking for people who'd like to volunteer to be an admin/maintainer: Discuss here: https://github.com/meadsteve/white-bread/issues/88
+
 # What?
 Story BDD tool written in and for Elixir. Based on [cucumber](https://cukes.info/).
 Parses Gherkin formatted feature files and executes them as acceptance tests.
