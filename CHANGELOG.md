@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.1.0 (PENDING)
+## 3.1.0 (2017-02-07)
 
 ### Enhancements
 - Better structure for outputting results. Thanks to @dzol/@findmypast [#83]
