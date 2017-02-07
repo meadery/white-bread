@@ -1,4 +1,4 @@
-defmodule WhiteBread.Outputter do
+defmodule WhiteBread.Outputer do
   alias WhiteBread.EventManager
 
   def report({:final_results, result_map}) do
