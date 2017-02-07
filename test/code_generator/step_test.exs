@@ -1,7 +1,7 @@
 defmodule WhiteBread.CodeGenerator.StepTest do
   use ExUnit.Case
   alias WhiteBread.CodeGenerator.Step, as: CodeGenerator
-  alias WhiteBread.Gherkin.Elements.Steps, as: Steps
+  alias Gherkin.Elements.Steps, as: Steps
 
   test "Returns a regular expression step" do
     step = %Steps.When{text: "I ask to be defined"}

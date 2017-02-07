@@ -1,8 +1,8 @@
 defmodule WhiteBread.Tags.FeatureFiltererTest do
   use ExUnit.Case
   import WhiteBread.Tags.FeatureFilterer, only: [get_for_tags: 2]
-  alias WhiteBread.Gherkin.Elements.Feature, as: Feature
-  alias WhiteBread.Gherkin.Elements.Scenario, as: Scenario
+  alias Gherkin.Elements.Feature, as: Feature
+  alias Gherkin.Elements.Scenario, as: Scenario
 
   test "Returns a feature if it has a matching tag" do
     feature = %Feature{tags: ["matching"]}

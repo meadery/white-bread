@@ -1,6 +1,6 @@
 defmodule WhiteBread.Roles.FeatureFiltererTest do
   use ExUnit.Case
-  alias WhiteBread.Gherkin.Elements.Feature
+  alias Gherkin.Elements.Feature
   alias WhiteBread.Roles.FeatureFilterer
 
 
