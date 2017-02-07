@@ -21,6 +21,8 @@ defmodule Mix.Tasks.WhiteBread.Run do
     System.at_exit fn _ ->
       if Enum.count(failures) > 0, do: exit({:shutdown, 1})
     end
+
+    WhiteBread.Application.stop()
   end
 
   defp run_suite(options, _arguments) do

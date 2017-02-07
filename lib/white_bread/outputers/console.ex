@@ -1,36 +1,52 @@
 defmodule WhiteBread.Outputers.Console do
-  defstruct pid: nil
+  use GenServer
   alias WhiteBread.Outputers.Style
 
+  # defstruct pid: nil
+
+  ## Client Interface
+
+  @doc false
   def start do
-    pid = spawn fn -> work end
-    %__MODULE__{pid: pid}
+    {:ok, outputer} = GenServer.start __MODULE__, []
+    outputer
   end
 
-  def stop(%__MODULE__{pid: pid}) do
-    send pid, {:stop, self}
-    receive do
-      :stop_complete -> :ok
-    after
-      2_000 -> :ok
-    end
+  @doc false
+  def stop(outputer) do
+    GenServer.cast(outputer, :stop)
   end
 
-  defp work do
-    continue = receive do
-      {:scenario_result, result, scenario} ->
-        output_scenario_result(result, scenario)
-      {:final_results, results} ->
-        output_final_results(results)
-      {:stop, caller} ->
-        send caller, :stop_complete
-        :stop
-      _ ->
-        IO.puts "UNKOWN MESSAGE RECIEVED"
-        :ok
-    end
-    unless continue == :stop, do: work
+  ## Interface to Generic Server Machinery
+
+  def init([]) do
+    Process.flag(:trap_exit, true)
+    {:ok, []}
   end
+
+  def handle_cast({:suite, name}, state) when is_binary(name) do
+    IO.puts("\n\nSuite: #{name}")
+    {:noreply, state}
+  end
+  def handle_cast({:scenario_result, result, scenario}, state) do
+    output_scenario_result(result, scenario)
+    {:noreply, state}
+  end
+  def handle_cast({:final_results, results}, state) do
+    output_final_results(results)
+    {:noreply, state}
+  end
+  def handle_cast(:stop, state) do
+    {:stop, :normal, state}
+  end
+  def handle_cast(x, state) do
+    require Logger
+
+    Logger.warn "cast with #{inspect x}."
+    {:noreply, state}
+  end
+
+  ## Internal
 
   defp output_scenario_result({result, _result_info}, scenario) do
     IO.puts Style.decide_color result, "#{scenario.name} ---> #{result}"

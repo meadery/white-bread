@@ -6,7 +6,18 @@ defmodule WhiteBread.Outputers.HTML.Formatter do
   end
 
   def body(content) when is_binary(content) do
-    "<body>#{paragraph "White Bread scenario results:"}#{content}</body>"
+    "<body>#{head "White Bread Results"}#{content}</body>"
+  end
+
+  defp head(content) do
+    "<h1>#{content}</h1>"
+  end
+
+  def section(_, []) do
+    ""
+  end
+  def section(title, results) when is_binary(title) do
+    "#{paragraph("Suite: " <> bold(title))}#{list(results)}"
   end
 
   def list([]), do: "Nothing to report."
@@ -23,10 +34,23 @@ defmodule WhiteBread.Outputers.HTML.Formatter do
     "<li>#{content}</li>"
   end
 
-  defp paragraph(content) when is_binary(content),
-    do: "<p>#{content}</p>"
+  defp paragraph(content) when is_binary(content) do
+    "<p>#{content}</p>"
+  end
 
-  def success(text) when is_binary(text), do: text
+  defp bold(x) do
+      "<b>#{x}</b>"
+  end
 
-  def failure(text) when is_binary(text), do: "<font color=\"red\">FAILURE:</font> #{text}"
+  def success(text) when is_binary(text) do
+    test(text, "green", "OK")
+  end
+
+  def failure(text) when is_binary(text) do
+    test(text, "red", "FAILURE")
+  end
+
+  defp test(text, color, indicator) do
+    "<font color=\"#{color}\">#{indicator}:</font> #{text}"
+  end
 end

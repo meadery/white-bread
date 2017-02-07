@@ -7,6 +7,8 @@ defmodule WhiteBread.CommandLine.SuiteRun do
     config_path: config_path,
     contexts: context_path)
   do
+    add_outputers()
+
     ContextLoader.load_context_files(context_path)
 
     config_path
@@ -16,7 +18,7 @@ defmodule WhiteBread.CommandLine.SuiteRun do
   end
 
   defp run_suite(%Suite{} = suite, context_path: context_path) do
-    IO.puts "\n\nSuite: #{suite.name}"
+    WhiteBread.EventManager.report({:suite, suite.name})
     ContextLoader.ensure_context(suite.context, context_path)
     WhiteBread.run(
       suite.context,
@@ -60,4 +62,13 @@ defmodule WhiteBread.CommandLine.SuiteRun do
     |> Stream.filter(fn suite -> suite.name == requested_suite end)
   end
 
+  defp add_outputers do
+    true = Enum.all?(outputers(), &Code.ensure_loaded?/1)
+    for o <- outputers() do
+      WhiteBread.EventManager.add_handler(o, [])
+    end
+  end
+  defp outputers do
+    Keyword.keys(Application.fetch_env!(:white_bread, :outputers))
+  end
 end
