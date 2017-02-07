@@ -47,7 +47,7 @@ defmodule WhiteBread do
   end
 
   defp parse_task(feature_text) do
-    Task.async(fn -> WhiteBread.Gherkin.Parser.parse_feature(feature_text) end)
+    Task.async(fn -> Gherkin.Parser.parse_feature(feature_text) end)
   end
 
   defp filter_features(features, tags: tags, roles: roles) do

@@ -1,5 +1,5 @@
 defmodule WhiteBread.Roles.FeatureFilterer do
-  alias WhiteBread.Gherkin.Elements.Feature
+  alias Gherkin.Elements.Feature
 
   def get_for_roles(features, roles)
   when is_list(features) and is_list(roles)

@@ -1,8 +1,8 @@
 defmodule WhiteBread.Outputers.HTML do
   use GenServer
-  alias WhiteBread.Gherkin.Elements.Scenario
-  alias WhiteBread.Gherkin.Elements.ScenarioOutline
-  alias WhiteBread.Gherkin.Elements.Feature
+  alias Gherkin.Elements.Scenario
+  alias Gherkin.Elements.ScenarioOutline
+  alias Gherkin.Elements.Feature
   alias WhiteBread.Outputers.HTML.Formatter
 
   @moduledoc """

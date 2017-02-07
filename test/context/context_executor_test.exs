@@ -3,7 +3,7 @@ defmodule WhiteBread.Context.ContextExecutorTest do
 
   alias WhiteBread.Context.StepExecutor
   alias WhiteBread.Context.StepFunction
-  alias WhiteBread.Gherkin.Elements.Steps
+  alias Gherkin.Elements.Steps
 
   test "Blocks provided with a simple string return ok with the starting state" do
     step = %Steps.Given{text: "I'm running a simple test"}

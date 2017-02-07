@@ -1,6 +1,6 @@
 defmodule WhiteBread.ContextBehaviour do
-  alias WhiteBread.Gherkin.Elements.Feature
-  alias WhiteBread.Gherkin.Elements.Scenario
+  alias Gherkin.Elements.Feature
+  alias Gherkin.Elements.Scenario
 
   @callback get_steps() :: [WhiteBread.Context.StepFunction.t]
 

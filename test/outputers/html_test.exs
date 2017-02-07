@@ -1,7 +1,7 @@
 defmodule WhiteBread.Outputers.HTMLTests do
 	use ExUnit.Case
   alias WhiteBread.Outputers.HTML
-  alias WhiteBread.Gherkin.Elements.Scenario
+  alias Gherkin.Elements.Scenario
 
   @console WhiteBread.Outputers.Console
 
