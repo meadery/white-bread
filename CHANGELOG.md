@@ -4,6 +4,7 @@
 
 ### Enhancements
 - Better structure for outputting results. Thanks to @dzol/@findmypast [#83]
+- Use external Gherkin library. Shared with the https://github.com/cabbage-ex project.
 
 ### Bug fixes
 none
