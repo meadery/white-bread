@@ -1,4 +1,4 @@
-defmodule WhiteBread.Context do
+defmodule WhiteBread.Context.FAIL do
 
   alias WhiteBread.Context.StepMacroHelpers
   alias WhiteBread.Context.Setup
