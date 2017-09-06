@@ -137,8 +137,6 @@ defmodule WhiteBread.Example.DefaultContext.LoafContext do
 end
 
 defmodule WhiteBread.Example.DefaultContext.TableStuff do
-  import WhiteBread.Helpers
-
   def load_table(_state, %{table_data: table_data}) do
     [%{'Person': first_god}, %{'Person': second_god} | _extra_rows] = table_data
     {:ok, {first_god, second_god}}
