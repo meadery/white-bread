@@ -56,6 +56,7 @@ defmodule WhiteBread.Mixfile do
   defp deps do
     [
       {:gherkin, "~> 1.4"},
+      {:poison, "~> 3.1", optional: true},
 
       {:credo, "~> 0.8", only: :dev},
       {:earmark, "~> 1.2", only: :dev},
