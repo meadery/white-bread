@@ -23,7 +23,6 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
 
   defp build_each_example(outline) do
     outline.examples
-      |> WhiteBread.Tables.index_table_by_first_row
       |> Enum.map(&create_steps(&1, outline.steps))
   end
 
