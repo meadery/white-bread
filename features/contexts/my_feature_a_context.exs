@@ -4,5 +4,4 @@ defmodule WhiteBread.TestContextPerFeature.MyFeatureAContext do
   given_ ~r/^(?<anything>.+)$/, fn state, %{anything: _anything} ->
     {:ok, state}
   end
-  
 end

@@ -88,9 +88,9 @@ defmodule WhiteBread.Context.StepFunction do
       step.text
     )
     extra = Map.new
-      |> Dict.merge(key_matches)
-      |> Dict.put(:table_data, step.table_data)
-      |> Dict.put(:doc_string, step.doc_string)
+      |> Map.merge(key_matches)
+      |> Map.put(:table_data, step.table_data)
+      |> Map.put(:doc_string, step.doc_string)
     apply(func, [state, extra])
   end
 

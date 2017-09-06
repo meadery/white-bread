@@ -14,6 +14,7 @@ defmodule WhiteBread.Example.PlainContext do
 
       Step.given_("I had a voice", fn ->
         # Arity zero funcs don't have to return anything
+        nil
       end),
 
       Step.then_("I could love you", fn "have a heart" ->

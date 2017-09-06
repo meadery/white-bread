@@ -15,8 +15,8 @@ defmodule WhiteBread.Mixfile do
        ],
      version: "3.1.0",
      elixir: "~> 1.1",
-     aliases: aliases,
-     deps: deps]
+     aliases: aliases(),
+     deps: deps()]
   end
 
   # Configuration for the OTP application
@@ -31,7 +31,7 @@ defmodule WhiteBread.Mixfile do
   end
 
   defp aliases do
-    [ci_tests: ci_mix_tests]
+    [ci_tests: ci_mix_tests()]
   end
 
   defp ci_mix_tests do

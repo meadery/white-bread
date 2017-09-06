@@ -8,11 +8,11 @@ defmodule WhiteBread.TestContextPerFeature.MyOtherFeatureBContext do
   end
 
   scenario_starting_state fn feature_state ->
-    feature_state |> Dict.put(:starting_state_loaded, :yes)
+    feature_state |> Map.put(:starting_state_loaded, :yes)
   end
 
-  scenario_finalize fn _status, _state ->
-    # Do some finalization actions
+  scenario_finalize fn _status, state ->
+    state
   end
 
 end

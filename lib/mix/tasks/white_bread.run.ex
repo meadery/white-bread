@@ -40,16 +40,16 @@ defmodule Mix.Tasks.WhiteBread.Run do
   end
 
   defp config_path(options) do
-    if Dict.has_key?(options, @suite_config_option) do
-      Dict.get(options, @suite_config_option)
+    if Keyword.has_key?(options, @suite_config_option) do
+      Keyword.get(options, @suite_config_option)
     else
       @default_suite_config
     end
   end
 
   defp contexts_path(options) do
-    if Dict.has_key?(options, @context_path_option) do
-      Dict.get(options, @context_path_option)
+    if Keyword.has_key?(options, @context_path_option) do
+      Keyword.get(options, @context_path_option)
     else
       @context_path
     end

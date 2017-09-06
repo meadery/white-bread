@@ -4,8 +4,6 @@ defmodule WhiteBread.EventManager do
   ## An Event Manager inspired by that in ExUnit but adapted for
   ## WhiteBread.
 
-  @timeout 30_000
-
   def start_link() do
     import Supervisor.Spec
     child = worker(GenServer, [], restart: :temporary)
