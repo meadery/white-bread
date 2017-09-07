@@ -12,10 +12,10 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunnerTest do
       %Steps.When{text: "step <number_two>"}
     ]
     examples = [
-      ["number_one", "number_two"],
-      ["one",        "one"],
-      ["one",        "two"]
+      %{number_one: "one", number_two: "one"},
+      %{number_one: "one", number_two: "two"},
     ]
+
     scenario_outline = %ScenarioOutline{name: "test scenario", steps: steps, examples: examples}
 
     expected_two_successes = [
@@ -31,10 +31,10 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunnerTest do
       %Steps.When{text: "step <number_two>"}
     ]
     examples = [
-      ["number_one", "number_two"],
-      ["one",        "two"],
-      ["two",        "one"]
+      %{number_one: "one", number_two: "two"},
+      %{number_one: "two", number_two: "one"},
     ]
+
     scenario_outline = %ScenarioOutline{name: "test scenario", steps: steps, examples: examples}
 
     [{:ok, "test scenario"}, {expected_result, _failure_data}

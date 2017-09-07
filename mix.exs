@@ -14,7 +14,7 @@ defmodule WhiteBread.Mixfile do
        links: %{"GitHub" => "https://github.com/meadsteve/white-bread"},
        ],
      version: "3.1.0",
-     elixir: "~> 1.1",
+     elixir: "~> 1.2",
      aliases: aliases(),
      deps: deps()]
   end
@@ -55,7 +55,7 @@ defmodule WhiteBread.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:gherkin, "< 1.2.0"},
+      {:gherkin, "~> 1.4"},
 
       {:credo, "~> 0.8", only: :dev},
       {:earmark, "~> 1.2", only: :dev},
