@@ -37,7 +37,7 @@ defmodule WhiteBread do
   end
 
   defp read_in_feature_files(file_paths) do
-    file_paths |> Stream.map(&File.read!/1)
+    file_paths |> Stream.map(&({&1, File.read!(&1)}))
   end
 
   defp parse_features(feature_texts) do
@@ -46,8 +46,8 @@ defmodule WhiteBread do
     |> Enum.map(&Task.await/1)
   end
 
-  defp parse_task(feature_text) do
-    Task.async(fn -> Gherkin.Parser.parse_feature(feature_text) end)
+  defp parse_task({file_name, feature_text}) do
+    Task.async(fn -> Gherkin.Parser.parse_feature(feature_text, file_name) end)
   end
 
   defp filter_features(features, tags: tags, roles: roles) do
