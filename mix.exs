@@ -15,8 +15,8 @@ defmodule WhiteBread.Mixfile do
        ],
      version: "3.1.0",
      elixir: "~> 1.1",
-     aliases: aliases,
-     deps: deps]
+     aliases: aliases(),
+     deps: deps()]
   end
 
   # Configuration for the OTP application
@@ -31,7 +31,7 @@ defmodule WhiteBread.Mixfile do
   end
 
   defp aliases do
-    [ci_tests: ci_mix_tests]
+    [ci_tests: ci_mix_tests()]
   end
 
   defp ci_mix_tests do
@@ -55,11 +55,11 @@ defmodule WhiteBread.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:gherkin, "~> 1.0"},
+      {:gherkin, "< 1.2.0"},
 
-      {:credo, "~> 0.5", only: :dev},
-      {:earmark, "~> 1.0.1", only: :dev},
-      {:ex_doc, "~> 0.8", only: :dev}
+      {:credo, "~> 0.8", only: :dev},
+      {:earmark, "~> 1.2", only: :dev},
+      {:ex_doc, "~> 0.16", only: :dev}
     ]
   end
 

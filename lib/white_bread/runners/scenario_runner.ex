@@ -6,7 +6,7 @@ defmodule WhiteBread.Runners.ScenarioRunner do
   alias WhiteBread.Runners.StepsRunner
 
   def run(scenario, context, %Setup{} = setup \\ Setup.new) do
-    start_trapping_exits
+    start_trapping_exits()
 
     starting_state = setup.starting_state
       |> apply_scenario_starting_state(context)

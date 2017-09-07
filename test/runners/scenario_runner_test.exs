@@ -218,7 +218,7 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
   use WhiteBread.Context
 
   scenario_starting_state fn global_state ->
-    %{starting_state: :yes, starting_state_run_count: (global_state |> Dict.get(:starting_state_run_count, 0)) + 1}
+    %{starting_state: :yes, starting_state_run_count: (global_state |> Map.get(:starting_state_run_count, 0)) + 1}
   end
 
   scenario_finalize fn

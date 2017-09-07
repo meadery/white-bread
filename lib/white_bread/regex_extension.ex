@@ -7,19 +7,19 @@ defmodule WhiteBread.RegexExtension do
   ## Examples
 
       iex> atom_keyed_named_captures(~r/hello (?<world>[a-z]+)/, "hello earth")
-      [world: "earth"]
+      %{world: "earth"}
 
       iex> atom_keyed_named_captures(~r/(?<a>[a-z]+) (?<b>[a-z]+)/, "hello earth")
-      [a: "hello", b: "earth"]
+      %{a: "hello", b: "earth"}
 
       iex> atom_keyed_named_captures(~r/.+/, "hello earth")
-      []
+      %{}
 
   """
   def atom_keyed_named_captures(regex, string) do
-    captures = Regex.named_captures(regex, string)
-    captures
-    |> Dict.keys
-    |> Enum.map(fn(key) -> {String.to_atom(key), Dict.get(captures, key)} end)
+    regex
+      |> Regex.named_captures(string)
+      |> Enum.map(fn({key, value}) -> {String.to_atom(key), value} end)
+      |> Enum.into(%{})
   end
 end

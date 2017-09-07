@@ -30,7 +30,7 @@ defmodule WhiteBread.Tables do
   end
 
   defp build_indexed_row({value, index}, indexed_row) do
-    indexed_row |> Dict.put(index, value)
+    indexed_row |> Map.put(index, value)
   end
 
 end

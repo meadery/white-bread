@@ -10,12 +10,13 @@ defmodule WhiteBread.Example.OutlineContext do
 
   scenario_starting_state fn feature_state ->
     feature_state
-    |> Dict.put(:starting_state_loaded, :yes)
-    |> Dict.put(:additional_state, [])
+    |> Map.put(:starting_state_loaded, :yes)
+    |> Map.put(:additional_state, [])
   end
 
-  scenario_finalize fn _state ->
+  scenario_finalize fn state ->
     # Do some finalization actions
+    state
   end
 
   given_ ~r/^a scenario outline$/, fn state ->

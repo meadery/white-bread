@@ -66,9 +66,9 @@ defmodule WhiteBread.CodeGenerator.Step do
     case Regex.split(@quoted_string_regex, string, [parts: 2]) do
         [before, remaining] ->
           %{}
-            |> Dict.put(:template, update_template(template, before, argument))
-            |> Dict.put(:groups, groups ++ [argument])
-            |> Dict.put(:unproccessed_string, remaining)
+            |> Map.put(:template, update_template(template, before, argument))
+            |> Map.put(:groups, groups ++ [argument])
+            |> Map.put(:unproccessed_string, remaining)
             |> named_groups_for_string
         [string_end] ->
           %{template: template <> string_end, groups: groups}
