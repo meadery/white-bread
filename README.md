@@ -57,13 +57,13 @@ This should prompt you with a few messages like:
 
 ```bash
 loading config from features/config.exs
-Config file not found at features/config.exs. 
-Create one [Y/n]? 
+Config file not found at features/config.exs.
+Create one [Y/n]?
 y
 
 Suite: All
 Context module not found Elixir.WhiteBreadContext (features/contexts/white_bread_context.exs)
-Create one [Y/n]? 
+Create one [Y/n]?
 y
 
 ```
@@ -143,7 +143,7 @@ end
 
 # Next steps - Additional Suites and subcontexts
 
-After following the getting started steps you may find your default context starts to get a bit large. 
+After following the getting started steps you may find your default context starts to get a bit large.
 There are two ways this can be broken apart:
 
 1. By composing your default suite out of subcontexts using the `import_steps_from` macro.
@@ -170,7 +170,7 @@ end
 
 Defining suites allows you to use a different starting context for groups of features. This will
 often be along the lines of a bounded context.
-You can also run one feature multiple times under different contexts. This is especially useful 
+You can also run one feature multiple times under different contexts. This is especially useful
 if you have a few different ways of accessing your software (web, rest api, command line etc.).
 
 Suite configuration is loaded from ```features/config.exs```. An example with multiple suites is:
@@ -193,7 +193,7 @@ defmodule WhiteBread.Example.Config do
         tags:          ["songs"]
 end
 ```
-Each suite gets run loading all the features in the given paths and running them using the specified context. 
+Each suite gets run loading all the features in the given paths and running them using the specified context.
 Additionally the scenarios can be filtered to specific tags.
 
 ## Suites: Context per feature
@@ -276,10 +276,13 @@ available property: tags, name, description etc.
 
 For HTML reports configure WhiteBread (e.g. in `config.exs`) with the HTML outputer and optionally a file name for the document:
 
+JSON reports are also available.
+
 ```Elixir
 config :white_bread,
   outputers: [{WhiteBread.Outputers.Console, []},
-              {WhiteBread.Outputers.HTML, path: "~/build/whitebread_report.html"}
+              {WhiteBread.Outputers.HTML, path: "~/build/whitebread_report.html"},
+              {WhiteBread.Outputers.JSON, path: "~/build/whitebread_report.json"}
              ]
 ```
 
