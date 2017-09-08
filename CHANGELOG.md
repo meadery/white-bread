@@ -1,5 +1,17 @@
 # Changelog
 
+## 4.0.0 (2017-09-08)
+
+### Enhancements
+- Features now have the filename available in the struct. Thanks to @leifg [#90]
+- Elixir 1.5 formally tested. Thanks to @leifg [#92]
+
+### Bug fixes
+- Deprecation warnings removed.
+
+### Backwards incompatible changes
+- Whitebread now requires elixir >= 1.2. Anyone already running this or  higher will be unaffected.
+
 ## 3.1.0 (2017-02-07)
 
 ### Enhancements
