@@ -54,12 +54,25 @@ defmodule WhiteBread.Outputers.JSON do
     }
   end
 
-  defp result_for_step(step, {:failed, {error, failed_step, _error2}}) do
+  defp result_for_step(step, {:failed, {error, failed_step, error2}}) do
     cond do
       step.line < failed_step.line -> %{status: "passed", duration: 1}
-      step.line == failed_step.line -> %{status: "failed", duration: 1, error_message: error.message}
       step.line > failed_step.line -> %{status: "skipped", duration: 1}
+      step.line == failed_step.line ->
+        %{
+          status: "failed",
+          duration: 1,
+          error_message: format_error_message(error, failed_step, error2)
+        }
     end
+  end
+
+  defp format_error_message(error, _failed_step, {error_object, stacktrace}) when is_atom(error) do
+    Exception.format(:error, error_object, stacktrace)
+  end
+
+  defp format_error_message(_error, _failed_step, assertion_error) do
+    assertion_error.message
   end
 
   defp find_scenario_result(scenario, feature_result) do
