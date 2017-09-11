@@ -49,7 +49,6 @@ defmodule WhiteBread.Example.CoffeeContext do
     assert served_coffees == 0
     {:ok, :whatever}
   end
-
 end
 
 defmodule WhiteBread.Example.SongContext do
