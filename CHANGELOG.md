@@ -1,5 +1,16 @@
 # Changelog
 
+## 4.1.0 (2017-09-15)
+
+### Enhancements
+- Add json formatter for output. Thanks to @leifg [#93]
+
+### Bug fixes
+None
+
+### Backwards incompatible changes
+None
+
 ## 4.0.0 (2017-09-08)
 
 ### Enhancements
