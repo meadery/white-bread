@@ -1,9 +1,9 @@
 language: elixir
 
 otp_release:
-  - 18.0
-  - 19.3
-  - 20.0
+  - 18
+  - 19
+  - 20
 
 elixir:
   - 1.2
@@ -14,15 +14,12 @@ elixir:
 
 matrix:
   exclude:
-    - otp_release: 17.5
+    - otp_release: 18
+      elixir: 1.6
+
+    - otp_release: 20
       elixir: 1.2
-    - otp_release: 17.5
-      elixir: 1.3
-    - otp_release: 17.5
-      elixir: 1.4
-    - otp_release: 20.0
-      elixir: 1.2
-    - otp_release: 20.0
+    - otp_release: 20
       elixir: 1.3
 
 install:
