@@ -1,5 +1,4 @@
 defmodule WhiteBread.CodeGenerator.Context do
-
   @empty_context """
   defmodule {{NAME}} do
     use WhiteBread.Context
@@ -12,8 +11,7 @@ defmodule WhiteBread.CodeGenerator.Context do
 
   def context_as_string(context) do
     context
-    |> Atom.to_string
+    |> Atom.to_string()
     |> String.replace("Elixir.", "")
   end
-
 end

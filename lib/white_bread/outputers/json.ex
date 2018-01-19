@@ -13,7 +13,7 @@ defmodule WhiteBread.Outputers.JSON do
 
   @doc false
   def start do
-    {:ok, outputer} = GenServer.start __MODULE__, []
+    {:ok, outputer} = GenServer.start(__MODULE__, [])
     outputer
   end
 
@@ -37,6 +37,7 @@ defmodule WhiteBread.Outputers.JSON do
   def handle_cast(:stop, state) do
     {:stop, :normal, state}
   end
+
   def handle_cast(_x, state) do
     {:noreply, state}
   end
@@ -50,14 +51,18 @@ defmodule WhiteBread.Outputers.JSON do
   defp result_for_step(_step, {:ok, _name}) do
     %{
       status: "passed",
-      duration: 1,
+      duration: 1
     }
   end
 
   defp result_for_step(step, {:failed, {error, failed_step, error2}}) do
     cond do
-      step.line < failed_step.line -> %{status: "passed", duration: 1}
-      step.line > failed_step.line -> %{status: "skipped", duration: 1}
+      step.line < failed_step.line ->
+        %{status: "passed", duration: 1}
+
+      step.line > failed_step.line ->
+        %{status: "skipped", duration: 1}
+
       step.line == failed_step.line ->
         %{
           status: "failed",
@@ -77,7 +82,8 @@ defmodule WhiteBread.Outputers.JSON do
 
   defp find_scenario_result(scenario, feature_result) do
     all_results = feature_result[:successes] ++ feature_result[:failures]
-    Enum.find(all_results, fn({inner_scenario, _details}) ->
+
+    Enum.find(all_results, fn {inner_scenario, _details} ->
       inner_scenario.line == scenario.line && inner_scenario.name == scenario.name
     end)
   end
@@ -90,25 +96,26 @@ defmodule WhiteBread.Outputers.JSON do
 
   defp normalize_name(name) do
     name
-      |> String.downcase()
-      |> String.replace(~r/\s/, "-")
+    |> String.downcase()
+    |> String.replace(~r/\s/, "-")
   end
 
   defp document_path do
     case Keyword.fetch!(outputers(), __MODULE__) do
       [path: "/"] ->
         raise WhiteBread.Outputers.JSON.PathError
+
       [path: x] when is_binary(x) ->
-        Path.expand x
+        Path.expand(x)
     end
   end
 
   defp write(content, path) do
-    File.mkdir_p!(parent path) && File.write!(path, content)
+    File.mkdir_p!(parent(path)) && File.write!(path, content)
   end
 
   defp parent(path) do
-    Path.join(drop(Path.split path))
+    Path.join(drop(Path.split(path)))
   end
 
   defp drop(x) when is_list(x), do: x -- [List.last(x)]
@@ -134,24 +141,26 @@ defmodule WhiteBread.Outputers.JSON do
       type: "scenario",
       line: feature.line,
       description: feature.description,
-      elements: Enum.map(feature.scenarios, &(map_scenario(&1, feature, result))),
-      tags: feature.tags |> Enum.map(fn(tag) -> %{name: tag, line: feature.line - 1} end),
+      elements: Enum.map(feature.scenarios, &map_scenario(&1, feature, result)),
+      tags: feature.tags |> Enum.map(fn tag -> %{name: tag, line: feature.line - 1} end)
     }
   end
 
   defp map_scenario(scenario, feature, feature_result) do
     scenario_result = find_scenario_result(scenario, feature_result)
+
     %{
       keyword: "Scenario",
       id: [feature.name, scenario.name] |> Enum.map(&normalize_name/1) |> Enum.join(";"),
       name: scenario.name,
-      tags: scenario.tags |> Enum.map(fn(tag) -> %{name: tag, line: scenario.line - 1} end),
-      steps: Enum.map(scenario.steps, &(map_step(&1, scenario_result))),
+      tags: scenario.tags |> Enum.map(fn tag -> %{name: tag, line: scenario.line - 1} end),
+      steps: Enum.map(scenario.steps, &map_step(&1, scenario_result))
     }
   end
 
   defp map_step(step, scenario_result) do
     {_scenario, scenario_result_details} = scenario_result
+
     %{
       keyword: step_keyword(step),
       name: step.text,
@@ -162,7 +171,7 @@ defmodule WhiteBread.Outputers.JSON do
         line: step.line + 1
       },
       match: %{},
-      result: result_for_step(step, scenario_result_details),
+      result: result_for_step(step, scenario_result_details)
     }
   end
 end

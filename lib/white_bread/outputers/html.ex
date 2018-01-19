@@ -17,7 +17,7 @@ defmodule WhiteBread.Outputers.HTML do
 
   @doc false
   def start do
-    {:ok, outputer} = GenServer.start __MODULE__, []
+    {:ok, outputer} = GenServer.start(__MODULE__, [])
     outputer
   end
 
@@ -36,29 +36,38 @@ defmodule WhiteBread.Outputers.HTML do
   def handle_cast({:suite, name}, state) when is_binary(name) do
     {:noreply, %{state | suite: name, tree: transplant(state, name), data: []}}
   end
-  def handle_cast({:scenario_result, {result, _}, %Scenario{name: name}}, state) when :ok == result or :failed == result do
-    {:noreply, %{state | data: [{result, name}|state.data]}}
+
+  def handle_cast({:scenario_result, {result, _}, %Scenario{name: name}}, state)
+      when :ok == result or :failed == result do
+    {:noreply, %{state | data: [{result, name} | state.data]}}
   end
+
   def handle_cast({:scenario_result, {_, _}, %ScenarioOutline{}}, state) do
     ## This clause here for more sophisticated report in the future.
     {:noreply, state}
   end
-  def handle_cast({:final_results, %{successes: [{%Feature{name: _}, _}|_], failures: _}}, state) do
+
+  def handle_cast(
+        {:final_results, %{successes: [{%Feature{name: _}, _} | _], failures: _}},
+        state
+      ) do
     ## This clause here for more sophisticated report in the future.
     {:noreply, state}
   end
+
   def handle_cast(:stop, state) do
     {:stop, :normal, state}
   end
+
   def handle_cast(x, state) do
     require Logger
 
-    Logger.warn "cast with #{inspect x}."
+    Logger.warn("cast with #{inspect(x)}.")
     {:noreply, state}
   end
 
   def terminate(_, state = %__MODULE__{path: path}) do
-    report_ transplant(state), path
+    report_(transplant(state), path)
   end
 
   ## Internal
@@ -67,8 +76,9 @@ defmodule WhiteBread.Outputers.HTML do
     case Keyword.fetch!(outputers(), __MODULE__) do
       [path: "/"] ->
         raise WhiteBread.Outputers.HTML.PathError
+
       [path: x] when is_binary(x) ->
-        Path.expand x
+        Path.expand(x)
     end
   end
 
@@ -80,15 +90,15 @@ defmodule WhiteBread.Outputers.HTML do
     Map.put(state.tree, name, state.data)
   end
 
-  defp format({:ok,     name}), do: Formatter.success(name)
+  defp format({:ok, name}), do: Formatter.success(name)
   defp format({:failed, name}), do: Formatter.failure(name)
 
   defp write(content, path) do
-    File.mkdir_p!(parent path) && File.write!(path, content)
+    File.mkdir_p!(parent(path)) && File.write!(path, content)
   end
 
   defp parent(path) do
-    Path.join(drop(Path.split path))
+    Path.join(drop(Path.split(path)))
   end
 
   defp drop(x) when is_list(x), do: x -- [List.last(x)]
@@ -103,7 +113,7 @@ defmodule WhiteBread.Outputers.HTML do
     content
     |> elements
     |> sections
-    |> IO.iodata_to_binary
+    |> IO.iodata_to_binary()
     |> body
     |> document
     |> write(path)

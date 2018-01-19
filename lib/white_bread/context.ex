@@ -1,5 +1,4 @@
 defmodule WhiteBread.Context do
-
   alias WhiteBread.Context.StepMacroHelpers
   alias WhiteBread.Context.Setup
 
@@ -30,11 +29,10 @@ defmodule WhiteBread.Context do
 
   @doc false
   defmacro __before_compile__(_env) do
-    Setup.before
+    Setup.before()
   end
 
   for word <- @step_keywords do
-
     defmacro unquote(word)(step_text, do: block) do
       StepMacroHelpers.add_block_to_steps(step_text, block)
     end
@@ -42,7 +40,6 @@ defmodule WhiteBread.Context do
     defmacro unquote(word)(step_text, func_def) do
       StepMacroHelpers.add_func_to_steps(step_text, func_def)
     end
-
   end
 
   defmacro feature_starting_state(function) do
@@ -68,12 +65,14 @@ defmodule WhiteBread.Context do
       @scenario_finalize_defined true
       def scenario_finalize(status \\ nil, state) do
         cond do
-          is_function(unquote(function), 2)
-            -> unquote(function).(status, state)
-          is_function(unquote(function), 1)
-            -> unquote(function).(state)
-          is_function(unquote(function), 0)
-            -> unquote(function).()
+          is_function(unquote(function), 2) ->
+            unquote(function).(status, state)
+
+          is_function(unquote(function), 1) ->
+            unquote(function).(state)
+
+          is_function(unquote(function), 0) ->
+            unquote(function).()
         end
       end
     end
@@ -84,12 +83,14 @@ defmodule WhiteBread.Context do
       @feature_finalize_defined true
       def feature_finalize(status \\ nil, state) do
         cond do
-          is_function(unquote(function), 2)
-            -> unquote(function).(status, state)
-          is_function(unquote(function), 1)
-            -> unquote(function).(state)
-          is_function(unquote(function), 0)
-            -> unquote(function).()
+          is_function(unquote(function), 2) ->
+            unquote(function).(status, state)
+
+          is_function(unquote(function), 1) ->
+            unquote(function).(state)
+
+          is_function(unquote(function), 0) ->
+            unquote(function).()
         end
       end
     end
@@ -109,6 +110,4 @@ defmodule WhiteBread.Context do
       @sub_context_modules [unquote(context_module) | @sub_context_modules]
     end
   end
-
-
 end

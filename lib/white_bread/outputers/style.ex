@@ -1,10 +1,8 @@
 defmodule WhiteBread.Outputers.Style do
-
-  @style_atoms [{:failed, :red}, {:ok, :green},
-  {:exception, :yellow}, {:info, :blue}]
+  @style_atoms [{:failed, :red}, {:ok, :green}, {:exception, :yellow}, {:info, :blue}]
 
   def decide_color(style, message) when is_atom(style) do
-    if(Keyword.has_key? @style_atoms, style) do
+    if Keyword.has_key?(@style_atoms, style) do
       color(@style_atoms[style], message)
     else
       message
@@ -28,9 +26,11 @@ defmodule WhiteBread.Outputers.Style do
   end
 
   def color(color, string_msg) do
-    [IO.ANSI.format_fragment([color], IO.ANSI.enabled?),
-    string_msg,
-    IO.ANSI.format_fragment(:reset, IO.ANSI.enabled?)]
-    |> IO.iodata_to_binary
+    [
+      IO.ANSI.format_fragment([color], IO.ANSI.enabled?()),
+      string_msg,
+      IO.ANSI.format_fragment(:reset, IO.ANSI.enabled?())
+    ]
+    |> IO.iodata_to_binary()
   end
 end

@@ -8,7 +8,7 @@ defmodule WhiteBread.Outputers.Console do
 
   @doc false
   def start do
-    {:ok, outputer} = GenServer.start __MODULE__, []
+    {:ok, outputer} = GenServer.start(__MODULE__, [])
     outputer
   end
 
@@ -28,36 +28,40 @@ defmodule WhiteBread.Outputers.Console do
     IO.puts("\n\nSuite: #{name}")
     {:noreply, state}
   end
+
   def handle_cast({:scenario_result, result, scenario}, state) do
     output_scenario_result(result, scenario)
     {:noreply, state}
   end
+
   def handle_cast({:final_results, results}, state) do
     output_final_results(results)
     {:noreply, state}
   end
+
   def handle_cast(:stop, state) do
     {:stop, :normal, state}
   end
+
   def handle_cast(x, state) do
     require Logger
 
-    Logger.warn "cast with #{inspect x}."
+    Logger.warn("cast with #{inspect(x)}.")
     {:noreply, state}
   end
 
   ## Internal
 
   defp output_scenario_result({result, _result_info}, scenario) do
-    IO.puts Style.decide_color result, "#{scenario.name} ---> #{result}"
+    IO.puts(Style.decide_color(result, "#{scenario.name} ---> #{result}"))
     :ok
   end
 
   defp output_final_results(results) do
     results
-      |> WhiteBread.FinalResultPrinter.text
-      |> IO.puts
+    |> WhiteBread.FinalResultPrinter.text()
+    |> IO.puts()
+
     :ok
   end
-
 end
