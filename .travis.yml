@@ -33,7 +33,7 @@ jobs:
     - stage: validate_formatting
       script: mix format --check-formatted
       elixir: 1.6
-      otp: 20.2
+      otp_release: 20.2
 
 notifications:
   webhooks:
