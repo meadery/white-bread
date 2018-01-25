@@ -1,5 +1,4 @@
 defmodule WhiteBread.CodeGenerator.SuiteConfig do
-
   @empty_config """
   defmodule WhiteBreadConfig do
     use WhiteBread.SuiteConfiguration
@@ -13,6 +12,4 @@ defmodule WhiteBread.CodeGenerator.SuiteConfig do
   def empty_config do
     @empty_config
   end
-
-
 end

@@ -12,15 +12,17 @@ defmodule Mix.Tasks.WhiteBread.Run do
   @context_path "features/contexts/"
 
   def run(argv) do
-    {options, arguments, _} = argv
-    |> OptionParser.parse
-    |> check_for_deprecations
+    {options, arguments, _} =
+      argv
+      |> OptionParser.parse()
+      |> check_for_deprecations
 
     start_app(argv)
     failures = run_suite(options, arguments)
-    System.at_exit fn _ ->
+
+    System.at_exit(fn _ ->
       if Enum.count(failures) > 0, do: exit({:shutdown, 1})
-    end
+    end)
 
     WhiteBread.Application.stop()
   end
@@ -35,7 +37,7 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
   defp start_app(argv) do
     unless "--no-start" in argv do
-      Mix.Task.run "app.start", argv
+      Mix.Task.run("app.start", argv)
     end
   end
 
@@ -57,17 +59,22 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
   defp check_for_deprecations({options, _arguments, _} = input) do
     if Keyword.has_key?(options, :context) do
-      error_exit "Specifying a context on the command line is no longer supported. Use suite configuration instead."
+      error_exit(
+        "Specifying a context on the command line is no longer supported. Use suite configuration instead."
+      )
     end
+
     if Keyword.has_key?(options, :tags) do
-      error_exit "Specifying tags on the command line is not yet supported in this version. Create a suite with the required filter."
+      error_exit(
+        "Specifying tags on the command line is not yet supported in this version. Create a suite with the required filter."
+      )
     end
+
     input
   end
 
   defp error_exit(message) do
-    IO.puts message
+    IO.puts(message)
     exit({:shutdown, 1})
   end
-
 end

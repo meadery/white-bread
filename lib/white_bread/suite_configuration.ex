@@ -12,19 +12,21 @@ defmodule WhiteBread.SuiteConfiguration do
 
   defmacro __before_compile__(_env) do
     quote do
-
       def suites do
         unique!(@suites)
       end
 
       defp unique!(suites) do
-        unique? = suites
+        unique? =
+          suites
           |> Stream.map(fn suite -> suite.name end)
-          |> Enum.uniq
+          |> Enum.uniq()
           |> same_size?(suites)
+
         unless unique? do
           raise_dupe_suite_error(suites)
         end
+
         suites
       end
 
@@ -40,8 +42,10 @@ defmodule WhiteBread.SuiteConfiguration do
 
   defp add_suite(properties) do
     quote do
-      new_suite = %WhiteBread.Suite{}
+      new_suite =
+        %WhiteBread.Suite{}
         |> WhiteBread.Suite.set_properties(unquote(properties))
+
       @suites @suites ++ [new_suite]
     end
   end
@@ -55,10 +59,10 @@ defmodule WhiteBread.SuiteConfiguration do
   end
 
   defmacro context_per_feature(
-    namespace_prefix: prefix,
-    entry_path: path,
-    extra: extra)
-  do
+             namespace_prefix: prefix,
+             entry_path: path,
+             extra: extra
+           ) do
     create_context_per_feature(
       namespace_prefix: prefix,
       entry_path: path,
@@ -67,28 +71,31 @@ defmodule WhiteBread.SuiteConfiguration do
   end
 
   defp create_context_per_feature(
-    namespace_prefix: prefix,
-    entry_path: path,
-    extra: extra)
-  do
+         namespace_prefix: prefix,
+         entry_path: path,
+         extra: extra
+       ) do
     quote do
-      new_suites = WhiteBread.Suite.ContextPerFeature.build_suites(
-        namespace_prefix: unquote(prefix),
-        entry_path: unquote(path),
-        extra_config: unquote(extra)
-      )
+      new_suites =
+        WhiteBread.Suite.ContextPerFeature.build_suites(
+          namespace_prefix: unquote(prefix),
+          entry_path: unquote(path),
+          extra_config: unquote(extra)
+        )
+
       @suites @suites ++ new_suites
     end
   end
 
   def raise_dupe_suite_error(suites) do
-    dupes = suites
+    dupes =
+      suites
       |> Enum.group_by(fn suite -> suite.name end)
       |> Enum.map(fn {name, suites} -> {name, Enum.count(suites)} end)
       |> Enum.filter(fn {_, suites} -> suites > 1 end)
       |> Enum.map(fn {name, _} -> name end)
       |> Enum.join(", ")
+
     raise DuplicateSuiteError, message: "Duplicate suite names found: #{dupes}"
   end
-
 end

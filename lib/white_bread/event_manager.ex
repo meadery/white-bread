@@ -14,6 +14,7 @@ defmodule WhiteBread.EventManager do
     for {_, pid, _, _} <- Supervisor.which_children(__MODULE__) do
       :ok = Supervisor.terminate_child(__MODULE__, pid)
     end
+
     Supervisor.terminate_child(WhiteBread.Supervisor, __MODULE__)
   end
 
@@ -29,6 +30,7 @@ defmodule WhiteBread.EventManager do
     for {_, pid, _, _} <- Supervisor.which_children(__MODULE__) do
       GenServer.cast(pid, msg)
     end
+
     :ok
   end
 end

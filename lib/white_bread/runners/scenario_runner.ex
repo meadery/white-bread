@@ -5,23 +5,24 @@ defmodule WhiteBread.Runners.ScenarioRunner do
 
   alias WhiteBread.Runners.StepsRunner
 
-  def run(scenario, context, %Setup{} = setup \\ Setup.new) do
+  def run(scenario, context, %Setup{} = setup \\ Setup.new()) do
     start_trapping_exits()
 
-    starting_state = setup.starting_state
+    starting_state =
+      setup.starting_state
       |> apply_scenario_starting_state(context)
 
     {scenario, scenario.steps}
-      |> StepsRunner.run(context, setup.background_steps, starting_state)
-      |> update_result_with_exits
-      |> stop_trapping_exits
-      |> build_result_tuple(scenario)
-      |> output_result(scenario)
+    |> StepsRunner.run(context, setup.background_steps, starting_state)
+    |> update_result_with_exits
+    |> stop_trapping_exits
+    |> build_result_tuple(scenario)
+    |> output_result(scenario)
   end
 
   defp build_result_tuple(result, scenario) do
     case result do
-      {:ok, _}   -> {:ok, scenario.name}
+      {:ok, _} -> {:ok, scenario.name}
       error_data -> {:failed, error_data}
     end
   end
@@ -44,11 +45,12 @@ defmodule WhiteBread.Runners.ScenarioRunner do
     receive do
       {'DOWN', _ref, _process, _pid2, _reason} = exit_message ->
         {:exit_recieved, exit_message}
+
       {:EXIT, _pid, reason} = exit_message when reason != :normal ->
         {:exit_recieved, exit_message}
-    after 0 ->
-      result
+    after
+      0 ->
+        result
     end
   end
-
 end

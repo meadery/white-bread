@@ -7,8 +7,7 @@ defmodule WhiteBread.Suite do
             run_async: false
 
   def set_properties(%__MODULE__{} = suite, properties)
-  when is_list(properties)
-  do
+      when is_list(properties) do
     properties |> Enum.reduce(suite, &set_property/2)
   end
 

@@ -3,19 +3,19 @@ defmodule WhiteBread.Tags.FeatureFilterer do
 
   def get_for_tags(features, tags) when is_list(features) do
     features
-      |> filter(tags)
-      |> Enum.into(features_with_matching_scenarios(features, tags))
+    |> filter(tags)
+    |> Enum.into(features_with_matching_scenarios(features, tags))
   end
 
   defp features_with_matching_scenarios(features, tags) do
     features
-      |> remove_scenarios_without_tags(tags)
-      |> remove_empty_features
+    |> remove_scenarios_without_tags(tags)
+    |> remove_empty_features
   end
 
   defp remove_scenarios_without_tags(features, tags) do
     features
-      |> Enum.map(fn(feature) -> filter_features_scenarios(feature, tags) end)
+    |> Enum.map(fn feature -> filter_features_scenarios(feature, tags) end)
   end
 
   defp filter_features_scenarios(feature = %{scenarios: scenarios}, tags) do
@@ -23,7 +23,6 @@ defmodule WhiteBread.Tags.FeatureFilterer do
   end
 
   defp remove_empty_features(features) do
-    features |> Enum.filter(fn(%{scenarios: scenarios}) -> scenarios != [] end)
+    features |> Enum.filter(fn %{scenarios: scenarios} -> scenarios != [] end)
   end
-
 end

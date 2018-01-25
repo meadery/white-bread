@@ -6,7 +6,7 @@ defmodule WhiteBread.Outputers.HTML.Formatter do
   end
 
   def body(content) when is_binary(content) do
-    "<body>#{head "White Bread Results"}#{content}</body>"
+    "<body>#{head("White Bread Results")}#{content}</body>"
   end
 
   defp head(content) do
@@ -16,17 +16,19 @@ defmodule WhiteBread.Outputers.HTML.Formatter do
   def section(_, []) do
     ""
   end
+
   def section(title, results) when is_binary(title) do
     "#{paragraph("Suite: " <> bold(title))}#{list(results)}"
   end
 
   def list([]), do: "Nothing to report."
-  def list([_|_] = elements), do: list(elements, "")
+  def list([_ | _] = elements), do: list(elements, "")
 
   defp list([], content) do
     "<ul style=\"list-style-type:square\">#{content}</ul>"
   end
-  defp list([head|tail], content) when is_binary(head) do
+
+  defp list([head | tail], content) when is_binary(head) do
     list(tail, content <> element(head))
   end
 
@@ -39,7 +41,7 @@ defmodule WhiteBread.Outputers.HTML.Formatter do
   end
 
   defp bold(x) do
-      "<b>#{x}</b>"
+    "<b>#{x}</b>"
   end
 
   def success(text) when is_binary(text) do

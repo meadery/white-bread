@@ -1,33 +1,39 @@
 language: elixir
 
 otp_release:
-  - 18.0
+  - 18.3
   - 19.3
-  - 20.0
+  - 20.2
 
 elixir:
   - 1.2
   - 1.3
   - 1.4
   - 1.5
+  - 1.6
 
 matrix:
   exclude:
-    - otp_release: 17.5
+    - otp_release: 18.3
+      elixir: 1.6
+
+    - otp_release: 20.2
       elixir: 1.2
-    - otp_release: 17.5
-      elixir: 1.3
-    - otp_release: 17.5
-      elixir: 1.4
-    - otp_release: 20.0
-      elixir: 1.2
-    - otp_release: 20.0
+    - otp_release: 20.2
       elixir: 1.3
 
-script:
+install:
   - mix local.hex --force
   - mix deps.get
-  - mix ci_tests
+
+script: mix ci_tests
+
+jobs:
+  include:
+    - stage: validate_formatting
+      script: mix format --check-formatted
+      elixir: 1.6
+      otp_release: 20.2
 
 notifications:
   webhooks:

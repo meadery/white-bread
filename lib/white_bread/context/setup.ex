@@ -6,9 +6,9 @@ defmodule WhiteBread.Context.Setup do
 
       def get_steps do
         @sub_context_modules
-         |> Enum.map(fn(sub_module) -> apply(sub_module, :get_steps, []) end)
-         |> Enum.flat_map(fn(x) -> x end)
-         |> Enum.into(@steps)
+        |> Enum.map(fn sub_module -> apply(sub_module, :get_steps, []) end)
+        |> Enum.flat_map(fn x -> x end)
+        |> Enum.into(@steps)
       end
 
       unless @feature_state_definied do
@@ -37,7 +37,6 @@ defmodule WhiteBread.Context.Setup do
           @default_scenario_timeout
         end
       end
-
     end
   end
 end

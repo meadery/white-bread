@@ -3,7 +3,7 @@ defmodule WhiteBread.FinalResultPrinter do
   alias WhiteBread.Outputers.Style
 
   def puts(result) do
-    IO.puts result
+    IO.puts(result)
   end
 
   def text(_, step_helper \\ FailedStep)
@@ -18,22 +18,21 @@ defmodule WhiteBread.FinalResultPrinter do
 
   def text(%{failures: failures}, step_helper) do
     failures
-      |> Enum.map(&failing_feature_text(&1, step_helper))
-      |> Enum.join("\n")
-      |> add_newline
+    |> Enum.map(&failing_feature_text(&1, step_helper))
+    |> Enum.join("\n")
+    |> add_newline
   end
 
   defp failing_feature_text(failing_feature, step_helper) do
     {feature, %{failures: failing_scenarios}} = failing_feature
-    scenerios_text = failing_scenarios
+
+    scenerios_text =
+      failing_scenarios
       |> Enum.map(&failing_scenerio_text(&1, step_helper))
       |> Enum.join("\n")
 
     failing_count = Enum.count(failing_scenarios)
-    Style.failed "#{failing_count} scenario failed for"
-    <> " #{feature.name}\n"
-    <> scenerios_text
-
+    Style.failed("#{failing_count} scenario failed for" <> " #{feature.name}\n" <> scenerios_text)
   end
 
   defp failing_scenerio_text(scenario_faliure, step_helper) do
