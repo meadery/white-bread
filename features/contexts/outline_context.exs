@@ -70,7 +70,7 @@ defmodule WhiteBread.Example.OutlineContext.TableSteps do
 
   then_ ~r/^the table data should (?<negation>not )?contain "(?<string>[^"]+)"$/,
   fn %{table_data: table_data} = state, %{negation: negation, string: string} ->
-    contains = (for %{data: data} <- table_data, do: data) |> Enum.any?(&contains?(&1, string))
+    contains = Enum.map(table_data, &Map.values/1) |> List.flatten |> Enum.any?(&contains?(&1, string))
     assert contains == (String.length(negation) == 0)
     {:ok, state}
   end
