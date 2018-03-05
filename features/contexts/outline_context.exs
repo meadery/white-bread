@@ -3,6 +3,7 @@ defmodule WhiteBread.Example.OutlineContext do
 
   import_steps_from WhiteBread.Example.OutlineContext.AdditionalStateSteps
   import_steps_from WhiteBread.Example.OutlineContext.StringSteps
+  import_steps_from WhiteBread.Example.OutlineContext.TableSteps
 
   feature_starting_state fn  ->
     %{feature_state_loaded: :yes}
@@ -55,6 +56,22 @@ defmodule WhiteBread.Example.OutlineContext.StringSteps do
 
   then_ ~r/^the string should contain "(?<substring>[^"]+)"$/, fn state, %{substring: substring} ->
     assert state[:string] |> contains?(substring)
+    {:ok, state}
+  end
+end
+
+defmodule WhiteBread.Example.OutlineContext.TableSteps do
+  use WhiteBread.Context
+  import String, only: [contains?: 2]
+
+  given_ "I have the following table:", fn state, {:table_data, table_data} ->
+    {:ok, state |> put_in([:table_data], table_data)}
+  end
+
+  then_ ~r/^the table data should (?<negation>not )?contain "(?<string>[^"]+)"$/,
+  fn %{table_data: table_data} = state, %{negation: negation, string: string} ->
+    contains = Enum.map(table_data, &Map.values/1) |> List.flatten |> Enum.any?(&contains?(&1, string))
+    assert contains == (String.length(negation) == 0)
     {:ok, state}
   end
 end

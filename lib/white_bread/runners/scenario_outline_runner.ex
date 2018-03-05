@@ -46,10 +46,14 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
   end
 
   defp replace_in_step({replace, with}, step) do
-    %{text: initial} = step
-    updated_text = initial
-      |> String.replace("<#{to_string(replace)}>", with)
-    %{step | text: updated_text}
+    %{text: initial_text, table_data: initial_table} = step
+    placeholder = "<#{to_string(replace)}>"
+    updated_text = initial_text
+      |> String.replace(placeholder, with)
+    updated_table = for row <- initial_table do
+      Map.new row, fn {key, value} -> {key, String.replace(value, placeholder, with)} end
+    end
+    %{step | text: updated_text, table_data: updated_table}
   end
 
   defp report_progress(results, scenario_outline) do

@@ -29,3 +29,15 @@ Feature: Scenario outlines
       | state |
       | foo   |
       | bar   |
+
+  Scenario Outline: Interpolate placeholders in tables
+    Given I have the following table:
+      | one             | two             |
+      | <placeholder_1> | <placeholder_2> |
+    Then the table data should contain "<placeholder_1>"
+    And the table data should contain "<placeholder_2>"
+    But the table data should not contain "<placeholder"
+
+    Examples:
+      | placeholder_1 | placeholder_2 |
+      | real value 1  | real value 2  |
