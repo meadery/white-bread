@@ -12,7 +12,7 @@ defmodule WhiteBread.Context do
     quote do
       import WhiteBread.Context
 
-      case unquote(test_library) do
+      case unquote(opts[:test_library]) do
         :ex_unit -> import ExUnit.Assertions
         :espec -> use ESpec
         nil -> nil
