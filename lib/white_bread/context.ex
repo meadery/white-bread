@@ -15,6 +15,8 @@ defmodule WhiteBread.Context do
       case unquote(test_library) do
         :ex_unit -> import ExUnit.Assertions
         :espec -> use ESpec
+        nil -> nil
+        _ -> raise ArgumentError, ":test_library must be one of :ex_unit, :espec, or nil."
       end
 
       @behaviour WhiteBread.ContextBehaviour
