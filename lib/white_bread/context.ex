@@ -6,10 +6,16 @@ defmodule WhiteBread.Context do
   @step_keywords [:given_, :when_, :then_, :and_, :but_]
 
   @doc false
-  defmacro __using__(_opts) do
+  defmacro __using__(opts \\ []) do
+    opts = Keyword.merge [test_library: :ex_unit], opts
+
     quote do
       import WhiteBread.Context
-      import ExUnit.Assertions
+
+      case unquote(test_library) do
+        :ex_unit -> import ExUnit.Assertions
+        :espec -> use ESpec
+      end
 
       @behaviour WhiteBread.ContextBehaviour
 
