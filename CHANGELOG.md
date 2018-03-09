@@ -1,5 +1,7 @@
 # Changelog
 
+## Unreleased changes
+
 ## 4.1.1 (2018-03-06)
 
 ### Enhancements
