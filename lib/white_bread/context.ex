@@ -8,24 +8,14 @@ defmodule WhiteBread.Context do
   @doc false
   defmacro __using__(opts \\ []) do
     opts = Keyword.merge [test_library: :ex_unit], opts
-
-    import_test_library = case opts[:test_library] do
-      :ex_unit -> quote do: import ExUnit.Assertions
-      :espec -> quote do
-        IO.puts "Getting ESpec!"
-        require ESpec
-        use ESpec
-      end
-      nil -> quote do: true
-      _ -> raise ArgumentError, ":test_library must be one of :ex_unit, :espec, or nil."
-    end
+    [test_library: test_library] = opts
 
     quote do
       IO.puts "Importing context into #{__MODULE__}"
       import WhiteBread.Context
 
       IO.puts "Importing test library #{inspect unquote(opts[:test_library])}."
-      unquote(import_test_library)
+      unquote(import_test_library test_library)
 
       IO.puts "Finishing setup."
       @behaviour WhiteBread.ContextBehaviour
@@ -127,5 +117,16 @@ defmodule WhiteBread.Context do
     end
   end
 
-
+  defp import_test_library(test_library) do
+    case test_library do
+      :ex_unit -> quote do: import ExUnit.Assertions
+      :espec -> quote do
+        IO.puts "Getting ESpec!"
+        require ESpec
+        use ESpec
+      end
+      nil -> quote do: true
+      _ -> raise ArgumentError, ":test_library must be one of :ex_unit, :espec, or nil."
+    end
+  end
 end
