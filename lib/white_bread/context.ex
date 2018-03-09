@@ -11,13 +11,9 @@ defmodule WhiteBread.Context do
     [test_library: test_library] = opts
 
     quote do
-      IO.puts "Importing context into #{__MODULE__}"
       import WhiteBread.Context
-
-      IO.puts "Importing test library #{inspect unquote(opts[:test_library])}."
       unquote(import_test_library test_library)
 
-      IO.puts "Finishing setup."
       @behaviour WhiteBread.ContextBehaviour
 
       @steps []
@@ -121,7 +117,6 @@ defmodule WhiteBread.Context do
     case test_library do
       :ex_unit -> quote do: import ExUnit.Assertions
       :espec -> quote do
-        IO.puts "Getting ESpec!"
         require ESpec
         use ESpec
       end
