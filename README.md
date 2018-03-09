@@ -141,6 +141,12 @@ def project do
 end
 ```
 
+## Integrating a testing library
+
+By default, `use WhiteBread.Context` will import ExUnit.Assertions. If you're not using ExUnit, you'll probably want to override this default by calling `use WhiteBread.Context, test_library: :some_other_library_name`.
+
+At the moment, the only library names available are `:ex_unit` (same as the default), `:espec`, and `nil` (which skips the test library setup step altogether).
+
 # Next steps - Additional Suites and subcontexts
 
 After following the getting started steps you may find your default context starts to get a bit large.
