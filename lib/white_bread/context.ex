@@ -122,7 +122,7 @@ defmodule WhiteBread.Context do
         use ESpec
       end
       nil -> quote do: true
-      _ -> raise ArgumentError, ":test_library must be one of :ex_unit, :espec, or nil."
+      _ -> raise ArgumentError, "#{inspect test_library} is not a recognized value for :test_library. Recognized values are :ex_unit, :espec, and nil."
     end
   end
 end
