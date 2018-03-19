@@ -4,10 +4,11 @@ defmodule WhiteBread.Context do
   alias WhiteBread.Context.Setup
 
   @step_keywords [:given_, :when_, :then_, :and_, :but_]
+  @default_test_library :ex_unit
 
   @doc false
   defmacro __using__(opts \\ []) do
-    opts = Keyword.merge [test_library: :ex_unit], opts
+    opts = Keyword.merge [test_library: @default_test_library], opts
     [test_library: test_library] = opts
 
     quote do
