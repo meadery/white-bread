@@ -1,5 +1,16 @@
 # Changelog
 
+## 4.1.1 (2018-03-06)
+
+### Enhancements
+None
+
+### Bug fixes
+- Fixed bug in placeholders in tables. Thanks to @marnen [#95]
+
+### Backwards incompatible changes
+None
+
 ## 4.1.0 (2017-09-15)
 
 ### Enhancements
