@@ -28,7 +28,7 @@ Add "white_bread" to your `mix.exs` file with the version you wish to use:
 defp deps do
     [
         ...
-        { :white_bread, "~> 3.1", only: [:dev, :test] }
+        { :white_bread, "~> 4.1.1", only: [:dev, :test] }
         ...
     ]
 end
@@ -67,7 +67,7 @@ Create one [Y/n]?
 y
 
 ```
-This will create a basic config file and also a context ```features/contexts/default_context.exs```.
+This will create a basic config file and also a context ```features/contexts/white_bread_context.exs```.
 A context file tells WhiteBread how to understand the gherkin in your feature files and also
 what setup is required.
 
