@@ -4,12 +4,16 @@ defmodule WhiteBread.Context do
   alias WhiteBread.Context.Setup
 
   @step_keywords [:given_, :when_, :then_, :and_, :but_]
+  @default_test_library :ex_unit
 
   @doc false
-  defmacro __using__(_opts) do
+  defmacro __using__(opts \\ []) do
+    opts = Keyword.merge [test_library: @default_test_library], opts
+    [test_library: test_library] = opts
+
     quote do
       import WhiteBread.Context
-      import ExUnit.Assertions
+      unquote(import_test_library test_library)
 
       @behaviour WhiteBread.ContextBehaviour
 
@@ -110,5 +114,15 @@ defmodule WhiteBread.Context do
     end
   end
 
-
+  defp import_test_library(test_library) do
+    case test_library do
+      :ex_unit -> quote do: import ExUnit.Assertions
+      :espec -> quote do
+        require ESpec
+        use ESpec
+      end
+      nil -> quote do: true
+      _ -> raise ArgumentError, "#{inspect test_library} is not a recognized value for :test_library. Recognized values are :ex_unit, :espec, and nil."
+    end
+  end
 end
