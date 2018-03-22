@@ -1,15 +1,17 @@
 # Changelog
 
+## Unreleased changes
+
 ## 4.1.1 (2018-03-06)
 
 ### Enhancements
 None
 
 ### Bug fixes
-- Fixed bug in placeholders in tables. Thanks to @marnen [#95]
+- Placeholders are now interpolated in tables. Thanks to @marnen [#95]
 
 ### Backwards incompatible changes
-None
+- Placeholder interpolation might break tables that rely on < and > characters.
 
 ## 4.1.0 (2017-09-15)
 
@@ -44,7 +46,7 @@ None
 none
 
 ### Backwards incompatible changes
-- The way custom output is configured has changed. Previously a config key `outputer` was expected to give a 
+- The way custom output is configured has changed. Previously a config key `outputer` was expected to give a
 module implementing the output protocol. This has now been replaced with an event driven model and the key `outputers`
 is now expected see #83 for details. This detail was not previously part of the official public interface.
 
