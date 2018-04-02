@@ -2,6 +2,17 @@
 
 ## Unreleased changes
 
+## 4.2.0 (2018-04-02)
+
+### Enhancements
+- Decouple from exunit and allow choice of assertion libraries. Thanks to @marnen [#96]
+
+### Bug fixes
+None
+
+### Backwards incompatible changes
+None
+
 ## 4.1.1 (2018-03-06)
 
 ### Enhancements
