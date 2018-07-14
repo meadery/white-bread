@@ -2,6 +2,17 @@
 
 ## Unreleased changes
 
+## 4.2.1 (2018-07-14)
+
+### Enhancements
+None
+
+### Bug fixes
+- Fix argument passing on the CLI so that --suite is used. Thanks to @bwhite-mdsol [#101]
+
+### Backwards incompatible changes
+None
+
 ## 4.2.0 (2018-04-02)
 
 ### Enhancements
