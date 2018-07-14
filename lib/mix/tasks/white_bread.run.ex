@@ -13,7 +13,7 @@ defmodule Mix.Tasks.WhiteBread.Run do
 
   def run(argv) do
     {options, arguments, _} = argv
-    |> OptionParser.parse
+    |> OptionParser.parse(switches: [suite: :string])
     |> check_for_deprecations
 
     start_app(argv)
