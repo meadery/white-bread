@@ -25,7 +25,11 @@ defmodule WhiteBread.FinalResultPrinterTest do
   end
 
   test "Prints out failures" do
-    trace = System.stacktrace
+    trace = try do
+      raise "we need a stack trace"
+    rescue
+      _ -> System.stacktrace
+    end
     step_failure = {:no_clause_match, %{text: "failing step"}, {%{}, trace}}
     result = %{
       failures: [
