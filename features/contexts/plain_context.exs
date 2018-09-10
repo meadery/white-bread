@@ -40,4 +40,8 @@ defmodule WhiteBread.Example.PlainContext do
   def scenario_finalize(_ignored_status, _ignored_state), do: nil
   def feature_finalize(_ignored_status, _ignored_state), do: nil
 
+  def get_scenario_timeout(_feature, _scenario) do
+    10_000
+  end
+
 end
