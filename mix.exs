@@ -60,7 +60,7 @@ defmodule WhiteBread.Mixfile do
 
       {:credo, "~> 0.8", only: :dev},
       {:earmark, "~> 1.2", only: :dev},
-      {:ex_doc, "~> 0.16", only: :dev}
+      {:ex_doc, "~> 0.19", only: :dev}
     ]
   end
 
