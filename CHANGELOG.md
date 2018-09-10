@@ -2,6 +2,17 @@
 
 ## Unreleased changes
 
+## 4.3.0 (2018-09-10)
+
+### Enhancements
+- Support & test against elixir 1.7 and otp 21
+
+### Bug fixes
+None
+
+### Backwards incompatible changes
+None
+
 ## 4.2.1 (2018-07-14)
 
 ### Enhancements

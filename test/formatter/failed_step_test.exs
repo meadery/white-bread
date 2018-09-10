@@ -5,7 +5,11 @@ defmodule WhiteBread.Formatter.FailedStepTest do
   alias Gherkin.Elements.Steps
 
   test "Prints out failure with a trace when no matching clause is found" do
-    trace = System.stacktrace
+    trace = try do
+      raise "we need a stack trace"
+    rescue
+      _ -> System.stacktrace
+    end
     step = %{text: "failing step"}
 
     output = FailedStep.text(:no_clause_match, step, {%{}, trace})
