@@ -68,11 +68,11 @@ defmodule WhiteBread.ScenarioOutlineRunnerTest.ExampleContext do
     %{starting_state: :yes}
   end
 
-  when_ "step one", fn _state ->
+  def_when "step one", fn _state ->
     {:ok, :step_one_complete}
   end
 
-  when_ "step two", fn :step_one_complete ->
+  def_when "step two", fn :step_one_complete ->
     {:ok, :step_two_complete}
   end
 

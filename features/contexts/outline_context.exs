@@ -20,11 +20,11 @@ defmodule WhiteBread.Example.OutlineContext do
     state
   end
 
-  given_ ~r/^a scenario outline$/, fn state ->
+  def_given ~r/^a scenario outline$/, fn state ->
     {:ok, state}
   end
 
-  then_ ~r/^it should load the scenario starting state$/, fn state ->
+  def_then ~r/^it should load the scenario starting state$/, fn state ->
     IO.inspect state
     assert state[:starting_state_loaded] == :yes
     {:ok, state}
@@ -34,12 +34,12 @@ end
 defmodule WhiteBread.Example.OutlineContext.AdditionalStateSteps do
   use WhiteBread.Context
 
-  given_ ~r/^some additional state "(?<new_item>[^"]+)"$/, fn state, %{new_item: new_item} ->
+  def_given ~r/^some additional state "(?<new_item>[^"]+)"$/, fn state, %{new_item: new_item} ->
     {_, new_state} = get_and_update_in state[:additional_state], &{&1, [new_item|&1]}
     {:ok, new_state}
   end
 
-  then_ ~r/^it should have only the additional state "(?<item>[^"]+)"$/, fn state, %{item: item} ->
+  def_then ~r/^it should have only the additional state "(?<item>[^"]+)"$/, fn state, %{item: item} ->
     assert state[:additional_state] == [item]
     {:ok, state}
   end
@@ -50,11 +50,11 @@ defmodule WhiteBread.Example.OutlineContext.StringSteps do
 
   use WhiteBread.Context
 
-  given_ ~r/^the string "(?<string>[^"]+)"/, fn state, %{string: string} ->
+  def_given ~r/^the string "(?<string>[^"]+)"/, fn state, %{string: string} ->
     {:ok, put_in(state[:string], string)}
   end
 
-  then_ ~r/^the string should contain "(?<substring>[^"]+)"$/, fn state, %{substring: substring} ->
+  def_then ~r/^the string should contain "(?<substring>[^"]+)"$/, fn state, %{substring: substring} ->
     assert state[:string] |> contains?(substring)
     {:ok, state}
   end
@@ -64,11 +64,11 @@ defmodule WhiteBread.Example.OutlineContext.TableSteps do
   use WhiteBread.Context
   import String, only: [contains?: 2]
 
-  given_ "I have the following table:", fn state, {:table_data, table_data} ->
+  def_given "I have the following table:", fn state, {:table_data, table_data} ->
     {:ok, state |> put_in([:table_data], table_data)}
   end
 
-  then_ ~r/^the table data should (?<negation>not )?contain "(?<string>[^"]+)"$/,
+  def_then ~r/^the table data should (?<negation>not )?contain "(?<string>[^"]+)"$/,
   fn %{table_data: table_data} = state, %{negation: negation, string: string} ->
     contains = Enum.map(table_data, &Map.values/1) |> List.flatten |> Enum.any?(&contains?(&1, string))
     assert contains == (String.length(negation) == 0)

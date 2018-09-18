@@ -117,29 +117,29 @@ defmodule WhiteBread.FeatureRunnerTest.ExampleContext do
     end
   end
 
-  when_ "step one", fn _state ->
+  def_when "step one", fn _state ->
     {:ok, :step_one_complete}
   end
 
-  when_ "step that blocks step two", fn _state ->
+  def_when "step that blocks step two", fn _state ->
     {:ok, :unexpected_state}
   end
 
-  when_ "step two", fn :step_one_complete ->
+  def_when "step two", fn :step_one_complete ->
     {:ok, :step_two_complete}
   end
 
-  when_ "make a failing assertion", fn _state ->
+  def_when "make a failing assertion", fn _state ->
     assert 1 == 0
     {:ok, :impossible}
   end
 
-  when_ "I take too long to execute", fn _state ->
+  def_when "I take too long to execute", fn _state ->
     :timer.sleep(1000 * 60)
     {:ok, :slow}
   end
 
-  when_ "increment global counter", fn _state->
+  def_when "increment global counter", fn _state->
     GlobalCounter.increment
   end
 end

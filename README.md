@@ -92,21 +92,21 @@ defmodule SunDoe.CoffeeShopContext do
     state.in_memory_coffee_db |> shutdown_db
   end
 
-  given_ "there are 1 coffees left in the machine", fn state ->
+  def_given "there are 1 coffees left in the machine", fn state ->
     {:ok, state |> Dict.put(:coffees, 1)}
   end
 
-  given_ ~r/^I have deposited £(?<pounds>[0-9]+)$/, fn state, %{pounds: pounds} ->
+  def_given ~r/^I have deposited £(?<pounds>[0-9]+)$/, fn state, %{pounds: pounds} ->
     {:ok, state |> Dict.put(:pounds, pounds)}
   end
 
-  when_ "I press the coffee button", fn state ->
+  def_when "I press the coffee button", fn state ->
     # Domain logic to serve coffees would happen
     # here. Then update the state with the result
     {:ok, state |> Dict.put(:coffees_served, 1)}
   end
 
-  then_ "I should be served a coffee", fn state ->
+  def_then "I should be served a coffee", fn state ->
     served_coffees = state |> Dict.get(:coffees_served)
 
     # The context automatically imports ExUnit.Assertions

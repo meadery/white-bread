@@ -4,24 +4,24 @@ defmodule WhiteBread.Example.PlainContext do
 
   def get_steps do
     [
-      Step.given_("I want more", fn _state ->
+      Step.def_given("I want more", fn _state ->
          {:ok, :want_more}
       end),
 
-      Step.given_("I had a heart", fn :want_more ->
+      Step.def_given("I had a heart", fn :want_more ->
          {:ok, "have a heart"}
       end),
 
-      Step.given_("I had a voice", fn ->
+      Step.def_given("I had a voice", fn ->
         # Arity zero funcs don't have to return anything
         nil
       end),
 
-      Step.then_("I could love you", fn "have a heart" ->
+      Step.def_then("I could love you", fn "have a heart" ->
         {:ok, :love}
       end),
 
-      Step.then_(~r/^I would (?<action>[a-z]+)$/, fn _state, %{action: "sing"} ->
+      Step.def_then(~r/^I would (?<action>[a-z]+)$/, fn _state, %{action: "sing"} ->
          {:ok, :singing}
       end)
     ]

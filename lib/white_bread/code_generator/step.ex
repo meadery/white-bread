@@ -1,13 +1,13 @@
 defmodule WhiteBread.CodeGenerator.Step do
 
   @regex_step_template """
-  {{step}}_ ~r/^{{text}}$/, fn state ->
+  def_{{step}} ~r/^{{text}}$/, fn state ->
     {:ok, state}
   end
   """
 
   @named_group_regex_step_template """
-  {{step}}_ ~r/^{{text}}$/,
+  def_{{step}} ~r/^{{text}}$/,
   fn state, %{{{groups}}} ->
     {:ok, state}
   end

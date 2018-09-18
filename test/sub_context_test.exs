@@ -20,7 +20,7 @@ end
 defmodule WhiteBread.SubContextTest.SubExampleContext.One do
   use WhiteBread.Context
 
-  given_ "I'm running a simple test" do
+  def_given "I'm running a simple test" do
     # Nothing happening here
   end
 end
@@ -28,11 +28,11 @@ end
 defmodule WhiteBread.SubContextTest.SubExampleContext.Two do
   use WhiteBread.Context
 
-  given_ ~r/I'm running a simple [A-Za-z]+/ do
+  def_given ~r/I'm running a simple [A-Za-z]+/ do
     # nothing happening here
   end
 
-  when_ ~r/I pass in some [A-Za-z]+/, fn state ->
+  def_when ~r/I pass in some [A-Za-z]+/, fn state ->
     {:ok, state}
   end
 end

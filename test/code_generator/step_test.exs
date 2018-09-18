@@ -6,7 +6,7 @@ defmodule WhiteBread.CodeGenerator.StepTest do
   test "Returns a regular expression step" do
     step = %Steps.When{text: "I ask to be defined"}
     expected_code = """
-    when_ ~r/^I ask to be defined$/, fn state ->
+    def_when ~r/^I ask to be defined$/, fn state ->
       {:ok, state}
     end
     """
@@ -36,7 +36,7 @@ defmodule WhiteBread.CodeGenerator.StepTest do
   test "Anything in quotes becomes a named group" do
     step = %Steps.When{text: "I ask to be \"defined\""}
     expected_code = """
-    when_ ~r/^I ask to be "(?<argument_one>[^"]+)"$/,
+    def_when ~r/^I ask to be "(?<argument_one>[^"]+)"$/,
     fn state, %{argument_one: _argument_one} ->
       {:ok, state}
     end

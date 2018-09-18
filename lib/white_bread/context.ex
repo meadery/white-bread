@@ -3,7 +3,7 @@ defmodule WhiteBread.Context do
   alias WhiteBread.Context.StepMacroHelpers
   alias WhiteBread.Context.Setup
 
-  @step_keywords [:given_, :when_, :then_, :and_, :but_]
+  @step_keywords [:def_given, :def_when, :def_then, :def_and, :def_but]
   @default_test_library :ex_unit
 
   @doc false

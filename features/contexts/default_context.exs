@@ -25,26 +25,26 @@ end
 defmodule WhiteBread.Example.CoffeeContext do
   use WhiteBread.Context
 
-  given_ ~r/^there are (?<coffees>[0-9]+) coffees left in the machine$/, fn state, %{coffees: coffees} ->
+  def_given ~r/^there are (?<coffees>[0-9]+) coffees left in the machine$/, fn state, %{coffees: coffees} ->
     {:ok, state |> Map.put(:coffees, coffees)}
   end
 
-  given_ ~r/^I have deposited £(?<pounds>[0-9]+)$/, fn state, %{pounds: pounds} ->
+  def_given ~r/^I have deposited £(?<pounds>[0-9]+)$/, fn state, %{pounds: pounds} ->
     {:ok, state |> Map.put(:pounds, pounds)}
   end
 
-  when_ "I press the coffee button", fn
+  def_when "I press the coffee button", fn
     state = %{coffees: "1"} -> {:ok, state |> Map.put(:coffees_served, 1)}
     state = %{coffees: "0"} -> {:ok, state |> Map.put(:coffees_served, 0)}
   end
 
-  then_ "I should be served a coffee", fn state ->
+  def_then "I should be served a coffee", fn state ->
     served_coffees = state |> Map.get(:coffees_served)
     assert served_coffees == 1
     {:ok, :whatever}
   end
 
-  then_ "I should be frustrated", fn state ->
+  def_then "I should be frustrated", fn state ->
     served_coffees = state |> Map.get(:coffees_served)
     assert served_coffees == 0
     {:ok, :whatever}
@@ -54,23 +54,23 @@ end
 defmodule WhiteBread.Example.SongContext do
   use WhiteBread.Context
 
-  given_ "I want more", fn %{starting_state_loaded: :yes, feature_state_loaded: :yes} ->
+  def_given "I want more", fn %{starting_state_loaded: :yes, feature_state_loaded: :yes} ->
     {:ok, :want_more}
   end
 
-  given_ "I had a heart", fn :want_more ->
+  def_given "I had a heart", fn :want_more ->
     {:ok, "have a heart"}
   end
 
-  given_ "I had a voice", fn :want_more ->
+  def_given "I had a voice", fn :want_more ->
     {:ok, "have a voice"}
   end
 
-  then_ "I could love you", fn "have a heart" ->
+  def_then "I could love you", fn "have a heart" ->
     {:ok, :love}
   end
 
-  then_ "I would sing", fn "have a voice" ->
+  def_then "I would sing", fn "have a voice" ->
     {:ok, :singing}
   end
 
@@ -79,11 +79,11 @@ end
 defmodule WhiteBread.Example.DocStringContext do
   use WhiteBread.Context
 
-  given_ ~r/^the following doc string:$/, fn _state, %{doc_string: doc_string} ->
+  def_given ~r/^the following doc string:$/, fn _state, %{doc_string: doc_string} ->
     {:ok, doc_string}
   end
 
-  then_ ~r/^the doc string should be okay.$/, fn state ->
+  def_then ~r/^the doc string should be okay.$/, fn state ->
     assert state == "This should\n  Work!\n"
     {:ok, state}
   end
@@ -93,26 +93,26 @@ end
 defmodule WhiteBread.Example.TableContext do
   use WhiteBread.Context
 
-  given_ ~r/^the following table:$/,
+  def_given ~r/^the following table:$/,
   &WhiteBread.Example.DefaultContext.TableStuff.load_table/2
 
-  then_ ~r/^everything should be okay.$/,
+  def_then ~r/^everything should be okay.$/,
   &WhiteBread.Example.DefaultContext.TableStuff.all_okay_with_table/1
 
-  given_ ~r/^I am Odin$/, fn _state ->
-    {:ok, :when_odin}
+  def_given ~r/^I am Odin$/, fn _state ->
+    {:ok, :def_whenodin}
   end
 
-  given_ ~r/^I am Thor$/, fn _state ->
-    {:ok, :when_thor}
+  def_given ~r/^I am Thor$/, fn _state ->
+    {:ok, :def_whenthor}
   end
 
-  then_ ~r/^I should have Huginn and Muninn$/, fn :when_odin ->
-    {:ok, :when_odin}
+  def_then ~r/^I should have Huginn and Muninn$/, fn :def_whenodin ->
+    {:ok, :def_whenodin}
   end
 
-  then_ ~r/^I should have Tanngrisnir and Tanngnjóstr$/, fn :when_thor ->
-    {:ok, :when_thor}
+  def_then ~r/^I should have Tanngrisnir and Tanngnjóstr$/, fn :def_whenthor ->
+    {:ok, :def_whenthor}
   end
 
 end
@@ -120,15 +120,15 @@ end
 defmodule WhiteBread.Example.DefaultContext.LoafContext do
   use WhiteBread.Context
 
-  given_ ~r/^I have bread$/, fn _state ->
+  def_given ~r/^I have bread$/, fn _state ->
     {:ok, :breadful_state}
   end
 
-  when_ ~r/^I place in the toaster$/, fn :breadful_state ->
+  def_when ~r/^I place in the toaster$/, fn :breadful_state ->
     {:ok, :loaded_toaster}
   end
 
-  then_ ~r/^I should get toast$/, fn :loaded_toaster ->
+  def_then ~r/^I should get toast$/, fn :loaded_toaster ->
     {:ok, :nomnomnom}
   end
 

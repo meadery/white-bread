@@ -229,64 +229,64 @@ defmodule WhiteBread.ScenarioRunnerTest.ExampleContext do
       Process.put :finalized, true
   end
 
-  when_ "step one", fn _state ->
+  def_when "step one", fn _state ->
     {:ok, :step_one_complete}
   end
 
-  when_ "step that blocks step two", fn _state ->
+  def_when "step that blocks step two", fn _state ->
     {:ok, :unexpected_state}
   end
 
-  when_ "step two", fn :step_one_complete ->
+  def_when "step two", fn :step_one_complete ->
     {:ok, :step_two_complete}
   end
 
-  when_ "step passthru", fn state ->
+  def_when "step passthru", fn state ->
     {:ok, state}
   end
 
-  when_ "make a failing asserstion", fn _state ->
+  def_when "make a failing asserstion", fn _state ->
     assert 1 == 0
     {:ok, :impossible}
   end
 
-  when_ "I return not okay", fn _state ->
+  def_when "I return not okay", fn _state ->
     {:no_way, :impossible}
   end
 
-  when_ "I only return :okay", fn _state ->
+  def_when "I only return :okay", fn _state ->
     :ok
   end
 
-  when_ "I raise an exception", fn _state ->
+  def_when "I raise an exception", fn _state ->
     raise "Runtime Exception"
   end
 
-  when_ "I start a linked process that will exit", fn state ->
+  def_when "I start a linked process that will exit", fn state ->
     spawn_link fn ->
       exit :bad
     end
     {:ok, state}
   end
 
-  when_ "I wait a bit", fn state ->
+  def_when "I wait a bit", fn state ->
     :timer.sleep(100)
     {:ok, state}
   end
 
-  then_ "starting state was correct", fn %{starting_state: :yes} = state ->
+  def_then "starting state was correct", fn %{starting_state: :yes} = state ->
     {:ok, state}
   end
 
-  then_ "the state is not just :ok", fn state when state != :ok ->
+  def_then "the state is not just :ok", fn state when state != :ok ->
     {:ok, state}
   end
 
-  then_ "scenario_starting_state only ran once", fn %{starting_state_run_count: 1} = state ->
+  def_then "scenario_starting_state only ran once", fn %{starting_state_run_count: 1} = state ->
     {:ok, state}
   end
 
-  then_ "scenario_finalize doesnt run until the end", fn state ->
+  def_then "scenario_finalize doesnt run until the end", fn state ->
     unless Process.get(:finalized, false) do
       {:ok, state}
     else
