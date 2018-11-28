@@ -68,9 +68,22 @@ defmodule WhiteBread.Example.OutlineContext.TableSteps do
     {:ok, state |> put_in([:table_data], table_data)}
   end
 
-  then_ ~r/^the table data should (?<negation>not )?contain "(?<string>[^"]+)"$/,
+  then_ ~r/^the table data should (?<negation>not )?contain value "(?<string>[^"]+)"$/,
   fn %{table_data: table_data} = state, %{negation: negation, string: string} ->
     contains = Enum.map(table_data, &Map.values/1) |> List.flatten |> Enum.any?(&contains?(&1, string))
+    assert contains == (String.length(negation) == 0)
+    {:ok, state}
+  end
+
+  then_ ~r/^the table data should (?<negation>not )?contain key "(?<string>[^"]+)"$/,
+  fn %{table_data: table_data} = state, %{negation: negation, string: string} ->
+    contains =
+      table_data
+      |> Enum.map(&Map.keys/1)
+      |> List.flatten
+      |> Enum.map(&to_string/1)
+      |> Enum.any?(&contains?(&1, string))
+
     assert contains == (String.length(negation) == 0)
     {:ok, state}
   end
