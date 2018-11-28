@@ -50,9 +50,16 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
     placeholder = "<#{to_string(replace)}>"
     updated_text = initial_text
       |> String.replace(placeholder, with)
+
     updated_table = for row <- initial_table do
-      Map.new row, fn {key, value} -> {key, String.replace(value, placeholder, with)} end
+      for {key, value} <- row, into: %{} do
+        key = key |> Atom.to_string |> String.replace(placeholder, with) |> String.to_atom
+        value = String.replace(value, placeholder, with)
+
+        {key, value}
+      end
     end
+
     %{step | text: updated_text, table_data: updated_table}
   end
 

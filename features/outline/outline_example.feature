@@ -30,14 +30,26 @@ Feature: Scenario outlines
       | foo   |
       | bar   |
 
-  Scenario Outline: Interpolate placeholders in tables
+  Scenario Outline: Interpolate placeholders in table values
     Given I have the following table:
       | one             | two             |
       | <placeholder_1> | <placeholder_2> |
-    Then the table data should contain "<placeholder_1>"
-    And the table data should contain "<placeholder_2>"
-    But the table data should not contain "<placeholder"
+    Then the table data should contain value "<placeholder_1>"
+    And the table data should contain value "<placeholder_2>"
+    But the table data should not contain value "<placeholder"
 
     Examples:
       | placeholder_1 | placeholder_2 |
       | real value 1  | real value 2  |
+
+  Scenario Outline: Interpolate placeholders in table keys
+    Given I have the following table:
+      | <key_placeholder_1> | <key_placeholder_2> |
+      | value_1             | value_2             |
+    Then the table data should contain key "<key_placeholder_1>"
+    And the table data should contain key "<key_placeholder_2>"
+    But the table data should not contain key "<key_placeholder"
+
+    Examples:
+      | key_placeholder_1 | key_placeholder_2 |
+      | real key 1        | real key 2        |
