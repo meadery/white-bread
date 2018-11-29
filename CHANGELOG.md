@@ -1,6 +1,15 @@
 # Changelog
 
-## Unreleased changes
+## 4.4.0 (2018-11-29)
+
+### Enhancements
+- Interpolation of placeholders in table keys thanks to @kiurchv [#105]
+
+### Bug fixes
+None
+
+### Backwards incompatible changes
+None
 
 ## 4.3.0 (2018-09-10)
 
