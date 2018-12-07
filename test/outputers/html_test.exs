@@ -18,7 +18,7 @@ defmodule WhiteBread.Outputers.HTMLTests do
 
   test "success result stored with the scenario name" do
     assert {:noreply, %HTML{data: [{:ok, "X"}]}} ==
-      HTML.handle_cast {:scenario_result, {:ok, "ignore"}, %Scenario{name: "X"}}, %HTML{data: []}
+      HTML.handle_cast {:scenario_result, {:ok, "ignore", %{}}, %Scenario{name: "X"}}, %HTML{data: []}
   end
 
   test "write file on termaination" do

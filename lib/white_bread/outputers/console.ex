@@ -48,7 +48,7 @@ defmodule WhiteBread.Outputers.Console do
 
   ## Internal
 
-  defp output_scenario_result({result, _result_info}, scenario) do
+  defp output_scenario_result({result, _result_info, _time_map}, scenario) do
     IO.puts Style.decide_color result, "#{scenario.name} ---> #{result}"
     :ok
   end

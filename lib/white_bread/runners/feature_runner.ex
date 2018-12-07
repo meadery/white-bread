@@ -51,8 +51,8 @@ defmodule WhiteBread.Runners.FeatureRunner do
   defp scenario_await({scenario, timeout, task}) do
     case Task.yield(task, timeout) do
       {:ok, result}   -> result
-      {:exit, reason} -> {scenario, {:failed, reason}}
-      nil             -> {scenario, {:failed, :timeout}}
+      {:exit, reason} -> {scenario, {:failed, reason, %{}}}
+      nil             -> {scenario, {:failed, :timeout, %{}}}
     end
   end
 
@@ -76,7 +76,7 @@ defmodule WhiteBread.Runners.FeatureRunner do
     results |> Enum.flat_map(flatten)
   end
 
-  defp success?({_scenario, {success, _}}), do: success == :ok
-  defp failure?({_scenario, {success, _}}), do: success == :failed
+  defp success?({_scenario, {success, _, _}}), do: success == :ok
+  defp failure?({_scenario, {success, _, _}}), do: success == :failed
 
 end

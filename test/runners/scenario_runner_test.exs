@@ -12,7 +12,8 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
       %Steps.When{text: "step one"}
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
-    assert {:ok, "test scenario"} == scenario |> ScenarioRunner.run(ExampleContext)
+    {result, scenario_name, _} = scenario |> ScenarioRunner.run(ExampleContext)
+    assert {:ok, "test scenario"} == {result, scenario_name}
   end
 
   test "Each step passes the updated state to the next" do
@@ -21,7 +22,8 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
       %Steps.When{text: "step two"}
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
-    assert {:ok, "test scenario"} == scenario |> ScenarioRunner.run(ExampleContext)
+    {result, scenario_name, _} = scenario |> ScenarioRunner.run(ExampleContext)
+    assert {:ok, "test scenario"} == {result, scenario_name}
   end
 
   test "Runs all backround steps first" do
@@ -33,7 +35,8 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
     setup = Setup.new(background_steps: background_steps)
-    assert {:ok, "test scenario"} == scenario |> ScenarioRunner.run(ExampleContext, setup)
+    {result, scenario_name, _} = scenario |> ScenarioRunner.run(ExampleContext, setup)
+    assert {:ok, "test scenario"} == {result, scenario_name}
   end
 
   test "Fails if the last step is missing" do
@@ -44,7 +47,7 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
       missing_step
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
-    {result, {reason, ^missing_step, _}} = scenario |> ScenarioRunner.run(ExampleContext)
+    {result, {reason, ^missing_step, _}, _} = scenario |> ScenarioRunner.run(ExampleContext)
     assert result == :failed
     assert reason == :missing_step
   end
@@ -57,7 +60,7 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
       %Steps.When{text: "step two"}
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
-    {result, {reason, ^missing_step, _}} = scenario |> ScenarioRunner.run(ExampleContext)
+    {result, {reason, ^missing_step, _}, _} = scenario |> ScenarioRunner.run(ExampleContext)
     assert result == :failed
     assert reason == :missing_step
   end
@@ -69,7 +72,7 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
       step_two
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
-    {result, {reason, ^step_two, _}} = scenario |> ScenarioRunner.run(ExampleContext)
+    {result, {reason, ^step_two, _}, _} = scenario |> ScenarioRunner.run(ExampleContext)
     assert result == :failed
     assert reason == :no_clause_match
   end
@@ -81,7 +84,7 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
       %Steps.When{text: "step two"}
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
-    {result, {_assertion_type, _, _failure}} = scenario |> ScenarioRunner.run(ExampleContext)
+    {result, {_assertion_type, _, _failure}, _} = scenario |> ScenarioRunner.run(ExampleContext)
     assert result == :failed
   end
 
@@ -92,7 +95,7 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
       %Steps.When{text: "step two"}
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
-    {result, {:other_failure, _, {_failure, _}}} = scenario |> ScenarioRunner.run(ExampleContext)
+    {result, {:other_failure, _, {_failure, _}}, _} = scenario |> ScenarioRunner.run(ExampleContext)
     assert result == :failed
   end
 
@@ -103,8 +106,8 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
       %Steps.Then{text: "the state is not just :ok"}
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
-
-    assert {:ok, "test scenario"} == scenario |> ScenarioRunner.run(ExampleContext)
+    {result, scenario_name, _} = scenario |> ScenarioRunner.run(ExampleContext)
+    assert {:ok, "test scenario"} == {result, scenario_name}
   end
 
   test "Fails if a step returns with not okay in the tuple {:ok, state}" do
@@ -116,8 +119,8 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
       %Steps.When{text: "step two"}
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
-
-    assert {:failed, expected_step_result} == scenario |> ScenarioRunner.run(ExampleContext)
+    {:failed, step_result, _} = scenario |> ScenarioRunner.run(ExampleContext)
+    assert expected_step_result == step_result
   end
 
   test "Contexts can start with a custom state provied by starting_state method" do
@@ -126,7 +129,7 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
 
-    {result, _error} = scenario |> ScenarioRunner.run(ExampleContext)
+    {result, _error, _} = scenario |> ScenarioRunner.run(ExampleContext)
     assert result == :ok
   end
 
@@ -138,7 +141,7 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
 
-    {result, _error} = scenario |> ScenarioRunner.run(ExampleContext)
+    {result, _error, _} = scenario |> ScenarioRunner.run(ExampleContext)
     assert result == :ok
   end
 
@@ -149,7 +152,7 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
 
     scenario = %Scenario{name: "test scenario", steps: steps}
 
-    {_, _error} = scenario |> ScenarioRunner.run(ExampleContext)
+    {_, _error, _} = scenario |> ScenarioRunner.run(ExampleContext)
     assert Process.get(:finalized) == true
   end
 
@@ -160,7 +163,7 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
 
     scenario = %Scenario{name: "test scenario", steps: steps}
 
-    {_, _error} = scenario |> ScenarioRunner.run(ExampleContext)
+    {_, _error, _} = scenario |> ScenarioRunner.run(ExampleContext)
     assert Process.get(:finalized) == true
   end
 
@@ -172,7 +175,7 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
 
     scenario = %Scenario{name: "test scenario", steps: steps}
 
-    {_, _error} = scenario |> ScenarioRunner.run(ExampleContext)
+    {_, _error, _} = scenario |> ScenarioRunner.run(ExampleContext)
     assert Process.get(:finalized) == true
     assert Process.get(:finalized_after_step_one) == true
   end
@@ -184,7 +187,7 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
 
     scenario = %Scenario{name: "test scenario", steps: steps}
 
-    {_, _error} = scenario |> ScenarioRunner.run(ExampleContext)
+    {_, _error, _} = scenario |> ScenarioRunner.run(ExampleContext)
     assert Process.get(:finalized) == true
   end
 
@@ -196,7 +199,7 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
 
-    {result, _error} = scenario |> ScenarioRunner.run(ExampleContext)
+    {result, _error, _} = scenario |> ScenarioRunner.run(ExampleContext)
     assert result == :ok
   end
 
@@ -207,7 +210,7 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
 
-    {result, {error_type, _}} = scenario |> ScenarioRunner.run(ExampleContext)
+    {result, error_type, _} = scenario |> ScenarioRunner.run(ExampleContext)
     assert result != :ok
     assert error_type == :exit_recieved
   end

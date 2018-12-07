@@ -21,8 +21,8 @@ defmodule WhiteBread.Runners.ScenarioRunner do
 
   defp build_result_tuple(result, scenario) do
     case result do
-      {:ok, _}   -> {:ok, scenario.name}
-      error_data -> {:failed, error_data}
+      {{:ok, _}, time_map}   -> {:ok, scenario.name, time_map}
+      {error_data, time_map} -> {:failed, error_data, time_map}
     end
   end
 
@@ -38,7 +38,7 @@ defmodule WhiteBread.Runners.ScenarioRunner do
     pass_through
   end
 
-  defp update_result_with_exits(result = {:other_failure, _, _}), do: result
+  defp update_result_with_exits(result = {{:other_failure, _, _}, _}), do: result
 
   defp update_result_with_exits(result) do
     receive do

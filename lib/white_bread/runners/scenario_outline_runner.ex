@@ -13,13 +13,13 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
       |> report_progress(scenario_outline)
   end
 
-  defp process_results([], _), do: [{:failed, :no_examples_given}]
+  defp process_results([], _), do: [{:failed, :no_examples_given, %{}}]
   defp process_results(results, scenario_outline) do
     Enum.map(results, &process_result(&1, scenario_outline))
   end
 
-  defp process_result({:ok, _last_state}, scenario), do: {:ok, scenario.name}
-  defp process_result(error_data,        _scenario), do: {:failed, error_data}
+  defp process_result({{:ok, _last_state}, time_map}, scenario), do: {:ok, scenario.name, time_map}
+  defp process_result({error_data, time_map},        _scenario), do: {:failed, error_data, time_map}
 
   defp build_each_example(outline) do
     outline.examples
@@ -64,9 +64,9 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunner do
   end
 
   defp report_progress(results, scenario_outline) do
-    failures? = results |> Enum.any?(fn {success, _} -> success != :ok end)
+    failures? = results |> Enum.any?(fn {success, _, _} -> success != :ok end)
     success_status = if failures?, do: :failed, else: :ok
-    scenario_report ={:scenario_result, {success_status, nil},
+    scenario_report ={:scenario_result, {success_status, nil, %{}},
     scenario_outline}
     WhiteBread.Outputer.report(scenario_report)
     results
