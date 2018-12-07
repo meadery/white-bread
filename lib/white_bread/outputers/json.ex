@@ -47,21 +47,22 @@ defmodule WhiteBread.Outputers.JSON do
 
   ## Internal
 
-  defp result_for_step(_step, {:ok, _name}) do
+  defp result_for_step(step, {:ok, {_, steps_result}}) do
     %{
       status: "passed",
-      duration: 1,
+      duration: Map.get(steps_result, step.text, 0),
     }
   end
 
-  defp result_for_step(step, {:failed, {error, failed_step, error2}}) do
+  defp result_for_step(step, {:failed, {error_result, steps_result}}) do
+    {error, failed_step, error2} = error_result
     cond do
-      step.line < failed_step.line -> %{status: "passed", duration: 1}
-      step.line > failed_step.line -> %{status: "skipped", duration: 1}
+      step.line < failed_step.line -> %{status: "passed", duration: Map.get(steps_result, step.text, 0)}
+      step.line > failed_step.line -> %{status: "skipped", duration: Map.get(steps_result, step.text, 0)}
       step.line == failed_step.line ->
         %{
           status: "failed",
-          duration: 1,
+          duration: Map.get(steps_result, step.text, 0),
           error_message: format_error_message(error, failed_step, error2)
         }
     end

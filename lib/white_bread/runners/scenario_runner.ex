@@ -21,7 +21,7 @@ defmodule WhiteBread.Runners.ScenarioRunner do
 
   defp build_result_tuple(result, scenario) do
     case result do
-      {:ok, _}   -> {:ok, scenario.name}
+      {:ok, data}   -> {:ok, {scenario.name, data}}
       error_data -> {:failed, error_data}
     end
   end

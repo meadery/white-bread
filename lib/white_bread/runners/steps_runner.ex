@@ -21,7 +21,10 @@ defmodule WhiteBread.Runners.StepsRunner do
 
   defp run_step(context, step, state) do
     possible_steps = apply(context, :get_steps, [])
+    start = System.monotonic_time(:millisecond)
     result = StepExecutor.execute_step(possible_steps, step, state)
+    time_spent = System.monotonic_time(:millisecond) - start
+    state = Map.put(state, step.text, time_spent)
     case result do
       {:ok, state} -> {:ok, state}
       :ok          -> {:ok, state}
@@ -33,9 +36,9 @@ defmodule WhiteBread.Runners.StepsRunner do
     context.scenario_finalize({:ok, scenario}, state)
     result
   end
-  defp finalize({error_result, state}, context, scenario) do
+  defp finalize(result = {error_result, state}, context, scenario) do
     context.scenario_finalize({:error, error_result, scenario}, state)
-    error_result
+    result
   end
 
 end
