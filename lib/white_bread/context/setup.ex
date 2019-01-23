@@ -8,7 +8,7 @@ defmodule WhiteBread.Context.Setup do
         @sub_context_modules
          |> Enum.map(fn(sub_module) -> apply(sub_module, :get_steps, []) end)
          |> Enum.flat_map(fn(x) -> x end)
-         |> Enum.into(@steps)
+         |> Kernel.++(@steps)
       end
 
       unless @feature_state_definied do

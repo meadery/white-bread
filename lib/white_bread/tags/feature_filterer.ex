@@ -4,7 +4,7 @@ defmodule WhiteBread.Tags.FeatureFilterer do
   def get_for_tags(features, tags) when is_list(features) do
     features
       |> filter(tags)
-      |> Enum.into(features_with_matching_scenarios(features, tags))
+      |> Kernel.++(features_with_matching_scenarios(features, tags))
   end
 
   defp features_with_matching_scenarios(features, tags) do
