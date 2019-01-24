@@ -1,5 +1,16 @@
 # Changelog
 
+## 4.5.0 (2019-01-24)
+
+### Enhancements
+- Support for Elixir 1.8 thanks to @ejscunha [#109]
+
+### Bug fixes
+None
+
+### Backwards incompatible changes
+None
+
 ## 4.4.0 (2018-11-29)
 
 ### Enhancements
