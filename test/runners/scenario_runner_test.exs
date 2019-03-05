@@ -109,7 +109,8 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
 
   test "Fails if a step returns with not okay in the tuple {:ok, state}" do
     failure_step = %Steps.When{text: "I return not okay"}
-    expected_step_result = {:no_way, :impossible}
+    expected_step_result = :no_way
+    expected_final_state = :impossible
 
     steps = [
       failure_step,
@@ -117,7 +118,9 @@ defmodule ScenarioRunner.ScenarioRunnerTest do
     ]
     scenario = %Scenario{name: "test scenario", steps: steps}
 
-    assert {:failed, expected_step_result} == scenario |> ScenarioRunner.run(ExampleContext)
+    {:failed, {step_result, final_state, _timing}} = scenario |> ScenarioRunner.run(ExampleContext)
+    assert step_result == expected_step_result
+    assert final_state == expected_final_state
   end
 
   test "Contexts can start with a custom state provied by starting_state method" do

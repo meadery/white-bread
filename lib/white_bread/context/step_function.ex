@@ -97,7 +97,7 @@ defmodule WhiteBread.Context.StepFunction do
   defp apply_and_time(func, args) do
     start_time = System.monotonic_time(:micro_seconds)
     result = apply(func, args)
-    duration_in_micro = start_time - System.monotonic_time(:micro_seconds)
+    duration_in_micro =  System.monotonic_time(:micro_seconds) - start_time
     {result, duration_in_micro}
   end
 

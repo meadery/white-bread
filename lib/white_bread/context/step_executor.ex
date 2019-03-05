@@ -4,10 +4,10 @@ defmodule WhiteBread.Context.StepExecutor do
 
   def execute_step(steps, step, state) when is_list(steps) do
     try do
-      {result, _time} = steps
+      steps
         |> find_match(step.text)
         |> StepFunction.call(step, state)
-      result
+        |> flatten_time
     rescue
       missing_step in WhiteBread.Context.MissingStep
         -> {:missing_step, step, missing_step}
@@ -17,6 +17,10 @@ defmodule WhiteBread.Context.StepExecutor do
         -> ErrorHandler.get_tuple(external_error, step, System.stacktrace)
     end
   end
+
+  defp flatten_time({{:ok, state}, duration}), do: {:ok, state, duration}
+  defp flatten_time({:ok, duration}), do: {:ok, duration}
+  defp flatten_time({{not_okay, state}, duration}), do: {not_okay, state, duration}
 
   defp find_match(steps, step_text) do
     matches = steps

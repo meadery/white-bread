@@ -7,29 +7,44 @@ defmodule WhiteBread.Context.ContextExecutorTest do
 
   test "Blocks provided with a simple string return ok with the starting state" do
     step = %Steps.Given{text: "I'm running a simple test"}
-    state = :old_state
-    assert StepExecutor.execute_step(get_steps(), step, state) == {:ok, state}
+    expected_state = :old_state
+    {:ok, state, _timing} = StepExecutor.execute_step(get_steps(), step, :old_state)
+
+    assert state == expected_state
+  end
+
+  test "Blocks return timing information as a positive integer" do
+    step = %Steps.Given{text: "I'm running a simple test"}
+    {:ok, _state, timing} = StepExecutor.execute_step(get_steps(), step, :old_state)
+
+    assert timing > 0
   end
 
   test "functions given with a simple string update and return the state" do
     step = %Steps.When{text: "I pass in some state"}
-    state = :old_state
-    assert StepExecutor.execute_step(get_steps(), step, state) == {:ok, [:test_new_state | :old_state]}
+    expected_state = [:test_new_state | :old_state]
+    {:ok, state, _timing} = StepExecutor.execute_step(get_steps(), step, :old_state)
+
+    assert state == expected_state
   end
 
   test "steps can be provided with regexes rather than flat strings" do
-    state = :old_state
+    expected_state = :old_state
     first_step = %Steps.Given{text: "I'm running a simple bakery"}
     second_step = %Steps.When{text: "I pass in some pie"}
 
-    assert StepExecutor.execute_step(get_steps(), first_step, state) == {:ok, state}
-    assert StepExecutor.execute_step(get_steps(), second_step, state) == {:ok, state}
+    {:ok, state_one, _timing} = StepExecutor.execute_step(get_steps(), first_step, :old_state)
+    {:ok, state_two, _timing} = StepExecutor.execute_step(get_steps(), second_step, :old_state)
+
+    assert state_one == expected_state
+    assert state_two == expected_state
   end
 
   test "steps can can use named group capture" do
-    state = :old_state
     step = %Steps.Then{text: "my new state should be awesome"}
-    assert StepExecutor.execute_step(get_steps(), step, state) == {:ok, "awesome"}
+    {:ok, state, _timing} = StepExecutor.execute_step(get_steps(), step, :old_state)
+
+    assert state == "awesome"
   end
 
   test "failing an assert should return a {%ExUnit.AssertionError{}, step, error} tuple" do
@@ -56,7 +71,7 @@ defmodule WhiteBread.Context.ContextExecutorTest do
   test "A step gets table_data passed as an option if available" do
     table_data = [["Hello", "World"]]
     step = %Steps.When{text: "I'm given the table:", table_data: table_data}
-    {:ok, returned_table_data}   = StepExecutor.execute_step(get_steps(), step, :whatever)
+    {:ok, returned_table_data, _timing} = StepExecutor.execute_step(get_steps(), step, :whatever)
     assert table_data == returned_table_data
   end
 
