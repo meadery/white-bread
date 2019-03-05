@@ -19,13 +19,13 @@ defmodule WhiteBread.Runners.StepsRunner do
     end
   end
 
-  defp run_step(context, step, state) do
+  defp run_step(context, step, starting_state) do
     possible_steps = apply(context, :get_steps, [])
-    result = StepExecutor.execute_step(possible_steps, step, state)
+    result = StepExecutor.execute_step(possible_steps, step, starting_state)
     case result do
       {:ok, state} -> {:ok, state}
-      :ok          -> {:ok, state}
-      error        -> {error, state}
+      :ok          -> {:ok, starting_state}
+      error        -> {error, starting_state}
     end
   end
 
