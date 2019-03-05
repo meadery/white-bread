@@ -79,7 +79,7 @@ defmodule WhiteBread.Context.StepFunction do
 
   def call(%__MODULE__{type: :string, function: func}, step, state) do
     args = [state, {:table_data, step.table_data}]
-    apply(func, args)
+    apply_and_time(func, args)
   end
 
   def call(%__MODULE__{type: :regex, function: func, regex: regex}, step, state) do
@@ -91,7 +91,14 @@ defmodule WhiteBread.Context.StepFunction do
       |> Map.merge(key_matches)
       |> Map.put(:table_data, step.table_data)
       |> Map.put(:doc_string, step.doc_string)
-    apply(func, [state, extra])
+    apply_and_time(func, [state, extra])
+  end
+
+  defp apply_and_time(func, args) do
+    start_time = System.monotonic_time(:micro_seconds)
+    result = apply(func, args)
+    duration_in_micro = start_time - System.monotonic_time(:micro_seconds)
+    {result, duration_in_micro}
   end
 
 end

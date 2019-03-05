@@ -4,9 +4,10 @@ defmodule WhiteBread.Context.StepExecutor do
 
   def execute_step(steps, step, state) when is_list(steps) do
     try do
-      steps
+      {result, _time} = steps
         |> find_match(step.text)
         |> StepFunction.call(step, state)
+      result
     rescue
       missing_step in WhiteBread.Context.MissingStep
         -> {:missing_step, step, missing_step}
