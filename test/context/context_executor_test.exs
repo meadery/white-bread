@@ -17,7 +17,7 @@ defmodule WhiteBread.Context.ContextExecutorTest do
     step = %Steps.Given{text: "I'm running a simple test"}
     {:ok, _state, timing} = StepExecutor.execute_step(get_steps(), step, :old_state)
 
-    assert timing > 0
+    assert timing >= 0
   end
 
   test "functions given with a simple string update and return the state" do
