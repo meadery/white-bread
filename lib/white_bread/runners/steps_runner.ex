@@ -6,34 +6,34 @@ defmodule WhiteBread.Runners.StepsRunner do
   do
     background_steps
       |> Enum.concat(steps)
-      |> Enum.reduce({:ok, starting_state}, step_executor(context))
+      |> Enum.reduce({:ok, starting_state, []}, step_executor(context))
       |> finalize(context, scenario)
   end
 
   defp step_executor(context) do
     fn
-      (step, {:ok, state})
-        -> run_step(context, step, state)
-      (_step, failure_state)
-        -> failure_state
+      (step, {:ok, state, executed_steps})
+        -> run_step(context, step, state, executed_steps)
+      (_step, {error, state, executed_steps})
+        -> {error, state, executed_steps}
     end
   end
 
-  defp run_step(context, step, starting_state) do
+  defp run_step(context, step, starting_state, executed_steps) do
     possible_steps = apply(context, :get_steps, [])
     result = StepExecutor.execute_step(possible_steps, step, starting_state)
     case result do
-      {:ok, state, _time} -> {:ok, state}
-      {:ok, _time}        -> {:ok, starting_state}
-      error               -> {error, starting_state}
+      {:ok, state, time} -> {:ok, state, [{step, time} | executed_steps]}
+      {:ok, time}        -> {:ok, starting_state, [{step, time} | executed_steps]}
+      error              -> {error, starting_state, executed_steps}
     end
   end
 
-  defp finalize(result = {:ok, state}, context, scenario) do
+  defp finalize({:ok, state, _executed_steps}, context, scenario) do
     context.scenario_finalize({:ok, scenario}, state)
-    result
+    {:ok, state}
   end
-  defp finalize({error_result, state}, context, scenario) do
+  defp finalize({error_result, state, _executed_steps}, context, scenario) do
     context.scenario_finalize({:error, error_result, scenario}, state)
     error_result
   end
