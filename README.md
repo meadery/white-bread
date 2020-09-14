@@ -4,7 +4,7 @@ WhiteBread
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/meadsteve/white-bread?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 # Looking for maintainers
-This project is looking for people who'd like to volunteer to be an admin/maintainer: Discuss here: https://github.com/meadsteve/white-bread/issues/88
+This project is looking for someone who'd like to take over ownershp: Discuss here: https://github.com/meadsteve/white-bread/issues/114
 
 # What?
 Story BDD tool written in and for Elixir. Based on [cucumber](https://cukes.info/).
