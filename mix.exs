@@ -11,7 +11,7 @@ defmodule WhiteBread.Mixfile do
      package: [
        maintainers: ["Steve Brazier"],
        licenses: ["MIT"],
-       links: %{"GitHub" => "https://github.com/meadsteve/white-bread"},
+       links: %{"GitHub" => "https://github.com/meadery/white-bread"},
        ],
      version: "4.5.0",
      elixir: "~> 1.2",
