@@ -36,7 +36,7 @@ defmodule WhiteBread.FinalResultPrinterTest do
         {
           %{name: "feature name"},
           %{failures: [
-            {%{name: "failing scenario"}, {:failed, step_failure}}
+            {%{name: "failing scenario"}, {:failed, step_failure, %{}}}
           ]}
         }
       ]
@@ -56,7 +56,7 @@ defmodule WhiteBread.FinalResultPrinterTest do
         {
           %{name: "feature name"},
           %{failures: [
-            {%{name: "failing scenario"}, {:failed, step_failure}}
+            {%{name: "failing scenario"}, {:failed, step_failure, %{}}}
           ]}
         }
       ]

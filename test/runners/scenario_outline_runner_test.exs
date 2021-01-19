@@ -18,11 +18,10 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunnerTest do
 
     scenario_outline = %ScenarioOutline{name: "test scenario", steps: steps, examples: examples}
 
-    expected_two_successes = [
-      {:ok, "test scenario"},
-      {:ok, "test scenario"}
-    ]
-    assert expected_two_successes == scenario_outline |> ScenarioOutlineRunner.run(ExampleContext)
+    [
+      {:ok, "test scenario", _},
+      {:ok, "test scenario", _}
+    ] = scenario_outline |> ScenarioOutlineRunner.run(ExampleContext)
   end
 
   test "Returns failures for any example" do
@@ -37,7 +36,7 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunnerTest do
 
     scenario_outline = %ScenarioOutline{name: "test scenario", steps: steps, examples: examples}
 
-    [{:ok, "test scenario"}, {expected_result, _failure_data}
+    [{:ok, "test scenario", _}, {expected_result, _failure_data, _}
     ] = scenario_outline |> ScenarioOutlineRunner.run(ExampleContext)
 
 
@@ -53,7 +52,7 @@ defmodule WhiteBread.Runners.ScenarioOutlineRunnerTest do
 
     scenario_outline = %ScenarioOutline{name: "test scenario", steps: steps, examples: examples}
 
-    [{expected_result, failure_data}] = scenario_outline |> ScenarioOutlineRunner.run(ExampleContext)
+    [{expected_result, failure_data, _}] = scenario_outline |> ScenarioOutlineRunner.run(ExampleContext)
 
     assert expected_result == :failed
     assert failure_data == :no_examples_given

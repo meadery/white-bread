@@ -19,12 +19,11 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     scenario = %Scenario{name: "test scenario", steps: steps}
     feature = %Feature{name: "test feature", scenarios: [scenario]}
 
-    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: false)
-
-    assert result == %{
+    %{
       failures: [],
-      successes: [{scenario, {:ok, "test scenario"}}]
-    }
+      successes: [{success_scenario, {:ok, "test scenario", _}}]
+    } = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: false)
+    assert success_scenario == scenario
   end
 
   test "feature runner should return succesful and failed scenarios" do
@@ -46,8 +45,8 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: false)
 
     %{
-      failures: [{^failing_scenario, {:failed, {failing_reason, ^failing_step, _}}}],
-      successes: [{^scenario, {:ok, "test scenario"}}]
+      failures: [{^failing_scenario, {:failed, {failing_reason, ^failing_step, _}, %{}}}],
+      successes: [{^scenario, {:ok, "test scenario", %{}}}]
     } = result
     assert failing_reason == :no_clause_match
   end
@@ -63,12 +62,11 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     scenario = %Scenario{name: "test scenario", steps: steps}
     feature = %Feature{name: "test feature", scenarios: [scenario], background_steps: background_steps}
 
-    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: false)
-
-    assert result == %{
+    %{
       failures: [],
-      successes: [{scenario, {:ok, "test scenario"}}]
-    }
+      successes: [{success_scenario, {:ok, "test scenario", _}}]
+    } = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: false)
+    assert success_scenario == scenario
   end
 
   test "timed out scenarios should be failed" do
@@ -79,12 +77,11 @@ defmodule WhiteBread.Runners.FeatureRunnerTest do
     scenario = %Scenario{name: "slow scenario", steps: steps}
     feature = %Feature{name: "test feature", scenarios: [scenario]}
 
-    result = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: true)
-
-    assert result == %{
-      failures: [{scenario, {:failed, :timeout}}],
+    %{
+      failures: [{failure_scenario, {:failed, :timeout, _}}],
       successes: []
-    }
+    } = WhiteBread.Runners.FeatureRunner.run(feature, ExampleContext, async: true)
+    assert failure_scenario == scenario
   end
 
   test "feature runner should run given scenarios only once" do

@@ -36,10 +36,10 @@ defmodule WhiteBread.Outputers.HTML do
   def handle_cast({:suite, name}, state) when is_binary(name) do
     {:noreply, %{state | suite: name, tree: transplant(state, name), data: []}}
   end
-  def handle_cast({:scenario_result, {result, _}, %Scenario{name: name}}, state) when :ok == result or :failed == result do
+  def handle_cast({:scenario_result, {result, _, _}, %Scenario{name: name}}, state) when :ok == result or :failed == result do
     {:noreply, %{state | data: [{result, name}|state.data]}}
   end
-  def handle_cast({:scenario_result, {_, _}, %ScenarioOutline{}}, state) do
+  def handle_cast({:scenario_result, {_, _, _}, %ScenarioOutline{}}, state) do
     ## This clause here for more sophisticated report in the future.
     {:noreply, state}
   end
